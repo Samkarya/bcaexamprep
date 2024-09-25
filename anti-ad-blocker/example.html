@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anti-Ad Blocker Example</title>
+    <link rel="stylesheet" href="https://samkarya.github.io/bcaexamprep/scripts/anti-ad-blocker-style.css">
+</head>
+<body>
+    <!-- AdBlock detection message -->
+    <div id="adblock-message">
+        <div class="emoji">🚫</div>
+        <h1>AdBlock Detected!</h1>
+        <p>We rely on ads to support our content. Please consider disabling your ad blocker.</p>
+        <button onclick="checkAgain()">I've disabled it!</button>
+        <button class="close-button" onclick="closeAdblockMessage()">✖</button>
+    </div>
+
+    <!-- Secondary message with cute cat -->
+    <div id="secondary-message">
+        <img src="https://yourimageurl.com/cat.png" alt="Cute Cat">
+        <h1>Are you sure? 😺</h1>
+        <p>We'd really appreciate your support! Please disable your ad blocker.</p>
+        <button onclick="closeAllMessages()">Close</button>
+    </div>
+
+    <script src="https://samkarya.github.io/bcaexamprep/scripts/anti-ad-blocker.js"></script>">
+</body>
+</html>

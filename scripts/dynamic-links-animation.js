@@ -1,4 +1,10 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Immediately check sessionStorage and hide hero section if homepage is already entered
+    if (sessionStorage.getItem('homepageEntered') === 'true') {
+        document.querySelector('.hero-section').style.display = 'none';
+        document.getElementById('loading-indicator').style.display = 'block';
+    }
+
     const linkUrl = "https://bcaexamprep.blogspot.com/";
     const homeLinks = document.querySelectorAll('#homeurl');
     homeLinks.forEach(link => link.setAttribute("href", linkUrl));
@@ -67,6 +73,11 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Event listener for the "Enter Homepage" button
     document.getElementById('enterhomepage').addEventListener('click', function() {
+        enterHomepage();
+    });
+
+    // Function to handle entering the homepage
+    function enterHomepage() {
         // Show loading indicator
         document.getElementById('loading-indicator').style.display = 'block';
 
@@ -80,31 +91,18 @@ document.addEventListener('DOMContentLoaded', function() {
             document.querySelector('#Blog-Post').style.display = 'block';
             document.querySelector('#blog-title').style.display = 'block';
 
+            // Hide loading indicator
+            document.getElementById('loading-indicator').style.display = 'none';
+
             // Store flag in sessionStorage to keep track of homepage entry
             sessionStorage.setItem('homepageEntered', 'true');
-            location.reload(); // Reload the page
-        }, 1000); // Adjust delay if needed
-    });
+        }, 500); // Reduced delay for better responsiveness
+    }
 
-    // On page load, check sessionStorage and hide hero section if homepage is already entered
+    // On page load, check sessionStorage and enter homepage if already entered
     window.addEventListener('load', function() {
         if (sessionStorage.getItem('homepageEntered') === 'true') {
-            // Show loading indicator while the page is loading
-            document.getElementById('loading-indicator').style.display = 'block';
-
-            // Hide the hero section
-            document.querySelector('.hero-section').style.display = 'none';
-
-            // Simulate a brief load time before showing content
-            setTimeout(function() {
-                document.querySelector('#popular-post-section').style.display = 'block';
-                document.querySelector('#footer-element').style.display = 'block';
-                document.querySelector('#Blog-Post').style.display = 'block';
-                document.querySelector('#blog-title').style.display = 'block';
-
-                // Hide loading indicator after load
-                document.getElementById('loading-indicator').style.display = 'none';
-            }, 500); // Adjust delay for loading simulation
+            enterHomepage();
         }
     });
 });

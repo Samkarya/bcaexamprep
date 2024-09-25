@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdBlock Checker Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .status {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 1.5em;
+            color: #333;
+        }
+        .status span {
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .enabled {
+            color: red;
+        }
+        .disabled {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+
+    <h1 style="text-align: center;">AdBlock Checker Example</h1>
+    <div class="status">
+        AdBlock Status: <span id="adblock-status">Checking...</span>
+    </div>
+
+    <script src="https://samkarya.github.io/bcaexamprep/anti-ad-blocker/anti-ad-blocker.js"></script>
+
+    <script>
+        // Function to update AdBlock status on the page
+        function updateAdBlockStatus(ads) {
+            const statusElement = document.getElementById('adblock-status');
+            if (ads.allowed) {
+                statusElement.textContent = "Off";
+                statusElement.classList.add('disabled');
+            } else {
+                statusElement.textContent = "On";
+                statusElement.classList.add('enabled');
+            }
+        }
+
+        // Check AdBlock status using your anti-ad-blocker.js
+        checkAdsStatus(updateAdBlockStatus);
+    </script>
+
+</body>
+</html>

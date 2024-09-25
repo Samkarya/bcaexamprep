@@ -15,7 +15,7 @@ This setup will allow anyone to easily use your anti-ad-blocker script by adding
 You should also include the required HTML and CSS for the message displays.
 
 Example
-Check the example.html for a working demo of how to integrate the script.
+Check the [check-if-script-works.html](check-if-script-works.html) for a working demo of how to integrate the script.
 
 Customization
 The ad blocker message can be styled using custom CSS (see styles.css for the default styles).

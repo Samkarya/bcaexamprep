@@ -1,10 +1,14 @@
-document.addEventListener('DOMContentLoaded', function() {
-    // Immediately check sessionStorage and hide hero section if homepage is already entered
+// Immediately Invoked Function Expression to hide hero section before page load if necessary
+(function() {
     if (sessionStorage.getItem('homepageEntered') === 'true') {
-        document.querySelector('.hero-section').style.display = 'none';
-        document.getElementById('loading-indicator').style.display = 'block';
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelector('.hero-section').style.display = 'none';
+            document.getElementById('loading-indicator').style.display = 'block';
+        });
     }
+})();
 
+document.addEventListener('DOMContentLoaded', function() {
     const linkUrl = "https://bcaexamprep.blogspot.com/";
     const homeLinks = document.querySelectorAll('#homeurl');
     homeLinks.forEach(link => link.setAttribute("href", linkUrl));
@@ -99,10 +103,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 500); // Reduced delay for better responsiveness
     }
 
-    // On page load, check sessionStorage and enter homepage if already entered
-    window.addEventListener('load', function() {
-        if (sessionStorage.getItem('homepageEntered') === 'true') {
-            enterHomepage();
-        }
-    });
+    // Check if homepage has been entered and call enterHomepage if true
+    if (sessionStorage.getItem('homepageEntered') === 'true') {
+        enterHomepage();
+    }
 });

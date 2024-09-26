@@ -1,0 +1,135 @@
+<script type ='module'>
+ 
+// Import Firebase modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
+        import { getAuth, onAuthStateChanged} from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
+
+// Your Firebase configuration
+        const firebaseConfig = {
+        };
+function initializeAppAndCheckAuth() {
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const targetElement = document.querySelector('.post-body.entry-content');
+
+
+
+function checkAuthStatus() {
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      removeOverlay();
+      loadProtectedContent();
+    } else {
+      displayOverlay();
+      // Prevent overlay removal through developer tools
+const observer = new MutationObserver((mutations) => {
+  mutations.forEach((mutation) => {
+    if (mutation.removedNodes.length) {
+      mutation.removedNodes.forEach((node) => {
+        if (node.id === 'auth-overlay') {
+          console.warn('Overlay was removed, adding it back.');
+          displayOverlay();
+        }
+      });
+    }
+  });
+});
+
+observer.observe(document.body, { childList: true, subtree: true });
+    }
+  });
+}
+
+function displayOverlay() {
+  const overlay = document.createElement('div');
+  overlay.id = 'auth-overlay';
+  overlay.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+  `;
+  overlay.innerHTML = `
+<h1 style="color: white; font-size: 24px; text-align: center; margin-bottom: 20px;">
+    Content only available for registered users
+</h1>
+<button id="create-ac" style="background-color: #4CAF50; color: white; border: none; padding: 10px 20px; font-size: 16px; cursor: pointer; border-radius: 5px; margin: 5px;">
+    Sign Up
+</button>
+<button id="go-back-button" style="background-color: #f44336; color: white; border: none; padding: 10px 20px; font-size: 16px; cursor: pointer; border-radius: 5px; margin: 5px;">
+    Go Back
+</button>
+
+  `;
+  document.body.appendChild(overlay);
+
+  document.getElementById('create-ac').addEventListener('click', () =>{window.location.href = 'https://bcaexamprep.blogspot.com/p/bca-exam-prep-account.html';
+});
+  document.getElementById('go-back-button').addEventListener('click', () => {
+    window.history.back();
+  });
+}
+
+function removeOverlay() {
+  const overlay = document.getElementById('auth-overlay');
+  if (overlay) {
+    overlay.remove();
+  }
+}
+// Protected content loader
+function loadProtectedContent() {
+  console.log("Loading protected content...");
+
+  // Array of scripts to load
+  const scriptsToLoad = [
+    'https://samkarya.github.io/mcq-data/decomcqs.js',
+    'https://samkarya.github.io/mcq-data/array_read_logic/normal_array_read.js'
+
+
+    // Add more script URLs as needed
+  ];
+
+  // Load all scripts sequentially
+  loadScriptsSequentially(scriptsToLoad);
+}
+
+function loadScriptsSequentially(scripts) {
+  scripts.reduce((promise, scriptUrl) => {
+    return promise.then(() => loadScript(scriptUrl));
+  }, Promise.resolve())
+    .then(() => {
+      console.log("All scripts loaded successfully");
+      // You can add any post-loading logic here
+    })
+    .catch(error => {
+      console.error("Error loading scripts:", error);
+    });
+}
+
+function loadScript(url) {
+  return new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = url;
+    script.onload = resolve;
+    script.onerror = reject;
+    targetElement.appendChild(script);
+  });
+}
+
+
+// Initialize the authentication check when the DOM is loaded
+document.addEventListener('DOMContentLoaded', checkAuthStatus);
+}
+  if (document.body.classList.contains('item-view')) {
+    initializeAppAndCheckAuth();
+} 
+</script>

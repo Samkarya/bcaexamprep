@@ -335,7 +335,27 @@ nav {
     padding: 0 20px;
      padding-top: 10px;
 }
+#account-toggle {
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+}
 
+#account-icon {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out;
+}
+
+#account-toggle:hover #account-icon {
+    transform: scale(1.1);
+}
+
+/* Adjust for dark mode */
+body.darkmode #account-icon {
+    filter: invert(100%);
+}
 #menu-toggle, #search-toggle {
     cursor: pointer;
     font-size: 18px;

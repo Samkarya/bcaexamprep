@@ -1,0 +1,487 @@
+<meta name="robots" content="noindex, nofollow"/> 
+<style>
+  .post-header{
+    display:none;
+  }
+       
+        .auth-container-dash {
+            display:none;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+       #no-account-message {
+        text-align: center;
+        margin-top: 20px;
+    }
+    #create-account-button {
+        background-color: #28a745;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+        .auth-container-dash h1, .auth-container-dash h2 {
+            color: #333;
+        }
+        .auth-container-dash .section {
+            background-color: #f4f4f4;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .auth-container-dash .form-group {
+            margin-bottom: 15px;
+        }
+        .auth-container-dash label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .auth-container-dash input[type="text"],
+        .auth-container-dash input[type="number"],
+        .auth-container-dash select,
+        .auth-container-dash textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .auth-container-dash .btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .auth-container-dash .btn-save {
+            background-color: #007BFF;
+            color: white;
+        }
+        .auth-container-dash .btn-cancel {
+            background-color: #dc3545;
+            color: white;
+        }
+        .auth-container-dash .verify-email {
+            display: inline-block;
+            margin-top: 10px;
+            color: #007BFF;
+            cursor: pointer;
+        }
+        .auth-container-dash .toggle-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .auth-container-dash .toggle-group label {
+            margin-right: 10px;
+        }
+        .auth-container-dash .dark-mode {
+            background-color: #333;
+            color: #fff;
+        }
+        .dark-mode .auth-container-dash .section {
+            background-color: #444;
+        }
+        .dark-mode .auth-container-dash h1, .dark-mode .auth-container-dash h2 {
+            color: #fff;
+        }
+        .dark-mode .auth-container-dash .auth-container-dash input[type="text"],
+        .dark-mode .auth-container-dash input[type="number"],
+        .dark-mode .auth-container-dash select,
+        .dark-mode .auth-container-dash textarea {
+            background-color: #555;
+            color: #fff;
+            border-color: #666;
+        }
+        .auth-container-dash .error-message {
+            color: red;
+            margin-bottom: 10px;
+        }
+        .auth-container-dash .success-message {
+            color: green;
+            margin-bottom: 10px;
+        }
+        .auth-container-dash .loading-indicator {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .auth-container-dash .interactivemcq-button {
+            display: none;
+            margin-top: 10px;
+        }
+      .toast {
+    position: fixed;
+    top: 50px;
+    right: 20px;
+    background-color: #4CAF50;
+    color: white;
+    padding: 16px;
+    border-radius: 4px;
+    z-index: 100;
+    display: none;
+}
+
+.dark-mode .toast {
+    background-color: #45a049;
+}
+    </style>
+<div id="no-account-message" style="display: none;">
+    <h2>No account found</h2>
+    <p>Create a new account to get started.</p>
+    <button id="create-account-button" onclick="window.showAuthPopup()">Create New Account</button>
+</div>
+
+
+        <div class="auth-container-dash">
+        <h1>Welcome, <span id="username"></span></h1>
+
+        <div id="error-message" class="error-message" style="display: none;"></div>
+        <div id="success-message" class="success-message" style="display: none;"></div>
+        <div id="loading-indicator" class="loading-indicator" style="display: none;">Loading...</div>
+
+        <!-- Profile Settings Section -->
+        <div class="section" id="Blog-Post">
+            <h2>Profile Settings</h2>
+
+            <form id="profile-form" novalidate>
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" placeholder="Enter your name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="age">Age</label>
+                    <input type="number" id="age" placeholder="Enter your age" min="1" max="120" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="gender">Gender</label>
+                    <select id="gender" required>
+                        <option value="">Select Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="education">Educational Qualification</label>
+                    <textarea id="education" placeholder="Describe your educational background" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="goals">Future Goals</label>
+                    <textarea id="goals" placeholder="What are your future goals?" required></textarea>
+                </div>
+
+                <div id="verify-email" class="verify-email" tabindex="0" role="button">Verify Email</div>
+
+                <div class="button-group">
+                    <button type="submit" id="save-btn" class="btn btn-save" aria-label="Save profile changes">Save</button>
+                    <button type="button" id="logout-btn" class="btn btn-cancel" aria-label="Logout">Logout</button>
+                </div>
+            </form>
+        </div>
+ <div class="section">
+        <h2>Account Settings</h2>
+        <div class="form-group">
+            <button id="reset-password-btn" class="btn">Reset Password</button>
+        </div>
+        <div class="form-group">
+            <button id="change-email-btn" class="btn">Change Email Address</button>
+        </div>
+    </div>
+
+        <!-- General Settings Section
+        <div class="section">
+            <h2>General Settings</h2>
+
+            <div class="toggle-group">
+                <label for="dark-mode-toggle">Dark Mode</label>
+                <input type="checkbox" id="dark-mode-toggle" role="switch" aria-checked="false">
+            </div>
+
+            <div class="toggle-group">
+                <label for="interactive-mcqs-toggle">Interactive MCQs</label>
+                <input type="checkbox" id="interactive-mcqs-toggle" role="switch" aria-checked="false">
+            </div>
+
+            <button class="interactivemcq-button btn">Activate Interactive MCQs</button>
+
+            
+        </div>-->
+          <div id="toast" class="toast"></div>
+    </div>
+
+    <script type="module">
+        // Import Firebase modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut, sendEmailVerification, updatePassword } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
+
+        // Your Firebase configuration
+        const firebaseConfig = {
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth();
+        const db = getFirestore(app);
+
+        // Get DOM elements
+      let profileChangesCount = 0;
+    const MAX_PROFILE_CHANGES = 5;
+    const noAccountMessage = document.getElementById('no-account-message');
+    const authContainer = document.querySelector('.auth-container-dash');
+    const resetPasswordBtn = document.getElementById('reset-password-btn');
+    const changeEmailBtn = document.getElementById('change-email-btn');
+        const usernameElement = document.getElementById('username');
+        const profileForm = document.getElementById('profile-form');
+        const nameInput = document.getElementById('name');
+        const ageInput = document.getElementById('age');
+        const genderSelect = document.getElementById('gender');
+        const educationTextarea = document.getElementById('education');
+        const goalsTextarea = document.getElementById('goals');
+        const verifyEmailBtn = document.getElementById('verify-email');
+        const logoutBtn = document.getElementById('logout-btn');
+        //const darkModeToggle = document.getElementById('dark-mode-toggle');
+        //const interactiveMCQsToggle = document.getElementById('interactive-mcqs-toggle');
+        //const changePasswordBtn = document.getElementById('change-password-btn');
+        const errorMessage = document.getElementById('error-message');
+        const successMessage = document.getElementById('success-message');
+        const loadingIndicator = document.getElementById('loading-indicator');
+        //const interactiveMCQButton = document.querySelector('.interactivemcq-button');
+      const toastElement = document.getElementById('toast');
+
+        onAuthStateChanged(auth, (user) => {
+        if (user) {
+            noAccountMessage.style.display = 'none';
+            authContainer.style.display = 'block';
+            usernameElement.textContent = user.displayName || user.email;
+            loadUserData(user.uid);
+            updateEmailVerificationUI(user);
+        } else {
+            noAccountMessage.style.display = 'block';
+            authContainer.style.display = 'none';
+        }
+    });
+        // Load user data from Firestore
+        async function loadUserData(userId) {
+            try {
+                loadingIndicator.style.display = 'block';
+                const userDoc = await getDoc(doc(db, 'users', userId));
+                if (userDoc.exists()) {
+                    const userData = userDoc.data();
+                    nameInput.value = userData.name || '';
+                    ageInput.value = userData.age || '';
+                    genderSelect.value = userData.gender || '';
+                    educationTextarea.value = userData.education || '';
+                    goalsTextarea.value = userData.goals || '';
+                    //darkModeToggle.checked = userData.darkMode || false;
+                    //interactiveMCQsToggle.checked = userData.interactiveMCQs || false;
+                    
+                    /* Apply dark mode if enabled
+                    applyDarkMode(userData.darkMode);
+                    updateInteractiveMCQs(userData.interactiveMCQs);*/
+                 // Check profile changes count
+                const lastChangeDate = userData.lastChangeDate;
+                const today = new Date().toISOString().split('T')[0];
+                if (lastChangeDate === today) {
+                    profileChangesCount = userData.profileChangesCount || 0;
+                } else {
+                    profileChangesCount = 0;
+                }
+            }
+        } catch (error) {
+            console.error('Error loading user data:', error);
+            showError('Failed to load user data. Please try again.');
+        } finally {
+            loadingIndicator.style.display = 'none';
+        }
+    }
+            // Modified save user data function
+    profileForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const user = auth.currentUser;
+        if (user) {
+            if (profileChangesCount >= MAX_PROFILE_CHANGES) {
+                showError('You have reached the maximum number of profile changes for today.');
+                return;
+            }
+            try {
+                loadingIndicator.style.display = 'block';
+                await setDoc(doc(db, 'users', user.uid), {
+                    name: nameInput.value,
+                    age: ageInput.value,
+                    gender: genderSelect.value,
+                    education: educationTextarea.value,
+                    goals: goalsTextarea.value,
+                    darkMode: darkModeToggle.checked,
+                    interactiveMCQs: interactiveMCQsToggle.checked,
+                    profileChangesCount: profileChangesCount + 1,
+                    lastChangeDate: new Date().toISOString().split('T')[0]
+                });
+                profileChangesCount++;
+                showToast('Profile updated successfully!');
+            } catch (error) {
+                console.error('Error updating profile:', error);
+                showError('An error occurred while updating your profile. Please try again.');
+            } finally {
+                loadingIndicator.style.display = 'none';
+            }
+        }
+    });
+
+       // Reset password functionality
+    resetPasswordBtn.addEventListener('click', () => {
+        const user = auth.currentUser;
+        if (user) {
+            sendPasswordResetEmail(auth, user.email)
+                .then(() => {
+                    showToast('Password reset email sent. Please check your inbox.');
+                })
+                .catch((error) => {
+                    console.error('Error sending password reset email:', error);
+                    showError('Failed to send password reset email. Please try again.');
+                });
+        }
+    });
+
+    // Change email functionality
+    changeEmailBtn.addEventListener('click', () => {
+        const user = auth.currentUser;
+        if (user) {
+            const newEmail = prompt('Enter new email address:');
+            if (newEmail) {
+                updateEmail(user, newEmail)
+                    .then(() => {
+                        showToast('Email address updated successfully!');
+                        sendEmailVerification(user);
+                    })
+                    .catch((error) => {
+                        console.error('Error updating email:', error);
+                        showError('Failed to update email address. Please try again.');
+                    });
+            }
+        }
+    });
+
+        // Logout functionality
+        logoutBtn.addEventListener('click', () => {
+            signOut(auth).then(() => {
+                window.showAuthPopup(); 
+            }).catch((error) => {
+                console.error('Error signing out:', error);
+                showError('Failed to log out. Please try again.');
+            });
+        });
+
+        // Email verification
+        function updateEmailVerificationUI(user) {
+            if (user.emailVerified) {
+                verifyEmailBtn.textContent = 'Email Verified';
+                verifyEmailBtn.style.color = 'green';
+                verifyEmailBtn.style.cursor = 'default';
+                verifyEmailBtn.removeEventListener('click', sendVerificationEmail);
+            } else {
+                verifyEmailBtn.textContent = 'Verify Email';
+                verifyEmailBtn.style.color = '#007BFF';
+                verifyEmailBtn.style.cursor = 'pointer';
+                verifyEmailBtn.addEventListener('click', sendVerificationEmail);
+            }
+        }
+
+        // Send verification email
+        function sendVerificationEmail() {
+            const user = auth.currentUser;
+            if (user && !user.emailVerified) {
+                sendEmailVerification(user).then(() => {
+                    showMessage('Verification email sent. Please check your inbox.', 'success');
+                }).catch((error) => {
+                    console.error('Error sending verification email:', error);
+                    showError('An error occurred while sending the verification email. Please try again.');
+                });
+            }
+        }
+
+        // Apply dark mode
+        function applyDarkMode(isDarkMode) {
+            document.body.classList.toggle('dark-mode', isDarkMode);
+            darkModeToggle.setAttribute('aria-checked', isDarkMode);
+            localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
+        }
+
+        // Dark mode toggle
+        darkModeToggle.addEventListener('change', () => {
+            const isDarkMode = darkModeToggle.checked;
+            applyDarkMode(isDarkMode);
+            location.reload();
+        });
+
+        // Interactive MCQs toggle
+        interactiveMCQsToggle.addEventListener('change', () => {
+            updateInteractiveMCQs(interactiveMCQsToggle.checked);
+        });
+
+        
+    // Improved Interactive MCQs functions
+    function updateInteractiveMCQs(isEnabled) {
+        interactiveMCQsToggle.checked = isEnabled;
+        if (isEnabled) {
+            enableInteractiveMCQs();
+        } else {
+            disableInteractiveMCQs();
+        }
+        localStorage.setItem('interactiveMCQs', isEnabled ? 'enabled' : 'disabled');
+    }
+
+        function enableInteractiveMCQs() {
+            // Implement your logic to enable interactive MCQs
+            console.log('Interactive MCQs enabled');
+        }
+
+        function disableInteractiveMCQs() {
+            // Implement your logic to disable interactive MCQs
+            console.log('Interactive MCQs disabled');
+        }
+
+         // Improved change password functionality
+    changePasswordBtn.addEventListener('click', () => {
+        const newPassword = prompt('Enter new password:');
+        if (newPassword) {
+            const user = auth.currentUser;
+            updatePassword(user, newPassword).then(() => {
+                showToast('Password updated successfully!');
+            }).catch((error) => {
+                console.error('Error updating password:', error);
+                showError('Failed to update password. Please try again.');
+            });
+        }
+    });
+
+      // New toast message function
+    function showToast(message) {
+        toastElement.textContent = message;
+        toastElement.style.display = 'block';
+        setTimeout(() => {
+            toastElement.style.display = 'none';
+        }, 3000);
+    }
+        // Helper functions
+        
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+            successMessage.style.display = 'none';
+        }
+
+        function showMessage(message, type) {
+            if (type === 'success') {
+                successMessage.textContent = message;
+                successMessage.style.display = 'block';
+                errorMessage.style.display = 'none';
+            } else {
+                showError(message);
+            }
+        }
+    </script>

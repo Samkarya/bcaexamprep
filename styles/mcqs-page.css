@@ -1,0 +1,123 @@
+h2{
+    text-align: center;
+    margin-bottom: 20px;
+}
+  
+  #question-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+  /* Default light mode styling */
+.report-btn {
+    font-size: 25px;
+    border: none;
+    cursor: pointer;
+}
+
+
+.syllabus {
+    margin-bottom: 20px;
+}
+
+.syllabus span.active{
+    background-color: #e9f325;
+    color: #fff;
+    padding: 3px 5px;
+    border-radius: 3px;
+}
+
+.syllabus details summary {
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.syllabus details #clickable {
+    cursor: pointer;
+    color: #007bff;
+    text-decoration: underline;
+}
+
+.syllabus details #clickable {
+    color: #0056b3;
+}
+
+.question-box {
+    background: #fafafa;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+.question-box h3 {
+    margin-top: 0;
+}
+
+.pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.pagination button {
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.pagination button:hover {
+    background-color: #0056b3;
+}
+
+.pagination span {
+    font-size: 16px;
+}
+
+/* Ads Styling */
+.adunit {
+    margin: 20px 0;
+    text-align: center;
+    background-color: #f0f0f0;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+/* Collapsible Syllabus Sections */
+.syllabus details {
+    margin-bottom: 10px;
+}
+
+.syllabus ul {
+    list-style: disc inside;
+    padding-left: 20px;
+}
+
+/* Highlighted Syllabus Section */
+.syllabus details[open] summary {
+    background-color: #007bff;
+    color: #fff;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+/* Responsive Styling */
+@media (max-width: 600px) {
+    .container {
+        padding: 15px;
+    }
+
+    .pagination button {
+        padding: 6px 12px;
+        font-size: 14px;
+    }
+
+    .pagination span {
+        font-size: 14px;
+    }
+}

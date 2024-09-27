@@ -1,162 +1,141 @@
-<meta name="robots" content="noindex, nofollow"/> 
-<style>
-  .post-header{
+
+    <meta name="robots" content="noindex, nofollow"/>
+
+    <style>
+          .post-header, .post-title.entry-title{
     display:none;
   }
-       
-        .auth-container-dash {
-            display:none;
+        .ac-dash .auth-container-dash {
             max-width: 800px;
             margin: 0 auto;
+            padding: 20px;
         }
-       #no-account-message {
-        text-align: center;
-        margin-top: 20px;
-    }
-    #create-account-button {
-        background-color: #28a745;
-        color: white;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-        .auth-container-dash h1, .auth-container-dash h2 {
+        .ac-dash h1, .ac-dash h2 {
             color: #333;
         }
-        .auth-container-dash .section {
+        .ac-dash .section {
             background-color: #f4f4f4;
             border-radius: 5px;
             padding: 20px;
             margin-bottom: 20px;
         }
-        .auth-container-dash .form-group {
+        .ac-dash .form-group {
             margin-bottom: 15px;
         }
-        .auth-container-dash label {
+        .ac-dash label {
             display: block;
             margin-bottom: 5px;
         }
-        .auth-container-dash input[type="text"],
-        .auth-container-dash input[type="number"],
-        .auth-container-dash select,
-        .auth-container-dash textarea {
+        .ac-dash input[type="text"],
+        .ac-dash input[type="number"],
+        .ac-dash select,
+        .ac-dash textarea {
             width: 100%;
             padding: 8px;
             border: 1px solid #ddd;
             border-radius: 4px;
+            font-size: 16px;
         }
-        .auth-container-dash .btn {
+        .ac-dash .btn {
             padding: 10px 15px;
             border: none;
             border-radius: 4px;
             cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
         }
-        .auth-container-dash .btn-save {
+        .ac-dash .btn-save {
             background-color: #007BFF;
             color: white;
         }
-        .auth-container-dash .btn-cancel {
+        .ac-dash .btn-cancel {
             background-color: #dc3545;
             color: white;
         }
-        .auth-container-dash .verify-email {
+        .ac-dash .verify-email {
             display: inline-block;
             margin-top: 10px;
             color: #007BFF;
             cursor: pointer;
         }
-        .auth-container-dash .toggle-group {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
+        .ac-dash .toast {
+            position: fixed;
+            top: 50px;
+            right: 20px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 16px;
+            border-radius: 4px;
+            z-index: 100;
+            display: none;
         }
-        .auth-container-dash .toggle-group label {
-            margin-right: 10px;
+        .ac-dash #loading-indicator {
+            text-align: center;
+            margin-top: 20px;
+            display: none;
         }
-        .auth-container-dash .dark-mode {
-            background-color: #333;
-            color: #fff;
+        
+        /* Responsive design */
+        @media (max-width: 600px) {
+            .ac-dash .auth-container-dash {
+                padding: 10px;
+            }
+            .ac-dash .btn {
+                width: 100%;
+                margin-bottom: 10px;
+            }
         }
-        .dark-mode .auth-container-dash .section {
+        
+        .dark-mode .ac-dash .section {
             background-color: #444;
         }
-        .dark-mode .auth-container-dash h1, .dark-mode .auth-container-dash h2 {
+        .dark-mode .ac-dash h1, .dark-mode .ac-dash h2 {
             color: #fff;
         }
-        .dark-mode .auth-container-dash .auth-container-dash input[type="text"],
-        .dark-mode .auth-container-dash input[type="number"],
-        .dark-mode .auth-container-dash select,
-        .dark-mode .auth-container-dash textarea {
+        .dark-mode .ac-dash input[type="text"],
+        .dark-mode .ac-dash input[type="number"],
+        .dark-mode .ac-dash select,
+        .dark-mode .ac-dash textarea {
             background-color: #555;
             color: #fff;
             border-color: #666;
         }
-        .auth-container-dash .error-message {
-            color: red;
-            margin-bottom: 10px;
+        .dark-mode .ac-dash .toast {
+            background-color: #45a049;
         }
-        .auth-container-dash .success-message {
-            color: green;
-            margin-bottom: 10px;
-        }
-        .auth-container-dash .loading-indicator {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .auth-container-dash .interactivemcq-button {
-            display: none;
-            margin-top: 10px;
-        }
-      .toast {
-    position: fixed;
-    top: 50px;
-    right: 20px;
-    background-color: #4CAF50;
-    color: white;
-    padding: 16px;
-    border-radius: 4px;
-    z-index: 100;
-    display: none;
-}
-
-.dark-mode .toast {
-    background-color: #45a049;
-}
     </style>
-<div id="no-account-message" style="display: none;">
-    <h2>No account found</h2>
-    <p>Create a new account to get started.</p>
-    <button id="create-account-button" onclick="window.showAuthPopup()">Create New Account</button>
-</div>
+<div class= 'ac-dash'>
+    <div id="no-account-message" style="display: none; text-align: center; margin-top: 20px;">
+        <h2>No account found</h2>
+        <p>Create a new account to get started.</p>
+        <button id="create-account-button" class="btn btn-save">Create New Account</button>
+    </div>
 
-
-        <div class="auth-container-dash">
+    <div class="auth-container-dash" style="display: none;">
         <h1>Welcome, <span id="username"></span></h1>
 
-        <div id="error-message" class="error-message" style="display: none;"></div>
-        <div id="success-message" class="success-message" style="display: none;"></div>
-        <div id="loading-indicator" class="loading-indicator" style="display: none;">Loading...</div>
+        <div id="error-message" role="alert" style="color: red; margin-bottom: 10px; display: none;"></div>
+        <div id="success-message" role="status" style="color: green; margin-bottom: 10px; display: none;"></div>
+        <div id="loading-indicator" role="status" aria-live="polite">Loading...</div>
 
         <!-- Profile Settings Section -->
-        <div class="section" id="Blog-Post">
-            <h2>Profile Settings</h2>
+        <div class="section" id="profile-section">
+            <h2 id="profile-form-title">Profile Settings</h2>
 
-            <form id="profile-form" novalidate>
+            <form id="profile-form" novalidate aria-labelledby="profile-form-title">
                 <div class="form-group">
                     <label for="name">Name</label>
-                    <input type="text" id="name" placeholder="Enter your name" required>
+                    <input type="text" id="name" placeholder="Enter your name" required aria-required="true">
                 </div>
 
                 <div class="form-group">
                     <label for="age">Age</label>
-                    <input type="number" id="age" placeholder="Enter your age" min="1" max="120" required>
+                    <input type="number" id="age" placeholder="Enter your age" min="1" max="120" required aria-required="true">
                 </div>
 
                 <div class="form-group">
                     <label for="gender">Gender</label>
-                    <select id="gender" required>
+                    <select id="gender" required aria-required="true">
                         <option value="">Select Gender</option>
                         <option value="male">Male</option>
                         <option value="female">Female</option>
@@ -166,59 +145,46 @@
 
                 <div class="form-group">
                     <label for="education">Educational Qualification</label>
-                    <textarea id="education" placeholder="Describe your educational background" required></textarea>
+                    <textarea id="education" placeholder="Describe your educational background" required aria-required="true"></textarea>
                 </div>
 
                 <div class="form-group">
                     <label for="goals">Future Goals</label>
-                    <textarea id="goals" placeholder="What are your future goals?" required></textarea>
+                    <textarea id="goals" placeholder="What are your future goals?" required aria-required="true"></textarea>
                 </div>
 
-                <div id="verify-email" class="verify-email" tabindex="0" role="button">Verify Email</div>
-
-                <div class="button-group">
-                    <button type="submit" id="save-btn" class="btn btn-save" aria-label="Save profile changes">Save</button>
-                    <button type="button" id="logout-btn" class="btn btn-cancel" aria-label="Logout">Logout</button>
-                </div>
+                <button type="submit" id="save-btn" class="btn btn-save" aria-label="Save profile changes">Save</button>
             </form>
         </div>
- <div class="section">
-        <h2>Account Settings</h2>
-        <div class="form-group">
-            <button id="reset-password-btn" class="btn">Reset Password</button>
-        </div>
-        <div class="form-group">
-            <button id="change-email-btn" class="btn">Change Email Address</button>
+
+        <!-- Account Settings Section -->
+        <div class="section" id="account-section">
+            <h2>Account Settings</h2>
+            <div class="form-group">
+                <button id="reset-password-btn" class="btn btn-save">Reset Password</button>
+            </div>
+            <div class="form-group">
+                <button id="change-email-btn" class="btn btn-save">Change Email Address</button>
+            </div>
+            <div class="form-group">
+                <button id="verify-email" class="btn btn-save">Verify Email</button>
+            </div>
+            <div class="form-group">
+                <button id="logout-btn" class="btn btn-cancel" aria-label="Logout">Logout</button>
+            </div>
         </div>
     </div>
 
-        <!-- General Settings Section
-        <div class="section">
-            <h2>General Settings</h2>
-
-            <div class="toggle-group">
-                <label for="dark-mode-toggle">Dark Mode</label>
-                <input type="checkbox" id="dark-mode-toggle" role="switch" aria-checked="false">
-            </div>
-
-            <div class="toggle-group">
-                <label for="interactive-mcqs-toggle">Interactive MCQs</label>
-                <input type="checkbox" id="interactive-mcqs-toggle" role="switch" aria-checked="false">
-            </div>
-
-            <button class="interactivemcq-button btn">Activate Interactive MCQs</button>
-
-            
-        </div>-->
-          <div id="toast" class="toast"></div>
-    </div>
-
+    <div id="toast" class="toast" role="alert" aria-live="assertive"></div>
+</div>
     <script type="module">
         // Import Firebase modules
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut, sendEmailVerification, updatePassword } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
+        import { getAuth, onAuthStateChanged, signOut, sendEmailVerification, updatePassword, sendPasswordResetEmail, updateEmail } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
         import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
+        import { initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app-check.js";
 
+        // Firebase configuration
         // Your Firebase configuration
         const firebaseConfig = {
         };
@@ -228,13 +194,16 @@
         const auth = getAuth();
         const db = getFirestore(app);
 
+       const appCheck = initializeAppCheck(app, {
+      provider: new ReCaptchaV3Provider('API'),
+      isTokenAutoRefreshEnabled: true
+  });
+
         // Get DOM elements
-      let profileChangesCount = 0;
-    const MAX_PROFILE_CHANGES = 5;
-    const noAccountMessage = document.getElementById('no-account-message');
-    const authContainer = document.querySelector('.auth-container-dash');
-    const resetPasswordBtn = document.getElementById('reset-password-btn');
-    const changeEmailBtn = document.getElementById('change-email-btn');
+        const noAccountMessage = document.getElementById('no-account-message');
+        const authContainer = document.querySelector('.auth-container-dash');
+        const resetPasswordBtn = document.getElementById('reset-password-btn');
+        const changeEmailBtn = document.getElementById('change-email-btn');
         const usernameElement = document.getElementById('username');
         const profileForm = document.getElementById('profile-form');
         const nameInput = document.getElementById('name');
@@ -244,31 +213,32 @@
         const goalsTextarea = document.getElementById('goals');
         const verifyEmailBtn = document.getElementById('verify-email');
         const logoutBtn = document.getElementById('logout-btn');
-        //const darkModeToggle = document.getElementById('dark-mode-toggle');
-        //const interactiveMCQsToggle = document.getElementById('interactive-mcqs-toggle');
-        //const changePasswordBtn = document.getElementById('change-password-btn');
         const errorMessage = document.getElementById('error-message');
         const successMessage = document.getElementById('success-message');
         const loadingIndicator = document.getElementById('loading-indicator');
-        //const interactiveMCQButton = document.querySelector('.interactivemcq-button');
-      const toastElement = document.getElementById('toast');
+        const toastElement = document.getElementById('toast');
+        const createAccountButton = document.getElementById('create-account-button');
+
+        let profileChangesCount = 0;
+        const MAX_PROFILE_CHANGES = 5;
 
         onAuthStateChanged(auth, (user) => {
-        if (user) {
-            noAccountMessage.style.display = 'none';
-            authContainer.style.display = 'block';
-            usernameElement.textContent = user.displayName || user.email;
-            loadUserData(user.uid);
-            updateEmailVerificationUI(user);
-        } else {
-            noAccountMessage.style.display = 'block';
-            authContainer.style.display = 'none';
-        }
-    });
+            if (user) {
+                noAccountMessage.style.display = 'none';
+                authContainer.style.display = 'block';
+                usernameElement.textContent = user.displayName || user.email;
+                loadUserData(user.uid);
+                updateEmailVerificationUI(user);
+            } else {
+                noAccountMessage.style.display = 'block';
+                authContainer.style.display = 'none';
+            }
+        });
+
         // Load user data from Firestore
         async function loadUserData(userId) {
             try {
-                loadingIndicator.style.display = 'block';
+                setLoading(true);
                 const userDoc = await getDoc(doc(db, 'users', userId));
                 if (userDoc.exists()) {
                     const userData = userDoc.data();
@@ -277,211 +247,253 @@
                     genderSelect.value = userData.gender || '';
                     educationTextarea.value = userData.education || '';
                     goalsTextarea.value = userData.goals || '';
-                    //darkModeToggle.checked = userData.darkMode || false;
-                    //interactiveMCQsToggle.checked = userData.interactiveMCQs || false;
-                    
-                    /* Apply dark mode if enabled
-                    applyDarkMode(userData.darkMode);
-                    updateInteractiveMCQs(userData.interactiveMCQs);*/
-                 // Check profile changes count
-                const lastChangeDate = userData.lastChangeDate;
-                const today = new Date().toISOString().split('T')[0];
-                if (lastChangeDate === today) {
-                    profileChangesCount = userData.profileChangesCount || 0;
-                } else {
-                    profileChangesCount = 0;
+
+                    const lastChangeDate = userData.lastChangeDate;
+                    const today = new Date().toISOString().split('T')[0];
+                    if (lastChangeDate === today) {
+                        profileChangesCount = userData.profileChangesCount || 0;
+                    } else {
+                        profileChangesCount = 0;
+                    }
+                }
+            } catch (error) {
+                handleError(error);
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        // Save user data
+        profileForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const user = auth.currentUser;
+            if (user) {
+                if (profileChangesCount >= MAX_PROFILE_CHANGES) {
+                    showToast('You have reached the maximum number of profile changes for today.');
+                    return;
+                }
+                if (!validateForm()) {
+                    return;
+                }
+                try {
+                    setLoading(true);
+                    await setDoc(doc(db, 'users', user.uid), {
+                        name: nameInput.value,
+                        age: parseInt(ageInput.value),
+                        gender: genderSelect.value,
+                        education: educationTextarea.value,
+                        goals: goalsTextarea.value,
+                        profileChangesCount: profileChangesCount + 1,
+                        lastChangeDate: new Date().toISOString().split('T')[0]
+                    });
+                    profileChangesCount++;
+                    showToast('Profile updated successfully!');
+                } catch (error) {
+                    handleError(error);
+                } finally {
+                    setLoading(false);
                 }
             }
-        } catch (error) {
-            console.error('Error loading user data:', error);
-            showError('Failed to load user data. Please try again.');
-        } finally {
-            loadingIndicator.style.display = 'none';
-        }
-    }
-            // Modified save user data function
-    profileForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const user = auth.currentUser;
-        if (user) {
-            if (profileChangesCount >= MAX_PROFILE_CHANGES) {
-                showError('You have reached the maximum number of profile changes for today.');
-                return;
-            }
-            try {
-                loadingIndicator.style.display = 'block';
-                await setDoc(doc(db, 'users', user.uid), {
-                    name: nameInput.value,
-                    age: ageInput.value,
-                    gender: genderSelect.value,
-                    education: educationTextarea.value,
-                    goals: goalsTextarea.value,
-                    darkMode: darkModeToggle.checked,
-                    interactiveMCQs: interactiveMCQsToggle.checked,
-                    profileChangesCount: profileChangesCount + 1,
-                    lastChangeDate: new Date().toISOString().split('T')[0]
-                });
-                profileChangesCount++;
-                showToast('Profile updated successfully!');
-            } catch (error) {
-                console.error('Error updating profile:', error);
-                showError('An error occurred while updating your profile. Please try again.');
-            } finally {
-                loadingIndicator.style.display = 'none';
-            }
-        }
-    });
+        });
 
-       // Reset password functionality
-    resetPasswordBtn.addEventListener('click', () => {
-        const user = auth.currentUser;
-        if (user) {
-            sendPasswordResetEmail(auth, user.email)
-                .then(() => {
-                    showToast('Password reset email sent. Please check your inbox.');
-                })
-                .catch((error) => {
-                    console.error('Error sending password reset email:', error);
-                    showError('Failed to send password reset email. Please try again.');
-                });
+        // Form validation
+        function validateForm() {
+            let isValid = true;
+            if (!validateInput(nameInput.value, 'name')) {
+                showError('Please enter a valid name (2-30 characters, letters only).');
+                isValid = false;
+            }
+            if (!validateInput(ageInput.value, 'age')) {
+                showError('Please enter a valid age (1-120).');
+                isValid = false;
+            }
+            // Add more validations as needed
+            return isValid;
         }
-    });
 
-    // Change email functionality
-    changeEmailBtn.addEventListener('click', () => {
-        const user = auth.currentUser;
-        if (user) {
-            const newEmail = prompt('Enter new email address:');
-            if (newEmail) {
-                updateEmail(user, newEmail)
-                    .then(() => {
-                        showToast('Email address updated successfully!');
-                        sendEmailVerification(user);
-                    })
-                    .catch((error) => {
-                        console.error('Error updating email:', error);
-                        showError('Failed to update email address. Please try again.');
-                    });
+        function validateInput(input, type) {
+            switch(type) {
+                case 'name':
+                    return /^[a-zA-Z ]{2,30}$/.test(input);
+                case 'age':
+                    const age = parseInt(input);
+                    return age > 0 && age < 120;
+                // Add more cases as needed
+                default:
+                    return true;
             }
         }
-    });
+
+        // Reset password functionality
+        resetPasswordBtn.addEventListener('click', async () => {
+            if (await confirmAction('Are you sure you want to reset your password?')) {
+                const user = auth.currentUser;
+                if (user) {
+                    try {
+                        setLoading(true);
+                        await sendPasswordResetEmail(auth, user.email);
+                        showToast('Password reset email sent. Please check your inbox.');
+                    } catch (error) {
+                        handleError(error);
+                    } finally {
+                        setLoading(false);
+                    }
+                }
+            }
+        });
+
+        // Change email functionality
+        changeEmailBtn.addEventListener('click', async () => {
+            if (await confirmAction('Are you sure you want to change your email address?')) {
+                const user = auth.currentUser;
+                if (user) {
+                    const newEmail = prompt('Enter new email address:');
+                    if (newEmail && validateInput(newEmail, 'email')) {
+                        try {
+                            setLoading(true);
+                            await updateEmail(user, newEmail);
+                            showToast('Email address updated successfully!');
+                            await sendEmailVerification(user);
+                        } catch (error) {
+                            handleError(error);
+                        } finally {
+                            setLoading(false);
+                        }
+                    } else {
+                        showError('Please enter a valid email address.');
+                    }
+                }
+            }
+        });
 
         // Logout functionality
-        logoutBtn.addEventListener('click', () => {
-            signOut(auth).then(() => {
-                window.showAuthPopup(); 
-            }).catch((error) => {
-                console.error('Error signing out:', error);
-                showError('Failed to log out. Please try again.');
-            });
+        logoutBtn.addEventListener('click', async () => {
+            if (await confirmAction('Are you sure you want to log out?')) {
+                try {
+                    setLoading(true);
+                    await signOut(auth);
+                    window.showAuthPopup();
+                } catch (error) {
+                    handleError(error);
+                } finally {
+                    setLoading(false);
+                }
+            }
         });
 
         // Email verification
         function updateEmailVerificationUI(user) {
             if (user.emailVerified) {
                 verifyEmailBtn.textContent = 'Email Verified';
-                verifyEmailBtn.style.color = 'green';
-                verifyEmailBtn.style.cursor = 'default';
-                verifyEmailBtn.removeEventListener('click', sendVerificationEmail);
+                verifyEmailBtn.disabled = true;
+                verifyEmailBtn.style.backgroundColor = 'green';
             } else {
                 verifyEmailBtn.textContent = 'Verify Email';
-                verifyEmailBtn.style.color = '#007BFF';
-                verifyEmailBtn.style.cursor = 'pointer';
+                verifyEmailBtn.disabled = false;
+                verifyEmailBtn.style.backgroundColor = '#007BFF';
                 verifyEmailBtn.addEventListener('click', sendVerificationEmail);
             }
         }
+        
 
         // Send verification email
-        function sendVerificationEmail() {
+        async function sendVerificationEmail() {
             const user = auth.currentUser;
             if (user && !user.emailVerified) {
-                sendEmailVerification(user).then(() => {
-                    showMessage('Verification email sent. Please check your inbox.', 'success');
-                }).catch((error) => {
-                    console.error('Error sending verification email:', error);
-                    showError('An error occurred while sending the verification email. Please try again.');
-                });
+                try {
+                    setLoading(true);
+                    await sendEmailVerification(user);
+                    showToast('Verification email sent. Please check your inbox.');
+                } catch (error) {
+                    handleError(error);
+                } finally {
+                    setLoading(false);
+                }
             }
         }
 
-        // Apply dark mode
-        function applyDarkMode(isDarkMode) {
-            document.body.classList.toggle('dark-mode', isDarkMode);
-            darkModeToggle.setAttribute('aria-checked', isDarkMode);
-            localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
-        }
-
-        // Dark mode toggle
-        darkModeToggle.addEventListener('change', () => {
-            const isDarkMode = darkModeToggle.checked;
-            applyDarkMode(isDarkMode);
-            location.reload();
-        });
-
-        // Interactive MCQs toggle
-        interactiveMCQsToggle.addEventListener('change', () => {
-            updateInteractiveMCQs(interactiveMCQsToggle.checked);
-        });
-
-        
-    // Improved Interactive MCQs functions
-    function updateInteractiveMCQs(isEnabled) {
-        interactiveMCQsToggle.checked = isEnabled;
-        if (isEnabled) {
-            enableInteractiveMCQs();
-        } else {
-            disableInteractiveMCQs();
-        }
-        localStorage.setItem('interactiveMCQs', isEnabled ? 'enabled' : 'disabled');
-    }
-
-        function enableInteractiveMCQs() {
-            // Implement your logic to enable interactive MCQs
-            console.log('Interactive MCQs enabled');
-        }
-
-        function disableInteractiveMCQs() {
-            // Implement your logic to disable interactive MCQs
-            console.log('Interactive MCQs disabled');
-        }
-
-         // Improved change password functionality
-    changePasswordBtn.addEventListener('click', () => {
-        const newPassword = prompt('Enter new password:');
-        if (newPassword) {
-            const user = auth.currentUser;
-            updatePassword(user, newPassword).then(() => {
-                showToast('Password updated successfully!');
-            }).catch((error) => {
-                console.error('Error updating password:', error);
-                showError('Failed to update password. Please try again.');
+        // Utility functions
+        function setLoading(isLoading) {
+            loadingIndicator.style.display = isLoading ? 'block' : 'none';
+            const buttons = document.querySelectorAll('.btn');
+            buttons.forEach(button => {
+                button.disabled = isLoading;
             });
         }
-    });
 
-      // New toast message function
-    function showToast(message) {
-        toastElement.textContent = message;
-        toastElement.style.display = 'block';
-        setTimeout(() => {
-            toastElement.style.display = 'none';
-        }, 3000);
-    }
-        // Helper functions
-        
+        function showToast(message) {
+            toastElement.textContent = message;
+            toastElement.style.display = 'block';
+            setTimeout(() => {
+                toastElement.style.display = 'none';
+            }, 3000);
+        }
+
         function showError(message) {
             errorMessage.textContent = message;
             errorMessage.style.display = 'block';
-            successMessage.style.display = 'none';
+            setTimeout(() => {
+                errorMessage.style.display = 'none';
+            }, 5000);
         }
 
-        function showMessage(message, type) {
-            if (type === 'success') {
-                successMessage.textContent = message;
-                successMessage.style.display = 'block';
-                errorMessage.style.display = 'none';
-            } else {
-                showError(message);
+        function handleError(error) {
+            console.error('Error:', error);
+            let message = 'An unexpected error occurred. Please try again.';
+            if (error.code === 'auth/requires-recent-login') {
+                message = 'For security reasons, please log out and log in again to perform this action.';
+            } else if (error.code === 'auth/email-already-in-use') {
+                message = 'This email is already in use. Please use a different email address.';
             }
+            // Add more specific error messages as needed
+            showError(message);
         }
+
+        async function confirmAction(message) {
+            return new Promise((resolve) => {
+                const result = window.confirm(message);
+                resolve(result);
+            });
+        }
+
+        // Create account button functionality
+        createAccountButton.addEventListener('click', () => {
+            window.showAuthPopup();
+        });
+
+        // Debounce function for save
+        function debounce(func, delay) {
+            let timeoutId;
+            return (...args) => {
+                clearTimeout(timeoutId);
+                timeoutId = setTimeout(() => func(...args), delay);
+            };
+        }
+
+        const debouncedSave = debounce(async () => {
+            const user = auth.currentUser;
+            if (user && validateForm()) {
+                try {
+                    setLoading(true);
+                    await setDoc(doc(db, 'users', user.uid), {
+                        name: nameInput.value,
+                        age: parseInt(ageInput.value),
+                        gender: genderSelect.value,
+                        education: educationTextarea.value,
+                        goals: goalsTextarea.value,
+                        profileChangesCount: profileChangesCount + 1,
+                        lastChangeDate: new Date().toISOString().split('T')[0]
+                    });
+                    profileChangesCount++;
+                    showToast('Profile updated successfully!');
+                } catch (error) {
+                    handleError(error);
+                } finally {
+                    setLoading(false);
+                }
+            }
+        }, 500);
+
+        
+    
     </script>

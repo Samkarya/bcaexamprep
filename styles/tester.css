@@ -17,7 +17,105 @@ body .disclaimer{
 #ad-blocker-blocker{
 display:content;
 }
-  
+header {
+    background: #333;
+    color: #fff;
+    padding: 10px 20px;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+  }
+
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .nav-left, .nav-right {
+    display: flex;
+    align-items: center;
+  }
+
+  #blog-title {
+    margin-left: 20px;
+    font-size: 1.2em;
+  }
+
+  #blog-title a {
+    color: #fff;
+    text-decoration: none;
+  }
+
+  #menu-toggle, #search-filter-toggle {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1.5em;
+    cursor: pointer;
+  }
+
+  #account-toggle {
+    margin-left: 20px;
+  }
+
+  #search-filter-panel {
+    background: #f0f0f0;
+    padding: 20px;
+    transition: all 0.3s ease;
+  }
+
+  #search-filter-panel.hidden {
+    display: none;
+  }
+
+  .search-filter-row {
+    display: flex;
+    margin-bottom: 10px;
+  }
+
+  #search-query {
+    flex-grow: 1;
+    padding: 10px;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 4px 0 0 4px;
+  }
+
+  #search-filter-submit {
+    padding: 10px 20px;
+    background: #d32f2f;
+    color: #fff;
+    border: none;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+
+  #search-filter-submit:hover {
+    background: #b71c1c;
+  }
+
+  .filter-options {
+    display: flex;
+    gap: 10px;
+  }
+
+  .filter-options select {
+    flex-grow: 1;
+    padding: 10px;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+
+  @media (max-width: 768px) {
+    .filter-options {
+      flex-direction: column;
+    }
+  }  
 h1, h2, h3, h4, h5, h6 {
     line-height: 1.3; /* Adjusted line height for headings */
 }
@@ -30,10 +128,7 @@ h1, h2, h3, h4, h5, h6 {
   .fade-in.show {
     opacity: 1;
   }
-/* Header styles */
-.header {
-    padding-bottom: 30px;
-}
+
 
 .body.home-page .header {
     padding: 0px;
@@ -62,11 +157,6 @@ body.dark-mode .section {
         padding-right: 5%;
     }
 }
-#blog-title a{
-
-color:white;
-}
-
 /* Post title styling */
 body.item-view .post-title.entry-title {
     font-size: 24px;
@@ -118,88 +208,6 @@ body.item-view .post-title.entry-title {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Search Widget Styles */
-#BlogSearch1 {
-    display: block; /* Make sure the widget is visible */
-    position: relative;
-    background:  var(--widget-background-color); /* White background for the search bar */
-    padding-left: 10px;
-    padding-right: 10px; /* Padding for spacing inside the container */
-    border-radius: 8px; /* Rounded corners for a modern look */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for elevation */
-}
-
-#BlogSearch1 .widget-content {
-    display: flex;
-    align-items: center; /* Center the content vertically */
-}
-
-#BlogSearch1 input[type="text"] {
-    flex: 1; /* Make the input take up remaining space */
-    padding: 10px; /* Padding for a larger touch target */
-    border: 1px solid #ddd; /* Light border for definition */
-    border-radius: 5px 0 0 5px; /* Rounded corners, left side */
-    box-sizing: border-box; /* Include padding and border in element's total width and height */
-}
-
-#BlogSearch1 input[type="submit"] {
-    background-color: #d32f2f; /* Red background for the submit button */
-    color: #fff; /* White text color */
-    border: none; /* Remove border */
-    border-radius: 0 5px 5px 0; /* Rounded corners, right side */
-    padding: 10px 20px; /* Padding for a larger touch target */
-    cursor: pointer; /* Pointer cursor for interactive element */
-    transition: background-color 0.3s ease; /* Smooth transition for background color */
-}
-
-#BlogSearch1 input[type="submit"]:hover {
-    background-color: #b71c1c; /* Darker red on hover */
-}
-
-#BlogSearch1 input[type="text"]::placeholder {
-    color: #888; /* Placeholder text color */
-    font-style: italic; /* Italicize placeholder text */
-}
-
-/* Responsive Styles */
-@media (max-width: 768px) {
-    #BlogSearch1 {
-        padding-left: 8px;
-    padding-right: 8px; /* Reduce padding on smaller screens */
-    }
-
-    #BlogSearch1 .widget-content {
-        flex-direction: column; /* Stack elements vertically */
-    }
-
-    #BlogSearch1 input[type="text"],
-    #BlogSearch1 input[type="submit"] {
-        flex: none; /* Remove flex property */
-        width: 100%; /* Make elements full width */
-        margin: 5px 0; /* Add margin for spacing */
-    }
-
-    #BlogSearch1 input[type="text"] {
-        border-radius: 5px; /* Make border-radius uniform */
-    }
-
-    #BlogSearch1 input[type="submit"] {
-        border-radius: 5px; /* Make border-radius uniform */
-    }
-}
-
-@media (max-width: 480px) {
-    #BlogSearch1 input[type="text"],
-    #BlogSearch1 input[type="submit"] {
-        padding: 8px; /* Reduce padding further on very small screens */
-    }
-
-    #BlogSearch1 input[type="submit"] {
-        padding: 8px 15px; /* Adjust padding for submit button */
-    }
-}
-
-
 /* Root styles */
 :root {
     --background-color: #FFF;
@@ -243,22 +251,6 @@ a:active {
     text-decoration: underline;
 }
 
-/* Header Styles */
-header {
-    background: #333;
-    color: #fff;
-    padding: 10px 0;
-    position: fixed;
-    width: 100%;
-    top: 0;
-    z-index: 1000;
-}
-
-@media (max-width: 768px) {
-    header {
-        padding: 10px;
-    }
-}
 
 /* Progress Bar Styles */
 body.item-view #progress-container {
@@ -328,14 +320,7 @@ input:checked + .slider:before {
     transform: translateX(16px);
 }
 
-/* Navigation Styles */
-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 20px;
-     padding-top: 10px;
-}
+
 #account-toggle {
     display: flex;
     align-items: center;
@@ -412,34 +397,7 @@ body.dark-mode {
     margin-right: 10px;
 }
 
-/* Search Widget Styles */
-#search-widget {
-    display: none;
-    position: absolute;
-    top: 50px;
-    right: 20px;
-}
 
-#search-widget input[type="text"] {
-    padding: 8px;
-    border: none;
-    border-radius: 3px;
-    margin-right: 5px;
-}
-
-#search-widget input[type="submit"] {
-    background-color: #333;
-    color: #fff;
-    border: none;
-    border-radius: 3px;
-    padding: 8px 15px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-#search-widget input[type="submit"]:hover {
-    background-color: #555;
-}
 
 /* Hero styles */
 #hero {

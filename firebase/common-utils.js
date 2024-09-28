@@ -10,15 +10,6 @@ export const firebaseConfig = {
     appId: "1:666537879299:web:70401ac08f2a8dde42ab36",
     measurementId: "G-WWWFS9DPH9"
 };
-
-// Initialize Firebase App Check
-export function initializeAppCheck(app) {
-    return initializeAppCheck(app, {
-        provider: new ReCaptchaV3Provider('6LeER1AqAAAAABaic_YKxvN30vuPQPlMJfpS9e1L'),
-        isTokenAutoRefreshEnabled: true
-    });
-}
-
 // Toast notification
 export function showToast(message, type = 'info') {
     const toast = document.createElement('div');

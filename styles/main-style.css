@@ -14,7 +14,7 @@ body .disclaimer{
     display: none;
 }
 #ad-blocker-blocker{
-display:content;
+display:none;
 }
   header {
     background: #333;

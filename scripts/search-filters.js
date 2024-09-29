@@ -1,25 +1,33 @@
-// Function to apply search filters
-function applyFilters() {
-    // Get the search query and filter values
-    var searchQuery = document.getElementById('search-query').value.trim();
-    var subjectFilter = document.getElementById('subject-filter').value;
-    // Uncomment the lines below if additional filters are used
-    // var unitFilter = document.getElementById('unit-filter').value;
-    // var semesterFilter = document.getElementById('semester-filter').value;
-    var otherFilter = document.getElementById('other-filter').value;
+document.addEventListener('DOMContentLoaded', function() {
+    const searchFilterToggle = document.getElementById('filter-toggle');
+    const searchFilterPanel = document.getElementById('filter-widget');
+    const searchFilterForm = document.getElementById('filter-form');
 
-    // Create an array of filters and remove empty (falsey) values
-    var filters = [subjectFilter, otherFilter].filter(Boolean);
+    searchFilterToggle.addEventListener('click', function() {
+      searchFilterPanel.classList.toggle('hidden');
+    });
 
-    // Join the filters with a plus sign (+) for the search URL
-    var filterString = filters.join('+');
-    var searchUrl = 'https://bcaexamprep.blogspot.com/search/label/' + encodeURIComponent(filterString);
+    searchFilterForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const searchQuery = document.getElementById('search-query').value.trim();
+      const subjectFilter = document.getElementById('subject-filter').value;
+      const contentTypeFilter = document.getElementById('other-filter').value;
 
-    // If there is a search query, append it to the URL
-    if (searchQuery) {
-        searchUrl += '%20' + encodeURIComponent(searchQuery); // Use %20 for space
-    }
+      let searchUrl = 'https://bcaexamprep.blogspot.com/search?';
+      const params = new URLSearchParams();
 
-    // Redirect to the search URL with applied filters and query
-    window.location.href = searchUrl;
-}
+      if (searchQuery) {
+        params.append('q', searchQuery);
+      }
+
+      if (subjectFilter) {
+        params.append('label', subjectFilter);
+      }
+
+      if (contentTypeFilter) {
+        params.append('label', contentTypeFilter);
+      }
+
+      window.location.href = searchUrl + params.toString();
+    });
+  });

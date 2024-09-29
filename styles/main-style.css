@@ -1027,7 +1027,6 @@ padding: 20px;
 #filter-widget input[type="text"], textarea {
     width: 95%;
 }
-.filter-search,
 .filter-row select,
 .filter-btn {
     background: #555;
@@ -1057,7 +1056,6 @@ padding: 20px;
 }
 
 @media (max-width: 480px) {
-    .filter-search,
     .filter-row select,
     .filter-btn {
         padding: 8px;

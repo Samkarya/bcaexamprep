@@ -16,7 +16,9 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('menu-close').addEventListener('click', function() {
         document.getElementById('menu').style.display = 'none';
     });
-
+ document.getElementById('filter-toggle').addEventListener('click', function() {
+        toggleDisplay(document.getElementById('filter-widget'), 'contents');
+    });
    
     const readingTimeElement = document.getElementById('reading-time');
 

@@ -3,25 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const menuClose = document.getElementById('menu-close');
   const darkModeToggle = document.getElementById('dark-mode-toggle');
   const interactiveMCQButton = document.getElementById('toggle-interactive-mcq');
-// Run this when the DOM is fully loaded
 
-    updateInteractiveMCQButton();
-    
-    if (interactiveMCQButton) {
-        if (window.location.href.includes('mcqs.h')) {
-            interactiveMCQButton.style.display = 'block';
-            interactiveMCQButton.addEventListener('click', toggleInteractiveMCQs);
-            
-            // Initialize the state based on localStorage
-            if (interactiveEnabled) {
-                enableInteractiveMCQs();
-            } else {
-                disableInteractiveMCQs();
-            }
-        } else {
-            interactiveMCQButton.style.display = 'none';
-        }
-    }
   // Function to open sidebar
   function openSidebar() {
       sidebar.classList.add('active');

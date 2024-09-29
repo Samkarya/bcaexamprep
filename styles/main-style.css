@@ -513,7 +513,7 @@ body.dark-mode #animated-text{
         .social-links {
             flex: 1;
             min-width: 200px;
-            text-align: right;
+            text-align: center;
         }
 
         .social-links h3 {

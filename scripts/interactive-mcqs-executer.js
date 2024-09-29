@@ -13,14 +13,4 @@ document.addEventListener('DOMContentLoaded', function() {
         disableInteractiveMCQs();
         button.style.display = 'none';
     }
-
-    document.querySelectorAll('#contactusurl').forEach(element => {
-        element.addEventListener('click', () => {
-            document.getElementById('contact-popup-overlay').style.display = 'flex';
-        });
-    });
-
-    document.getElementById('closeForm').addEventListener('click', () => {
-        document.getElementById('contact-popup-overlay').style.display = 'none';
-    });
 });

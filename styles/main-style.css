@@ -500,14 +500,14 @@ body.dark-mode #animated-text{
             margin: 0 auto;
         }
 
-        .quick-links a !important{
+        .quick-links a {
             color: #fff;
             text-decoration: none;
             transition: color 0.3s ease;
         }
 
-        .quick-links a:hover !important{
-            color: #ffd700;
+        .quick-links a:hover {
+            color: #ffd700 !important;
         }
 
         .social-links {

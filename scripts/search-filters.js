@@ -3,9 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchFilterPanel = document.getElementById('filter-widget');
     const searchFilterForm = document.getElementById('filter-form');
 
-    searchFilterToggle.addEventListener('click', function() {
-      searchFilterPanel.classList.toggle('hidden');
-    });
+   
 
     searchFilterForm.addEventListener('submit', function(e) {
       e.preventDefault();

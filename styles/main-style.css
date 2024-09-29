@@ -494,20 +494,19 @@ body.dark-mode #animated-text{
         }
 
         .footer-content {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
+            display: block;
+            
             max-width: 1200px;
             margin: 0 auto;
         }
 
-        .quick-links a {
+        .quick-links a !important{
             color: #fff;
             text-decoration: none;
             transition: color 0.3s ease;
         }
 
-        .quick-links a:hover {
+        .quick-links a:hover !important{
             color: #ffd700;
         }
 

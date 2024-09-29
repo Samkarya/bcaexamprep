@@ -462,31 +462,103 @@ body.dark-mode #animated-text{
 }
 
 
-/* Footer styles */
-footer {
-    background: #333;
-    color: #fff;
-    text-align: center;
-    padding: 20px;
-}
-.social-links {
-    margin-top: 10px;
-}
+ /* Footer styles */
+        footer {
+            background: #333;
+            color: #fff;
+            padding: 40px 20px;
+            font-family: Arial, sans-serif;
+        }
+ @media (max-width: 600px) {
+            .quick-links {
+                flex-direction: column;
+                align-items: center;
+            }
 
-.quick-links a{
-    color: #fff;
-    text-decoration: none;
-    margin: 0 10px;
-}
+            .quick-links a {
+                margin: 5px 0;
+            }
+        }
+        .quick-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
 
+        .quick-links a {
+            color: #fff;
+            text-decoration: none;
+            margin: 5px 10px;
+            transition: color 0.3s ease;
+        }
 
-.social-links a img {
-    width: 24px;
-    height: 24px;
-    margin: 0 5px;
-    vertical-align: middle;
-}
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
 
+        .quick-links a {
+            color: #fff;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .quick-links a:hover {
+            color: #ffd700;
+        }
+
+        .social-links {
+            flex: 1;
+            min-width: 200px;
+            text-align: right;
+        }
+
+        .social-links h3 {
+            font-size: 1.2em;
+            margin-bottom: 15px;
+        }
+
+        .social-links a {
+            display: inline-block;
+            margin-left: 15px;
+        }
+
+        .social-links img {
+            width: 30px;
+            height: 30px;
+            transition: transform 0.3s ease;
+        }
+
+        .social-links img:hover {
+            transform: scale(1.1);
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #555;
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 768px) {
+            .footer-content {
+                flex-direction: column;
+            }
+
+            .quick-links, .social-links {
+                text-align: center;
+                margin-bottom: 30px;
+            }
+
+            .social-links a {
+                margin: 0 10px;
+            }
+        }
 #shareButton {
 	display: content;
     position: fixed;

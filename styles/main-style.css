@@ -572,78 +572,160 @@ body.dark-mode #animated-text{
     z-index: 1000; /* Ensures it stays on top of other elements */
 }
 
-/* Popup Styles */
+/* Enhanced CSS for Contact Form Popup */
 .contact-popup-overlay {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      justify-content: center;
-      align-items: center;
-  }
-  
-  .popup-content {
-      background: #fff;
-      padding: 20px;
-      border-radius: 8px;
-      max-width: 500px;
-      width: 100%;
-      text-align: -webkit-center;
-  }
-  
-  .contact-form-widget {
-      margin: 0;
-	  text-align: justify;
-  }
-  
-  input[type="text"], textarea {
-      width: 100%;
-      padding: 10px;
-      margin: 5px 0;
-      box-sizing: border-box;
-  }
-  
-  input[type="button"] {
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      padding: 0px 20px;
-      text-align: center;
-      text-decoration: none;
-      display: inline-block;
-      margin: 4px 2px;
-      cursor: pointer;
-  }
-  
-  input[type="button"]:hover {
-      background-color: #45a049;
-  }
-  
-  .contact-form-error-message, .contact-form-success-message {
-      color: red;
-      font-size: 12px;
-  }
-  
-  body.dark-mode .popup-content {
-      background: #333;
-      color: #fff;
-  }
-  
-  body.dark-mode  input[type="text"], body.dark-mode  textarea {
-      background: #555;
-      color: #fff;
-  }
-  
-  body.dark-mode  input[type="button"] {
-      background-color: #007BFF;
-  }
-  
-  body.dark-mode  input[type="button"]:hover {
-      background-color: #0056b3;
-  }
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.popup-content {
+    background: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    max-width: 500px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    transform: scale(0.9);
+    transition: all 0.3s ease;
+}
+
+.contact-popup-overlay.active {
+    opacity: 1;
+}
+
+.contact-popup-overlay.active .popup-content {
+    transform: scale(1);
+}
+
+.contact-form-widget {
+    margin: 0;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+}
+
+input[type="text"], textarea {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 16px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input[type="text"]:focus, textarea:focus {
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+    outline: none;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.contact-form-button-submit {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 10px 0;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.contact-form-button-submit:hover {
+    background-color: #45a049;
+}
+
+.contact-form-button-submit:active {
+    transform: scale(0.98);
+}
+
+.contact-form-error-message, .contact-form-success-message {
+    font-size: 14px;
+    margin-top: 10px;
+    text-align: center;
+}
+
+#closeForm {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin-top: 20px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+#closeForm:hover {
+    background-color: #d32f2f;
+}
+
+#closeForm:active {
+    transform: scale(0.98);
+}
+
+/* Dark mode styles */
+body.dark-mode .popup-content {
+    background: #333;
+    color: #fff;
+}
+
+body.dark-mode input[type="text"], body.dark-mode textarea {
+    background: #444;
+    color: #fff;
+    border-color: #555;
+}
+
+body.dark-mode input[type="text"]:focus, body.dark-mode textarea:focus {
+    border-color: #007BFF;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+}
+
+body.dark-mode .contact-form-button-submit {
+    background-color: #007BFF;
+}
+
+body.dark-mode .contact-form-button-submit:hover {
+    background-color: #0056b3;
+}
+
+body.dark-mode #closeForm {
+    background-color: #d32f2f;
+}
+
+body.dark-mode #closeForm:hover {
+    background-color: #b71c1c;
+}
+
+
 /* Post Styles for Home Page */
 body.feed-view .post-body{
     overflow: hidden; 

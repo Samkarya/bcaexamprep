@@ -1,38 +1,14 @@
 document.addEventListener('DOMContentLoaded', function() {
-  const sidebar = document.getElementById('menu');
-  const menuClose = document.getElementById('menu-close');
-  const darkModeToggle = document.getElementById('dark-mode-toggle');
-  const interactiveMCQButton = document.getElementById('toggle-interactive-mcq');
+    if (localStorage.getItem('darkMode') === 'enabled') {
+        document.body.classList.add('dark-mode');
+        document.getElementById('dark-mode-toggle').checked = true;
+    }
 
-  // Function to open sidebar
-  function openSidebar() {
-      sidebar.classList.add('active');
-  }
-
-  // Function to close sidebar
-  function closeSidebar() {
-      sidebar.classList.remove('active');
-  }
-
-  // Event listener for sidebar close
-  menuClose.addEventListener('click', closeSidebar);
-
-  // Close sidebar when clicking outside
-  document.addEventListener('click', function(event) {
-      if (!sidebar.contains(event.target) && !event.target.matches('#menu-open')) {
-          closeSidebar();
-      }
-  });
-  // Dark mode toggle
-  if (localStorage.getItem('darkMode') === 'enabled') {
-      document.body.classList.add('dark-mode');
-      darkModeToggle.checked = true;
-  }
-
-  darkModeToggle.addEventListener('change', function() {
-      document.body.classList.toggle('dark-mode', this.checked);
-      localStorage.setItem('darkMode', this.checked ? 'enabled' : 'disabled');
-  });
+    document.getElementById('dark-mode-toggle').addEventListener('change', function() {
+        document.body.classList.toggle('dark-mode', this.checked);
+        localStorage.setItem('darkMode', this.checked ? 'enabled' : 'disabled');
+        location.reload();
+    });
 
     const progressBar = document.querySelector('#progress-bar');
     const section = document.querySelector('#Blog-Post');

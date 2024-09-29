@@ -19,17 +19,16 @@ function calculateReadingTime() {
 let interactiveEnabled = localStorage.getItem("interactiveMCQs") === "true";
 updateInteractiveMCQButton();
 
-// Function to toggle interactive MCQs
 function toggleInteractiveMCQs() {
     interactiveEnabled = !interactiveEnabled;
     localStorage.setItem("interactiveMCQs", interactiveEnabled);
-updateInteractiveMCQButton();
-      if (interactiveEnabled) {
-          enableInteractiveMCQs();
-      } else {
-          disableInteractiveMCQs();
-      }
-  }
+    updateInteractiveMCQButton();
+    if (interactiveEnabled) {
+        enableInteractiveMCQs();
+    } else {
+        disableInteractiveMCQs();
+    }
+}
  function updateInteractiveMCQButton() {
       interactiveMCQButton.textContent = interactiveEnabled ? "Deactivate Interactive MCQs" : "Activate Interactive MCQs";
   }

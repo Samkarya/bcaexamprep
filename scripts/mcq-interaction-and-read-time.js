@@ -17,6 +17,7 @@ function calculateReadingTime() {
 
 // Manage interactive MCQs state using localStorage
 let interactiveEnabled = localStorage.getItem("interactiveMCQs") === "true";
+const interactiveMCQButton = document.getElementById('toggle-interactive-mcq');
 updateInteractiveMCQButton();
 
 function toggleInteractiveMCQs() {

@@ -17,22 +17,22 @@ function calculateReadingTime() {
 
 // Manage interactive MCQs state using localStorage
 let interactiveEnabled = localStorage.getItem("interactiveMCQs") === "true";
+updateInteractiveMCQButton();
 
 // Function to toggle interactive MCQs
 function toggleInteractiveMCQs() {
     interactiveEnabled = !interactiveEnabled;
     localStorage.setItem("interactiveMCQs", interactiveEnabled);
-
-    const button = document.querySelector(".interactivemcq-button");
-    if (interactiveEnabled) {
-        enableInteractiveMCQs();
-        button.textContent = "Deactivate Interactive MCQs";
-    } else {
-        disableInteractiveMCQs();
-        button.textContent = "Activate Interactive MCQs";
-    }
-}
-
+updateInteractiveMCQButton();
+      if (interactiveEnabled) {
+          enableInteractiveMCQs();
+      } else {
+          disableInteractiveMCQs();
+      }
+  }
+ function updateInteractiveMCQButton() {
+      interactiveMCQButton.textContent = interactiveEnabled ? "Deactivate Interactive MCQs" : "Activate Interactive MCQs";
+  }
 // Function to enable interactive MCQs
 function enableInteractiveMCQs() {
     document.querySelectorAll(".question-box").forEach((questionBox, questionIndex) => {

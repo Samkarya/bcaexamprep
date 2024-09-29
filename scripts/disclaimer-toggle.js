@@ -17,13 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('menu').style.display = 'none';
     });
 
-    document.getElementById('search-toggle').addEventListener('click', function() {
-        toggleDisplay(document.getElementById('search-widget'), 'block');
-    });
-
-    document.getElementById('filter-toggle').addEventListener('click', function() {
-        toggleDisplay(document.getElementById('filter-widget'), 'contents');
-    });
+   
     const readingTimeElement = document.getElementById('reading-time');
 
   if (readingTimeElement) {

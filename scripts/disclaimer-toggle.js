@@ -9,9 +9,13 @@ document.addEventListener('DOMContentLoaded', function() {
         element.style.display = (element.style.display === displayStyle) ? 'none' : displayStyle;
     }
 
-    document.getElementById('menu-open').addEventListener('click', openSidebar);
+    document.getElementById('menu-toggle').addEventListener('click', function() {
+        toggleDisplay(document.getElementById('menu'), 'flex');
+    });
 
-   
+    document.getElementById('menu-close').addEventListener('click', function() {
+        document.getElementById('menu').style.display = 'none';
+    });
  document.getElementById('filter-toggle').addEventListener('click', function() {
         toggleDisplay(document.getElementById('filter-widget'), 'contents');
     });

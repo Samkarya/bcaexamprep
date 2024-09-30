@@ -1,0 +1,280 @@
+/* Light Mode */
+.project-tool-container {
+    color: #333;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+}
+
+.project-tool-container .main {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 1rem;
+}
+
+.project-tool-container section {
+    background-color: #ffffff;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.project-tool-container h1, .project-tool-container h2, .project-tool-container h3 {
+    color: #4CAF50;
+}
+
+.project-tool-container .interactive-form .input-group {
+    display: block;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.project-tool-container label {
+    flex: 1 0 150px;
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.project-tool-container input {
+    flex: 2 0 200px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.project-tool-container button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.project-tool-container button:hover {
+    background-color: #45a049;
+}
+
+.project-tool-container .info-btn {
+    background-color: #007bff;
+    color: white;
+    font-size: 14px;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 35px;
+    text-align: center;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.project-tool-container .info-btn:hover {
+    background-color: #0056b3;
+}
+
+.project-tool-container .table-wrapper {
+    overflow-x: auto; /* Enables horizontal scrolling */
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on touch devices */
+    margin-bottom: 1rem;
+}
+
+.project-tool-container #steps-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    min-width: 700px; /* Ensure minimum width for small screens */
+}
+
+.project-tool-container #steps-table th, #steps-table td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+.project-tool-container #steps-table th {
+    background-color: #4CAF50;
+    color: white;
+    white-space: nowrap; /* Prevent header text from wrapping */
+}
+
+.project-tool-container #final-answer {
+    margin-top: 20px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #4CAF50;
+}
+
+.project-tool-container .graph-container {
+    margin-top: 2rem;
+    height: 400px; /* Fixed height for the graph */
+}
+
+.project-tool-container .modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.project-tool-container .modal-content {
+    background-color: #ffffff;
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 600px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.project-tool-container .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.project-tool-container .close:hover, .close:focus {
+    color: #333;
+}
+
+.project-tool-container .view-more-container {
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.project-tool-container .view-more-btn {
+    display: inline-block;
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.project-tool-container .view-more-btn:hover {
+    background-color: #45a049;
+}
+
+.project-tool-container .related-projects ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.project-tool-container .related-projects li {
+    margin-bottom: 10px;
+}
+
+.project-tool-container .related-projects a {
+    color: #4CAF50;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.project-tool-container .related-projects a:hover {
+    color: #45a049;
+}
+
+/* Dark Mode */
+.dark-mode .project-tool-container {
+    background-color: #121212;
+    color: #f0f0f0;
+}
+
+.dark-mode .project-tool-container section {
+    background-color: #1e1e1e;
+    box-shadow: 0px 4px 12px rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode .project-tool-container h1, .dark-mode .project-tool-container h2, .dark-mode .project-tool-container h3 {
+    color: #66bb6a;
+}
+
+.dark-mode .project-tool-container input {
+    background-color: #333;
+    color: #f0f0f0;
+    border-color: #555;
+}
+
+.dark-mode .project-tool-container #steps-table th {
+    background-color: #66bb6a;
+    color: white;
+}
+
+.dark-mode .project-tool-container #steps-table td, .dark-mode .project-tool-container #steps-table th {
+    border-color: #555;
+}
+
+.dark-mode .project-tool-container .modal-content {
+    background-color: #1e1e1e;
+}
+
+.dark-mode .project-tool-container .close:hover, .dark-mode .close:focus {
+    color: #f0f0f0;
+}
+
+.dark-mode .project-tool-container .view-more-btn {
+    background-color: #66bb6a;
+}
+
+.dark-mode .project-tool-container .view-more-btn:hover {
+    background-color: #81c784;
+}
+
+.dark-mode .project-tool-container .related-projects a {
+    color: #66bb6a;
+}
+
+.dark-mode .project-tool-container .related-projects a:hover {
+    color: #81c784;
+}
+
+/* Smooth transitions */
+.project-tool-container * {
+    transition: all 0.3s ease;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .project-tool-container .main {
+        padding: 1rem;
+    }
+
+    .project-tool-container .interactive-form .input-group {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .project-tool-container label {
+        margin-bottom: 5px;
+    }
+
+    .project-tool-container input {
+        width: 100%;
+    }
+
+    .project-tool-container section {
+        padding: 1rem;
+    }
+
+    .project-tool-container .table-wrapper {
+        margin-left: -1rem;
+        margin-right: -1rem;
+        padding: 0 1rem;
+    }
+
+    .project-tool-container #steps-table td, .project-tool-container #steps-table th {
+        padding: 8px;
+        font-size: 0.9rem;
+    }
+}

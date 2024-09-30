@@ -36,7 +36,7 @@ display:none;
 
   .nav-left, .nav-right {
     display: flex;
-    align-items: center;
+    align-items: flex-end;
   }
 
   #blog-title {
@@ -59,6 +59,7 @@ display:none;
 
   #account-toggle {
     margin-left: 20px;
+	  margin-right: 10px;
   }
 
   #filter-widget {

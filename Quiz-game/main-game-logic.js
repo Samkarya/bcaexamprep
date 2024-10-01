@@ -82,7 +82,7 @@ class QuizGame {
         this.currentQuestion = 0;
         this.score = 0;
         this.timer = null;
-        this.timeRemaining = GAME_CONFIG.defaultTimeLimit;
+        this.timeRemaining = null;
         this.currentSubject = null;
         this.questions = [];
         this.questionSets = new Map();
@@ -146,7 +146,7 @@ class QuizGame {
     }
      
         this.currentSubject = subject;
-        this.timeRemaining = parseInt(document.getElementById('timeSlider').value);
+        this.timeRemaining = parseInt(document.getElementById('timeDisplay').value)|| GAME_CONFIG.defaultTimeLimit;
         this.questions = this.loadQuestions(subject);
         this.currentQuestion = 0;
         this.score = 0;

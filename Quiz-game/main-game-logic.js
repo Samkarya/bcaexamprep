@@ -157,7 +157,7 @@ class QuizGame {
                 throw new Error(`No configuration found for subject: ${subjectId}`);
             }
 
-            const module = await import(`./questions/${subjectConfig.fileName}`);
+            const module = await import(`https://samkarya.github.io/mcq-data/${subjectConfig.fileName}`);
             const questions = module.default || module.questions;
 
             if (!Array.isArray(questions) || !questions.length) {

@@ -236,7 +236,7 @@ class QuizGame {
         question.options.forEach((option, index) => {
             const button = document.createElement('button');
             button.classList.add('option');
-            button.textContent = option; 
+            button.innerHTML = option; 
             button.dataset.index = index;
             button.addEventListener('click', () => this.checkAnswer(index));
             this.elements.optionsContainer.appendChild(button);

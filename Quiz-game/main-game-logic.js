@@ -228,13 +228,15 @@ class QuizGame {
             return;
         }
 
-        this.elements.questionElement.textContent = question.question;
+       // Render HTML content and MathJax in the question
+    this.elements.questionElement.innerHTML = question.question;
+    MathJax.typeset();  // Ensure MathJax renders the math code
         
         this.elements.optionsContainer.innerHTML = '';
         question.options.forEach((option, index) => {
             const button = document.createElement('button');
             button.classList.add('option');
-            button.textContent = option;
+            button.innerHTML = option;  // Render HTML in options
             button.dataset.index = index;
             button.addEventListener('click', () => this.checkAnswer(index));
             this.elements.optionsContainer.appendChild(button);
@@ -262,12 +264,12 @@ class QuizGame {
             this.elements.scoreElement.textContent = this.score;
         }
         
-        if (question.explanation) {
+        /*if (question.explanation) {
             const explanationDiv = document.createElement('div');
             explanationDiv.classList.add('explanation');
             explanationDiv.textContent = question.explanation;
             this.elements.optionsContainer.appendChild(explanationDiv);
-        }
+        }*/
 
         setTimeout(() => {
             this.currentQuestion++;

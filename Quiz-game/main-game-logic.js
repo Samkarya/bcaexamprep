@@ -1,7 +1,7 @@
 
 import { auth, db } from './auth-logic.js';
 import { getDoc, doc,collection, serverTimestamp, writeBatch } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
-import { LeaderboardManager } from './leaderboard.js';
+
 // Game settings
 const GAME_CONFIG = {
     defaultTimeLimit: 60,
@@ -86,8 +86,8 @@ class QuizGame {
         this.currentSubject = null;
         this.questions = [];
         this.questionSets = new Map();
-        this.leaderboardManager = new LeaderboardManager();
         
+        // DOM Elements
        // DOM Elements
         this.elements = {
             welcomeScreen: document.getElementById('welcomeScreen'),
@@ -360,9 +360,7 @@ class QuizGame {
         
         this.elements.resultScreen.style.display = 'none';
         document.getElementById('leaderboardScreen').style.display = 'block';
-        
-        // Call leaderboard display method
-        this.leaderboardManager.displayLeaderboard(); // Load and display leaderboard data
+        // Implement leaderboard data loading here
     }
 
     resetGame() {

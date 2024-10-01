@@ -1,5 +1,5 @@
 import { getFirestore, collection, query, where, orderBy, limit, getDocs } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
-import { auth, db } from './auth.js';
+import { auth, db } from './auth-logic.js';
 
 class LeaderboardManager {
     constructor() {

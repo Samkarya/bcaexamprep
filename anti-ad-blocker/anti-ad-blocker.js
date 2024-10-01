@@ -3,7 +3,7 @@
           o = n.head;
     const adMessage = document.getElementById('adblock-message');
     const secMessage = document.getElementById('secondary-message');
-    const widget_anti_ad = document.getElementbyId('ad-blocker-blocker');
+    const widget_anti_ad = document.getElementById('ad-blocker-blocker');
 
     var t = "pointer-events: none; height: 1px; width: 0; opacity: 0; visibility: hidden; position: fixed; bottom: 0;";
     const a = n.createElement("div"),

@@ -1,3 +1,6 @@
+import { getFirestore, collection, query, where, orderBy, limit, getDocs } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
+import { auth, db } from './auth.js';
+
 class LeaderboardManager {
     constructor() {
         this.leaderboardList = document.getElementById('leaderboardList');
@@ -6,20 +9,24 @@ class LeaderboardManager {
     }
 
     async fetchLeaderboardData() {
-        let query = firebase.firestore().collection('gameHistory')
-            .orderBy('score', 'desc')
-            .limit(100);
+        const gameHistoryRef = collection(db, 'gameHistory');
+        let queryConstraints = [
+            orderBy('score', 'desc'),
+            limit(100)
+        ];
 
         if (this.subjectFilter !== 'All') {
-            query = query.where('subject', '==', this.subjectFilter);
+            queryConstraints.push(where('subject', '==', this.subjectFilter));
         }
 
         if (this.timeFilter !== 'all-time') {
             const cutoffDate = this.getTimeFilterDate();
-            query = query.where('timestamp', '>=', cutoffDate);
+            queryConstraints.push(where('timestamp', '>=', cutoffDate));
         }
 
-        const snapshot = await query.get();
+        const q = query(gameHistoryRef, ...queryConstraints);
+        const snapshot = await getDocs(q);
+        
         return snapshot.docs.map(doc => ({
             id: doc.id,
             ...doc.data()

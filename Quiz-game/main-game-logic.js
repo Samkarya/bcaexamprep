@@ -158,7 +158,7 @@ class QuizGame {
             }
 
             const module = await import(`https://samkarya.github.io/mcq-data/${subjectConfig.fileName}`);
-            const questions = module.default || module.mcqs;
+            const questions = module.default || module.questions;
 
             if (!Array.isArray(questions) || !questions.length) {
                 throw new Error(`Invalid questions format in ${subjectConfig.fileName}`);

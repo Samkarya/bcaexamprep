@@ -1,5 +1,5 @@
 
-import { auth, db } from './auth.js';
+import { auth, db } from './auth-logic.js';
 import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
 
 // Game settings

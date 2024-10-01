@@ -192,7 +192,75 @@
     border: 1px solid #ccc;
     border-radius: 4px;
 }
+/* Leaderboard Styling */
+.quiz-game-container .leaderboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
 
+.quiz-game-container .leaderboard-table th,
+.quiz-game-container .leaderboard-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.quiz-game-container .leaderboard-table th {
+    background-color: #1a73e8;
+    color: white;
+}
+
+.quiz-game-container .leaderboard-table tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+/* Button Styling */
+.quiz-game-container .action-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.quiz-game-container #playAgainBtn {
+    background-color: #34a853;
+    color: white;
+}
+
+.quiz-game-container #viewLeaderboardBtn {
+    background-color: #1a73e8;
+    color: white;
+    margin-left: 10px;
+}
+
+.quiz-game-container #backToMenuBtn {
+    background-color: #ea4335;
+    color: white;
+}
+
+.quiz-game-container .action-button:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
+
+/* Time Selection Styling */
+.quiz-game-container .time-selection {
+    margin-top: 20px;
+}
+
+.quiz-game-container .time-slider {
+    width: 100%;
+    margin-top: 10px;
+}
+
+.quiz-game-container .time-display {
+    text-align: center;
+    font-size: 18px;
+    margin-top: 10px;
+}
 /* Responsive design */
 @media (max-width: 600px) {
     .quiz-game-container .options-container {

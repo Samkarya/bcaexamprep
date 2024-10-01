@@ -297,20 +297,34 @@ class QuizGame {
    async saveGameData(gameData) {
     if (auth.currentUser) {
         try {
-            // Save to Firestore
+
+            //create a reference to user's document 
+            const userDocRef = doc(db, 'users' auth.currentUser.uid);
+            //get user documents
+            const userDoc = await getDoc(userDocRef);
+
+             if (!userDoc.exists()) {
+                // Create user document if it doesn't exist
+                await setDoc(userDocRef, {
+                    gameHistory: [],
+                    displayName: auth.currentUser.displayName || 'Anonymous User',
+                    email: auth.currentUser.email
+                });
+            }
+            
+              // Add new game to gameHistory collection
             const gameHistoryRef = collection(db, 'gameHistory');
             await addDoc(gameHistoryRef, {
                 userId: auth.currentUser.uid,
                 ...gameData,
                 timestamp: serverTimestamp()
             });
+            
         } catch (error) {
             console.error('Error saving game data to Firestore:', error);
-            // Fallback to localStorage if Firestore save fails
             this.saveToLocalStorage(gameData);
         }
     } else {
-        // Save to localStorage
         this.saveToLocalStorage(gameData);
     }
 }

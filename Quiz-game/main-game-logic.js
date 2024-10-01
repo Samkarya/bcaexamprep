@@ -1,6 +1,6 @@
 
 import { auth, db } from './auth-logic.js';
-import { getDoc, doc, setDoc ,collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
+import { getDoc, doc,collection, serverTimestamp, writeBatch } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
 
 // Game settings
 const GAME_CONFIG = {
@@ -88,28 +88,29 @@ class QuizGame {
         this.questionSets = new Map();
         
         // DOM Elements
-        this.welcomeScreen = document.getElementById('welcomeScreen');
-        this.gameScreen = document.getElementById('gameScreen');
-        this.resultScreen = document.getElementById('resultScreen');
-        this.questionElement = document.getElementById('question');
-        this.optionsContainer = document.getElementById('options');
-        this.scoreElement = document.getElementById('scoreValue');
-        this.timerElement = document.getElementById('timerValue');
-        this.subjectButtons = document.getElementById('subjectButtons');
+       // DOM Elements
+        this.elements = {
+            welcomeScreen: document.getElementById('welcomeScreen'),
+            gameScreen: document.getElementById('gameScreen'),
+            resultScreen: document.getElementById('resultScreen'),
+            questionElement: document.getElementById('question'),
+            optionsContainer: document.getElementById('options'),
+            scoreElement: document.getElementById('scoreValue'),
+            timerElement: document.getElementById('timerValue'),
+            subjectButtons: document.getElementById('subjectButtons'),
+            timeSlider: document.getElementById('timeSlider'),
+            timeDisplay: document.getElementById('timeDisplay')
+        };
         
         this.initializeSubjects();
         this.initializeTimeSelection();
         this.setupEventListeners();
     }
 
-    
     initializeTimeSelection() {
-        const timeSlider = document.getElementById('timeSlider');
-        const timeDisplay = document.getElementById('timeDisplay');
-        
-        timeSlider.addEventListener('input', (e) => {
+        this.elements.timeSlider.addEventListener('input', (e) => {
             const seconds = e.target.value;
-            timeDisplay.textContent = `${seconds} seconds`;
+            this.elements.timeDisplay.textContent = `${seconds} seconds`;
         });
     }
     
@@ -118,10 +119,12 @@ class QuizGame {
             const button = document.createElement('button');
             button.classList.add('subject-btn');
             button.dataset.subjectId = subject.id;
+            button.setAttribute('aria-label', `Start ${subject.name} quiz`);
             
             const icon = document.createElement('span');
             icon.textContent = subject.icon;
             icon.classList.add('subject-icon');
+            icon.setAttribute('aria-hidden', 'true');
             
             const name = document.createElement('span');
             name.textContent = subject.name;
@@ -129,13 +132,14 @@ class QuizGame {
             const difficulty = document.createElement('span');
             difficulty.textContent = '⭐'.repeat(subject.difficulty);
             difficulty.classList.add('difficulty');
+            difficulty.setAttribute('aria-label', `Difficulty: ${subject.difficulty} out of 5`);
             
             button.appendChild(icon);
             button.appendChild(name);
             button.appendChild(difficulty);
             
             button.addEventListener('click', () => this.startGame(subject.id));
-            this.subjectButtons.appendChild(button);
+            this.elements.subjectButtons.appendChild(button);
         });
     }
 
@@ -158,6 +162,12 @@ class QuizGame {
                 throw new Error(`No configuration found for subject: ${subjectId}`);
             }
 
+            // Using a predefined list of allowed file names for security
+            const allowedFiles = GAME_CONFIG.subjects.map(subject => subject.fileName);
+            if (!allowedFiles.includes(subjectConfig.fileName)) {
+                throw new Error(`Invalid file name: ${subjectConfig.fileName}`);
+            }
+
             const module = await import(`https://samkarya.github.io/mcq-data/${subjectConfig.fileName}`);
             const questions = module.default || module.mcqs;
 
@@ -175,15 +185,10 @@ class QuizGame {
     }
 
     shuffleQuestions(questions) {
-        const shuffled = [...questions];
-        for (let i = shuffled.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-        }
-        return shuffled;
+        return [...questions].sort(() => Math.random() - 0.5);
     }
 
-      getFallbackQuestions(subjectId) {
+     getFallbackQuestions(subjectId) {
         const subject = getSubjectConfig(subjectId);
         return [{
             question: `Sample question for ${subject.name}`,
@@ -195,28 +200,27 @@ class QuizGame {
   
          
        async startGame(subjectId) {
-           if (!auth.currentUser) {
-            const proceed = confirm('You need to be logged in to save your score and compete on the leaderboard. Continue as guest?');
+        if (!auth.currentUser) {
+            const proceed = await this.showConfirmDialog('You need to be logged in to save your score and compete on the leaderboard. Continue as guest?');
             if (!proceed) return;
         }
         this.currentSubject = subjectId;
         const subject = getSubjectConfig(subjectId);
-        this.timeRemaining = parseInt(document.getElementById('timeDisplay').value)|| GAME_CONFIG.defaultTimeLimit;
+        this.timeRemaining = parseInt(this.elements.timeSlider.value) || GAME_CONFIG.defaultTimeLimit;
         this.questions = await this.loadQuestions(subjectId);
         this.currentQuestion = 0;
         this.score = 0;
         
+        this.elements.welcomeScreen.style.display = 'none';
+        this.elements.gameScreen.style.display = 'block';
         
-        this.welcomeScreen.style.display = 'none';
-        this.gameScreen.style.display = 'block';
-        
-        // Update UI with subject info
         document.getElementById('currentSubject').textContent = subject.name;
         document.getElementById('subjectIcon').textContent = subject.icon;
         
         this.startTimer();
         this.displayQuestion();
     }
+
     displayQuestion() {
         const question = this.questions[this.currentQuestion];
         if (!question) {
@@ -224,16 +228,16 @@ class QuizGame {
             return;
         }
 
-        this.questionElement.textContent = question.question;
+        this.elements.questionElement.textContent = question.question;
         
-        this.optionsContainer.innerHTML = '';
+        this.elements.optionsContainer.innerHTML = '';
         question.options.forEach((option, index) => {
             const button = document.createElement('button');
             button.classList.add('option');
             button.textContent = option;
             button.dataset.index = index;
             button.addEventListener('click', () => this.checkAnswer(index));
-            this.optionsContainer.appendChild(button);
+            this.elements.optionsContainer.appendChild(button);
         });
     }
 
@@ -242,8 +246,7 @@ class QuizGame {
         const correctLetter = question.answer.split('.')[0].trim();
         const correctIndex = 'ABCD'.indexOf(correctLetter);
         
-        // Disable all options
-        const options = this.optionsContainer.querySelectorAll('.option');
+        const options = this.elements.optionsContainer.querySelectorAll('.option');
         options.forEach(option => {
             option.disabled = true;
             const index = parseInt(option.dataset.index);
@@ -255,19 +258,17 @@ class QuizGame {
         });
 
         if (selectedIndex === correctIndex) {
-            this.score += 10;
-            this.scoreElement.textContent = this.score;
+            this.score += GAME_CONFIG.pointsPerCorrectAnswer;
+            this.elements.scoreElement.textContent = this.score;
         }
         
-        // Show explanation if available
         if (question.explanation) {
             const explanationDiv = document.createElement('div');
             explanationDiv.classList.add('explanation');
             explanationDiv.textContent = question.explanation;
-            this.optionsContainer.appendChild(explanationDiv);
+            this.elements.optionsContainer.appendChild(explanationDiv);
         }
 
-        // Wait before moving to next question
         setTimeout(() => {
             this.currentQuestion++;
             if (this.currentQuestion < this.questions.length) {
@@ -278,15 +279,15 @@ class QuizGame {
         }, 2000);
     }
 
- startTimer() {
-    this.timer = setInterval(() => {
-      this.timeRemaining--;
-      this.timerElement.textContent = this.timeRemaining;
-      if (this.timeRemaining <= 0) {
-        this.endGame();
-      }
-    }, 1000);
-  }
+    startTimer() {
+        this.timer = setInterval(() => {
+            this.timeRemaining--;
+            this.elements.timerElement.textContent = this.timeRemaining;
+            if (this.timeRemaining <= 0) {
+                this.endGame();
+            }
+        }, 1000);
+    }
 
     endGame() {
         clearInterval(this.timer);
@@ -294,80 +295,97 @@ class QuizGame {
         const gameData = {
             subject: this.currentSubject,
             score: this.score,
-            timeTaken: 60 - this.timeRemaining
+            timeTaken: GAME_CONFIG.defaultTimeLimit - this.timeRemaining
         };
         
         this.saveGameData(gameData);
         this.showResultScreen(gameData);
     }
 
-   async saveGameData(gameData) {
-    if (auth.currentUser) {
-        try {
+    async saveGameData(gameData) {
+        if (auth.currentUser) {
+            try {
+                const batch = writeBatch(db);
 
-            //create a reference to user's document 
-            const userDocRef = doc(db, 'users', auth.currentUser.uid);
-            //get user documents
-            const userDoc = await getDoc(userDocRef);
+                const userDocRef = doc(db, 'users', auth.currentUser.uid);
+                const userDoc = await getDoc(userDocRef);
 
-             if (!userDoc.exists()) {
-                // Create user document if it doesn't exist
-                await setDoc(userDocRef, {
-                    gameHistory: [],
-                    displayName: auth.currentUser.displayName || 'Anonymous User',
-                    email: auth.currentUser.email
+                if (!userDoc.exists()) {
+                    batch.set(userDocRef, {
+                        gameHistory: [],
+                        displayName: auth.currentUser.displayName || 'Anonymous User',
+                        email: auth.currentUser.email
+                    });
+                }
+                
+                const gameHistoryRef = doc(collection(db, 'gameHistory'));
+                batch.set(gameHistoryRef, {
+                    userId: auth.currentUser.uid,
+                    ...gameData,
+                    timestamp: serverTimestamp()
                 });
+
+                await batch.commit();
+            } catch (error) {
+                console.error('Error saving game data to Firestore:', error);
+                this.saveToLocalStorage(gameData);
             }
-            
-              // Add new game to gameHistory collection
-            const gameHistoryRef = collection(db, 'gameHistory');
-            await addDoc(gameHistoryRef, {
-                userId: auth.currentUser.uid,
-                ...gameData,
-                timestamp: serverTimestamp()
-            });
-            
-        } catch (error) {
-            console.error('Error saving game data to Firestore:', error);
+        } else {
             this.saveToLocalStorage(gameData);
         }
-    } else {
-        this.saveToLocalStorage(gameData);
     }
-}
 
-// Helper method to save to localStorage
-saveToLocalStorage(gameData) {
-    const localGameHistory = JSON.parse(localStorage.getItem('gameHistory') || '[]');
-    localGameHistory.push({
-        ...gameData,
-        timestamp: new Date().toISOString()
-    });
-    localStorage.setItem('gameHistory', JSON.stringify(localGameHistory));
-}
+    saveToLocalStorage(gameData) {
+        const localGameHistory = JSON.parse(localStorage.getItem('gameHistory') || '[]');
+        localGameHistory.push({
+            ...gameData,
+            timestamp: new Date().toISOString()
+        });
+        localStorage.setItem('gameHistory', JSON.stringify(localGameHistory));
+    }
 
     showResultScreen(gameData) {
-        this.gameScreen.style.display = 'none';
-        this.resultScreen.style.display = 'block';
+        this.elements.gameScreen.style.display = 'none';
+        this.elements.resultScreen.style.display = 'block';
         
         document.getElementById('finalScore').textContent = gameData.score;
         document.getElementById('timeTaken').textContent = gameData.timeTaken + 's';
     }
 
-    showLeaderboard() {
+    async showLeaderboard() {
         if (!auth.currentUser) {
-            alert('Please sign in to view the leaderboard!');
+            await this.showAlert('Please sign in to view the leaderboard!');
             return;
         }
         
-        this.resultScreen.style.display = 'none';
+        this.elements.resultScreen.style.display = 'none';
         document.getElementById('leaderboardScreen').style.display = 'block';
-        // Trigger leaderboard data load
+        // Implement leaderboard data loading here
     }
 
     resetGame() {
-        this.resultScreen.style.display = 'none';
+        this.elements.resultScreen.style.display = 'none';
         this.startGame(this.currentSubject);
+    }
+
+    showWelcomeScreen() {
+        this.elements.resultScreen.style.display = 'none';
+        this.elements.welcomeScreen.style.display = 'block';
+    }
+
+    // Utility methods for better user interaction
+    showAlert(message) {
+        return new Promise(resolve => {
+            alert(message);
+            resolve();
+        });
+    }
+
+    showConfirmDialog(message) {
+        return new Promise(resolve => {
+            const result = confirm(message);
+            resolve(result);
+        });
     }
 }
 

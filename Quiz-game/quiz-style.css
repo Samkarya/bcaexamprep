@@ -128,6 +128,15 @@
     gap: 1rem;
     margin-top: 1rem;
 }
+.quiz-game-container .option.correct {
+    background-color: #28a745;  /* Green */
+    color: white;
+}
+
+.quiz-game-container .option.incorrect {
+    background-color: #dc3545;  /* Red */
+    color: white;
+}
 
 .quiz-game-container .option {
     padding: 1rem;

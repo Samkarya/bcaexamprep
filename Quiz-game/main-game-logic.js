@@ -230,7 +230,7 @@ class QuizGame {
 
        // Render HTML content and MathJax in the question
     this.elements.questionElement.innerHTML = question.question;
-    MathJax.typeset();  // Ensure MathJax renders the math code
+    
         
         this.elements.optionsContainer.innerHTML = '';
         question.options.forEach((option, index) => {

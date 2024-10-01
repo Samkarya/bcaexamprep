@@ -145,19 +145,7 @@ class QuizGame {
         document.getElementById('backToMenuBtn').addEventListener('click', () => this.showWelcomeScreen());
     }
      
-        this.currentSubject = subject;
-        this.timeRemaining = parseInt(document.getElementById('timeDisplay').value)|| GAME_CONFIG.defaultTimeLimit;
-        this.questions = this.loadQuestions(subject);
-        this.currentQuestion = 0;
-        this.score = 0;
-        
-        
-        this.welcomeScreen.style.display = 'none';
-        this.gameScreen.style.display = 'block';
-        
-        this.startTimer();
-        this.displayQuestion();
-    }
+       
 
      async loadQuestions(subjectId) {
         try {
@@ -213,11 +201,11 @@ class QuizGame {
         }
         this.currentSubject = subjectId;
         const subject = getSubjectConfig(subjectId);
-        
+        this.timeRemaining = parseInt(document.getElementById('timeDisplay').value)|| GAME_CONFIG.defaultTimeLimit;
         this.questions = await this.loadQuestions(subjectId);
         this.currentQuestion = 0;
         this.score = 0;
-        this.timeRemaining = GAME_CONFIG.defaultTimeLimit;
+        
         
         this.welcomeScreen.style.display = 'none';
         this.gameScreen.style.display = 'block';

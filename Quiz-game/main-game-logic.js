@@ -232,7 +232,8 @@ class QuizGame {
 
     checkAnswer(selectedIndex) {
         const question = this.questions[this.currentQuestion];
-        const correctIndex = 'ABCD'.indexOf(question.answer.charAt(0));
+        const correctLetter = question.answer.split('.')[0].trim();
+        const correctIndex = 'ABCD'.indexOf(correctLetter);
         
         // Disable all options
         const options = this.optionsContainer.querySelectorAll('.option');

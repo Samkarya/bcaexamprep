@@ -318,7 +318,7 @@ class QuizGame {
         try {
 
             //create a reference to user's document 
-            const userDocRef = doc(db, 'users' auth.currentUser.uid);
+            const userDocRef = doc(db, 'users', auth.currentUser.uid);
             //get user documents
             const userDoc = await getDoc(userDocRef);
 

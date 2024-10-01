@@ -7,14 +7,14 @@ class AuthManager {
 
     initializeFirebase() {
         // Initialize Firebase with your config
-        const firebaseConfig = {firebaseConfig = {
+        const firebaseConfig = {firebaseConfig : {
     apiKey: "AIzaSyAF4vkip75_XV74EP6vf_TrsnbRbQur1iQ",
     authDomain: "bcaexamprep-auth-project.firebaseapp.com",
     projectId: "bcaexamprep-auth-project",
     storageBucket: "bcaexamprep-auth-project.appspot.com",
     messagingSenderId: "666537879299",
     appId: "1:666537879299:web:70401ac08f2a8dde42ab36",
-    measurementId: "G-WWWFS9DPH9"};
+    measurementId: "G-WWWFS9DPH9"}};
         firebase.initializeApp(firebaseConfig);
     }
 

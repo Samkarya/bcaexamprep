@@ -376,7 +376,7 @@ saveToLocalStorage(gameData) {
         document.getElementById('leaderboardScreen').style.display = 'block';
         // Trigger leaderboard data load
     }
-}
+
     resetGame() {
         this.resultScreen.style.display = 'none';
         this.startGame(this.currentSubject);

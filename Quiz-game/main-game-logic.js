@@ -234,7 +234,7 @@ class QuizGame {
         
         this.elements.optionsContainer.innerHTML = '';
         question.options.forEach((option, index) => {
-            const button = document.createElement('button');
+            const button = document.createElement('div');
             button.classList.add('option');
             button.innerHTML = option;  // Render HTML in options
             button.dataset.index = index;

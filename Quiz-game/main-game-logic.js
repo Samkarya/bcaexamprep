@@ -158,7 +158,7 @@ class QuizGame {
             }
 
             const module = await import(`https://samkarya.github.io/mcq-data/${subjectConfig.fileName}`);
-            const questions = module.default || module.questions;
+            const questions = module.default || module.mcqs;
 
             if (!Array.isArray(questions) || !questions.length) {
                 throw new Error(`Invalid questions format in ${subjectConfig.fileName}`);
@@ -271,7 +271,15 @@ class QuizGame {
         }, 2000);
     }
 
-
+ startTimer() {
+    this.timer = setInterval(() => {
+      this.timeRemaining--;
+      this.timerElement.textContent = this.timeRemaining;
+      if (this.timeRemaining <= 0) {
+        this.endGame();
+      }
+    }, 1000);
+  }
 
     endGame() {
         clearInterval(this.timer);

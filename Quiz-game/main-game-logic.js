@@ -10,32 +10,50 @@ const GAME_CONFIG = {
         wrongAnswer: 5
     },
     subjects: [
-        {
-            id: 'math',
-            name: 'Mathematics',
-            icon: '✏️',
-            difficulty: 1
-        },
-        {
-            id: 'science',
-            name: 'Science',
-            icon: '🔬',
-            difficulty: 2
-        },
-        {
-            id: 'history',
-            name: 'History',
-            icon: '📚',
-            difficulty: 2
-        },
-        {
-            id: 'geography',
-            name: 'Geography',
-            icon: '🌍',
-            difficulty: 1
-        }
-    ]
-};
+    {
+        id: 'c_programming',
+        name: 'C Programming',
+        icon: '💻',
+        difficulty: 2
+    },
+    {
+        id: 'digital_electronics',
+        name: 'Digital Electronics',
+        icon: '🔌',
+        difficulty: 3
+    },
+    {
+        id: 'computer_graphics',
+        name: 'Computer Graphics',
+        icon: '🎨',
+        difficulty: 2
+    },
+    {
+        id: 'operating_system',
+        name: 'Operating System',
+        icon: '🖥️',
+        difficulty: 4
+    },
+    {
+        id: 'software_engineering',
+        name: 'Software Engineering',
+        icon: '🔧',
+        difficulty: 3
+    },
+    {
+        id: 'optimization_techniques',
+        name: 'Optimization Techniques',
+        icon: '📈',
+        difficulty: 4
+    },
+    {
+        id: 'graph_theory',
+        name: 'Graph Theory',
+        icon: '📊',
+        difficulty: 3
+    }
+]
+        };
 
 class QuizGame {
     constructor() {

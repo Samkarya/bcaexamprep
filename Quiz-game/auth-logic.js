@@ -1,21 +1,23 @@
+// Import Firebase modules
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
+import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
+import { initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app-check.js";
+import { firebaseConfig } from "https://samkarya.github.io/bcaexamprep/firebase/common-utils.js";
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const auth = getAuth();
+const db = getFirestore(app);
+const appCheck = initializeAppCheck(app, {
+    provider: new ReCaptchaV3Provider('6LeER1AqAAAAABaic_YKxvN30vuPQPlMJfpS9e1L'),
+    isTokenAutoRefreshEnabled: true
+});
+
 class AuthManager {
     constructor() {
-        this.initializeFirebase();
         this.setupAuthUI();
         this.setupAuthListeners();
-    }
-
-    initializeFirebase() {
-        // Initialize Firebase with your config
-        const firebaseConfig = {firebaseConfig : {
-    apiKey: "AIzaSyAF4vkip75_XV74EP6vf_TrsnbRbQur1iQ",
-    authDomain: "bcaexamprep-auth-project.firebaseapp.com",
-    projectId: "bcaexamprep-auth-project",
-    storageBucket: "bcaexamprep-auth-project.appspot.com",
-    messagingSenderId: "666537879299",
-    appId: "1:666537879299:web:70401ac08f2a8dde42ab36",
-    measurementId: "G-WWWFS9DPH9"}};
-        firebase.initializeApp(firebaseConfig);
     }
 
     setupAuthUI() {
@@ -35,7 +37,6 @@ class AuthManager {
             });
         });
 
-        // Close modals when clicking outside
         window.addEventListener('click', (e) => {
             if (e.target === this.loginModal) this.loginModal.style.display = 'none';
             if (e.target === this.signupModal) this.signupModal.style.display = 'none';
@@ -50,7 +51,7 @@ class AuthManager {
         this.loginForm.addEventListener('submit', (e) => this.handleLogin(e));
         this.signupForm.addEventListener('submit', (e) => this.handleSignup(e));
 
-        firebase.auth().onAuthStateChanged(user => this.handleAuthStateChange(user));
+        onAuthStateChanged(auth, user => this.handleAuthStateChange(user));
     }
 
     handleLogin(e) {
@@ -58,7 +59,7 @@ class AuthManager {
         const email = e.target.querySelector('input[type="email"]').value;
         const password = e.target.querySelector('input[type="password"]').value;
 
-        firebase.auth().signInWithEmailAndPassword(email, password)
+        signInWithEmailAndPassword(auth, email, password)
             .then(() => {
                 this.loginModal.style.display = 'none';
                 this.syncLocalData();
@@ -72,7 +73,7 @@ class AuthManager {
         const password = e.target.querySelector('input[type="password"]').value;
         const username = e.target.querySelector('input[type="text"]').value;
 
-        firebase.auth().createUserWithEmailAndPassword(email, password)
+        createUserWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 return userCredential.user.updateProfile({
                     displayName: username
@@ -98,33 +99,27 @@ class AuthManager {
     }
 
     logout() {
-        firebase.auth().signOut()
+        signOut(auth)
             .then(() => {
                 // Handle any UI updates after logout
             })
             .catch(error => alert(error.message));
     }
 
-    syncLocalData() {
+    async syncLocalData() {
         const localGameHistory = JSON.parse(localStorage.getItem('gameHistory') || '[]');
-        if (localGameHistory.length > 0) {
-            const batch = firebase.firestore().batch();
-            const userRef = firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid);
-            
-            localGameHistory.forEach(game => {
-                const gameRef = firebase.firestore().collection('gameHistory').doc();
-                batch.set(gameRef, {
-                    ...game,
-                    userId: firebase.auth().currentUser.uid
-                });
-            });
-
-            batch.commit()
-                .then(() => {
-                    localStorage.removeItem('gameHistory');
-                    console.log('Local data synced successfully');
-                })
-                .catch(error => console.error('Error syncing local data:', error));
+        if (localGameHistory.length > 0 && auth.currentUser) {
+            try {
+                const userDocRef = doc(db, 'users', auth.currentUser.uid);
+                await setDoc(userDocRef, {
+                    gameHistory: localGameHistory
+                }, { merge: true });
+                
+                localStorage.removeItem('gameHistory');
+                console.log('Local data synced successfully');
+            } catch (error) {
+                console.error('Error syncing local data:', error);
+            }
         }
     }
 }
@@ -133,3 +128,5 @@ class AuthManager {
 document.addEventListener('DOMContentLoaded', () => {
     const authManager = new AuthManager();
 });
+
+export { auth, db };

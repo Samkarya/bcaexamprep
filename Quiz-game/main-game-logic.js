@@ -367,12 +367,6 @@ saveToLocalStorage(gameData) {
     }
 
     showLeaderboard() {
-        this.resultScreen.style.display = 'none';
-        document.getElementById('leaderboardScreen').style.display = 'block';
-        // Leaderboard logic will be implemented in leaderboard.js
-    }
-
-    showLeaderboard() {
         if (!auth.currentUser) {
             alert('Please sign in to view the leaderboard!');
             return;

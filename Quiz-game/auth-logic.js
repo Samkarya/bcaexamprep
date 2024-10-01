@@ -14,8 +14,7 @@ class AuthManager {
     storageBucket: "bcaexamprep-auth-project.appspot.com",
     messagingSenderId: "666537879299",
     appId: "1:666537879299:web:70401ac08f2a8dde42ab36",
-    measurementId: "G-WWWFS9DPH9"
-};
+    measurementId: "G-WWWFS9DPH9"};
         firebase.initializeApp(firebaseConfig);
     }
 

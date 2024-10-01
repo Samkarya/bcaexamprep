@@ -51,7 +51,7 @@ const CONFIG = {
         difficulty: 3
     }
 ],
-    firebaseConfig = {
+    firebaseConfig : {
     apiKey: "AIzaSyAF4vkip75_XV74EP6vf_TrsnbRbQur1iQ",
     authDomain: "bcaexamprep-auth-project.firebaseapp.com",
     projectId: "bcaexamprep-auth-project",

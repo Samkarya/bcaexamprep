@@ -59,6 +59,7 @@ const CONFIG = {
     messagingSenderId: "666537879299",
     appId: "1:666537879299:web:70401ac08f2a8dde42ab36",
     measurementId: "G-WWWFS9DPH9"
+}
 };
 
 // Export the configuration

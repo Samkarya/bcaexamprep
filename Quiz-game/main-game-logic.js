@@ -1,6 +1,6 @@
 
 import { auth, db } from './auth-logic.js';
-import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
+import { getDoc, doc, setDoc ,collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
 
 // Game settings
 const GAME_CONFIG = {
@@ -144,19 +144,13 @@ class QuizGame {
         document.getElementById('viewLeaderboardBtn').addEventListener('click', () => this.showLeaderboard());
         document.getElementById('backToMenuBtn').addEventListener('click', () => this.showWelcomeScreen());
     }
-
-    startGame(subject) {
-         if (!auth.currentUser) {
-            const proceed = confirm('You need to be logged in to save your score and compete on the leaderboard. Continue as guest?');
-            if (!proceed) return;
-        }
-        
+     
         this.currentSubject = subject;
         this.timeRemaining = parseInt(document.getElementById('timeSlider').value);
         this.questions = this.loadQuestions(subject);
         this.currentQuestion = 0;
         this.score = 0;
-        this.timeRemaining = 60;
+        
         
         this.welcomeScreen.style.display = 'none';
         this.gameScreen.style.display = 'block';
@@ -210,7 +204,13 @@ class QuizGame {
             explanation: "This is a fallback question. The actual questions failed to load."
         }];
     }
+  
+         
        async startGame(subjectId) {
+           if (!auth.currentUser) {
+            const proceed = confirm('You need to be logged in to save your score and compete on the leaderboard. Continue as guest?');
+            if (!proceed) return;
+        }
         this.currentSubject = subjectId;
         const subject = getSubjectConfig(subjectId);
         

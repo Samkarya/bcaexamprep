@@ -54,6 +54,16 @@ const GAME_CONFIG = {
     }
 ]
         };
+// Map subject names to file names
+const SUBJECT_FILE_MAP = {
+    'C Programming': 'c-prog-mcqs.js',
+    'Computer Graphics': 'cgma-mcqs.js',
+    'Digital Electronics': 'decomcqs.js',
+    'Graph Theory': 'graph-theory-mcqs.js',
+    'Operating Systems': 'os-mcqs.js',
+    'Software Engineering': 'software-engineering-mcqs.js',
+    'Optimization Research': 'optimization-research-mcqs.js'
+};
 
 class QuizGame {
     constructor() {
@@ -76,6 +86,9 @@ class QuizGame {
         
         this.initializeSubjects();
         this.setupEventListeners();
+        
+        // Add property to store loaded question sets
+        this.questionSets = new Map();
     }
     initializeSubjects() {
         const subjects = ['C Programming', 'Digital Electronics', 'Computer Graphics', 'Operating System', 'Software Engineering', 'Optimization Techniquies', 'Graph Theory'];
@@ -108,21 +121,81 @@ class QuizGame {
         this.displayQuestion();
     }
 
-    loadQuestions(subject) {
-        // In a real implementation, this would load from your subject-specific JS files
-        // For now, we'll return a dummy question
+    async loadQuestions(subject) {
+         try {
+            // Check if questions are already loaded
+            if (this.questionSets.has(subject)) {
+                return this.questionSets.get(subject);
+            }
+
+            // Get the corresponding file name
+            const fileName = SUBJECT_FILE_MAP[subject];
+            if (!fileName) {
+                throw new Error(`No question file found for subject: ${subject}`);
+            }
+
+            // Dynamically import the question file
+            const module = await import(`https://samkarya.github.io/mcq-data/${fileName}`);
+            const questions = module.default || module.questions;
+
+            // Validate questions format
+            if (!Array.isArray(questions) || !questions.length) {
+                throw new Error(`Invalid questions format in ${fileName}`);
+            }
+
+            // Store questions for future use
+            this.questionSets.set(subject, questions);
+
+            // Shuffle questions
+            return this.shuffleQuestions(questions);
+
+        } catch (error) {
+            console.error('Error loading questions:', error);
+            return this.getFallbackQuestions(subject);
+        }
+    }
+
+    shuffleQuestions(questions) {
+        const shuffled = [...questions];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        return shuffled;
+    }
+
+    getFallbackQuestions(subject) {
         return [
             {
-                question: "Sample question for " + subject,
+                question: `Sample question for ${subject}`,
                 options: ['Option 1', 'Option 2', 'Option 3', 'Option 4'],
-                answer: "B. Option 2",
-                explanation: "This is an explanation"
+                answer: "B",
+                explanation: "This is a fallback question. The actual questions failed to load."
             }
         ];
     }
 
+      async startGame(subject) {
+        this.currentSubject = subject;
+        this.questions = await this.loadQuestions(subject);
+        this.currentQuestion = 0;
+        this.score = 0;
+        this.timeRemaining = GAME_CONFIG.defaultTimeLimit;
+        
+        this.welcomeScreen.style.display = 'none';
+        this.gameScreen.style.display = 'block';
+        
+        this.startTimer();
+        this.displayQuestion();
+    }
+
     displayQuestion() {
         const question = this.questions[this.currentQuestion];
+        if (!question) {
+            this.endGame();
+            return;
+        }
+
         this.questionElement.textContent = question.question;
         
         this.optionsContainer.innerHTML = '';
@@ -130,6 +203,7 @@ class QuizGame {
             const button = document.createElement('button');
             button.classList.add('option');
             button.textContent = option;
+            button.dataset.index = index;
             button.addEventListener('click', () => this.checkAnswer(index));
             this.optionsContainer.appendChild(button);
         });
@@ -137,31 +211,45 @@ class QuizGame {
 
     checkAnswer(selectedIndex) {
         const question = this.questions[this.currentQuestion];
-        const correctIndex = question.answer.charAt(0).toUpperCase().charCodeAt(0) - 65;
+        const correctIndex = 'ABCD'.indexOf(question.answer.charAt(0));
         
+        // Disable all options
+        const options = this.optionsContainer.querySelectorAll('.option');
+        options.forEach(option => {
+            option.disabled = true;
+            const index = parseInt(option.dataset.index);
+            if (index === correctIndex) {
+                option.classList.add('correct');
+            } else if (index === selectedIndex) {
+                option.classList.add('incorrect');
+            }
+        });
+
         if (selectedIndex === correctIndex) {
             this.score += 10;
             this.scoreElement.textContent = this.score;
         }
         
-        this.currentQuestion++;
-        if (this.currentQuestion < this.questions.length) {
-            this.displayQuestion();
-        } else {
-            this.endGame();
+        // Show explanation if available
+        if (question.explanation) {
+            const explanationDiv = document.createElement('div');
+            explanationDiv.classList.add('explanation');
+            explanationDiv.textContent = question.explanation;
+            this.optionsContainer.appendChild(explanationDiv);
         }
-    }
 
-    startTimer() {
-        this.timer = setInterval(() => {
-            this.timeRemaining--;
-            this.timerElement.textContent = this.timeRemaining;
-            
-            if (this.timeRemaining <= 0) {
+        // Wait before moving to next question
+        setTimeout(() => {
+            this.currentQuestion++;
+            if (this.currentQuestion < this.questions.length) {
+                this.displayQuestion();
+            } else {
                 this.endGame();
             }
-        }, 1000);
+        }, 2000);
     }
+
+
 
     endGame() {
         clearInterval(this.timer);

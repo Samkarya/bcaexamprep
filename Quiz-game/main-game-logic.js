@@ -10,50 +10,62 @@ const GAME_CONFIG = {
         wrongAnswer: 5
     },
     subjects: [
-    {
-        id: 'c_programming',
-        name: 'C Programming',
-        icon: '💻',
-        difficulty: 2
-    },
-    {
-        id: 'digital_electronics',
-        name: 'Digital Electronics',
-        icon: '🔌',
-        difficulty: 3
-    },
-    {
-        id: 'computer_graphics',
-        name: 'Computer Graphics',
-        icon: '🎨',
-        difficulty: 2
-    },
-    {
-        id: 'operating_system',
-        name: 'Operating System',
-        icon: '🖥️',
-        difficulty: 4
-    },
-    {
-        id: 'software_engineering',
-        name: 'Software Engineering',
-        icon: '🔧',
-        difficulty: 3
-    },
-    {
-        id: 'optimization_techniques',
-        name: 'Optimization Techniques',
-        icon: '📈',
-        difficulty: 4
-    },
-    {
-        id: 'graph_theory',
-        name: 'Graph Theory',
-        icon: '📊',
-        difficulty: 3
-    }
-]
-        };
+        {
+            id: 'c_programming',
+            name: 'C Programming',
+            icon: '💻',
+            difficulty: 2,
+            fileName: 'c-prog-mcqs.js'
+        },
+        {
+            id: 'digital_electronics',
+            name: 'Digital Electronics',
+            icon: '🔌',
+            difficulty: 3,
+            fileName: 'decomcqs.js'
+        },
+        {
+            id: 'computer_graphics',
+            name: 'Computer Graphics',
+            icon: '🎨',
+            difficulty: 2,
+            fileName: 'cgma-mcqs.js'
+        },
+        {
+            id: 'operating_system',
+            name: 'Operating System',
+            icon: '🖥️',
+            difficulty: 4,
+            fileName: 'os-mcqs.js'
+        },
+        {
+            id: 'software_engineering',
+            name: 'Software Engineering',
+            icon: '🔧',
+            difficulty: 3,
+            fileName: 'software-engineering-mcqs.js'
+        },
+        {
+            id: 'optimization_techniques',
+            name: 'Optimization Techniques',
+            icon: '📈',
+            difficulty: 4,
+            fileName: 'optimization-research-mcqs.js'
+        },
+        {
+            id: 'graph_theory',
+            name: 'Graph Theory',
+            icon: '📊',
+            difficulty: 3,
+            fileName: 'graph-theory-mcqs.js'
+        }
+    ]
+};
+
+// Helper function to find subject config by ID
+function getSubjectConfig(subjectId) {
+    return GAME_CONFIG.subjects.find(subject => subject.id === subjectId);
+}
 // Map subject names to file names
 const SUBJECT_FILE_MAP = {
     'C Programming': 'c-prog-mcqs.js',
@@ -73,6 +85,7 @@ class QuizGame {
         this.timeRemaining = GAME_CONFIG.defaultTimeLimit;
         this.currentSubject = null;
         this.questions = [];
+        this.questionSets = new Map();
         
         // DOM Elements
         this.welcomeScreen = document.getElementById('welcomeScreen');
@@ -86,17 +99,29 @@ class QuizGame {
         
         this.initializeSubjects();
         this.setupEventListeners();
-        
-        // Add property to store loaded question sets
-        this.questionSets = new Map();
     }
-    initializeSubjects() {
-        const subjects = ['C Programming', 'Digital Electronics', 'Computer Graphics', 'Operating System', 'Software Engineering', 'Optimization Techniquies', 'Graph Theory'];
-        subjects.forEach(subject => {
-            const button = document.createElement('button'); 
+     initializeSubjects() {
+        GAME_CONFIG.subjects.forEach(subject => {
+            const button = document.createElement('button');
             button.classList.add('subject-btn');
-            button.textContent = subject;
-            button.addEventListener('click', () => this.startGame(subject));
+            button.dataset.subjectId = subject.id;
+            
+            const icon = document.createElement('span');
+            icon.textContent = subject.icon;
+            icon.classList.add('subject-icon');
+            
+            const name = document.createElement('span');
+            name.textContent = subject.name;
+            
+            const difficulty = document.createElement('span');
+            difficulty.textContent = '⭐'.repeat(subject.difficulty);
+            difficulty.classList.add('difficulty');
+            
+            button.appendChild(icon);
+            button.appendChild(name);
+            button.appendChild(difficulty);
+            
+            button.addEventListener('click', () => this.startGame(subject.id));
             this.subjectButtons.appendChild(button);
         });
     }
@@ -121,37 +146,30 @@ class QuizGame {
         this.displayQuestion();
     }
 
-    async loadQuestions(subject) {
-         try {
-            // Check if questions are already loaded
-            if (this.questionSets.has(subject)) {
-                return this.questionSets.get(subject);
+     async loadQuestions(subjectId) {
+        try {
+            if (this.questionSets.has(subjectId)) {
+                return this.questionSets.get(subjectId);
             }
 
-            // Get the corresponding file name
-            const fileName = SUBJECT_FILE_MAP[subject];
-            if (!fileName) {
-                throw new Error(`No question file found for subject: ${subject}`);
+            const subjectConfig = getSubjectConfig(subjectId);
+            if (!subjectConfig) {
+                throw new Error(`No configuration found for subject: ${subjectId}`);
             }
 
-            // Dynamically import the question file
-            const module = await import(`https://samkarya.github.io/mcq-data/${fileName}`);
+            const module = await import(`./questions/${subjectConfig.fileName}`);
             const questions = module.default || module.questions;
 
-            // Validate questions format
             if (!Array.isArray(questions) || !questions.length) {
-                throw new Error(`Invalid questions format in ${fileName}`);
+                throw new Error(`Invalid questions format in ${subjectConfig.fileName}`);
             }
 
-            // Store questions for future use
-            this.questionSets.set(subject, questions);
-
-            // Shuffle questions
+            this.questionSets.set(subjectId, questions);
             return this.shuffleQuestions(questions);
 
         } catch (error) {
             console.error('Error loading questions:', error);
-            return this.getFallbackQuestions(subject);
+            return this.getFallbackQuestions(subjectId);
         }
     }
 
@@ -164,20 +182,20 @@ class QuizGame {
         return shuffled;
     }
 
-    getFallbackQuestions(subject) {
-        return [
-            {
-                question: `Sample question for ${subject}`,
-                options: ['Option 1', 'Option 2', 'Option 3', 'Option 4'],
-                answer: "B",
-                explanation: "This is a fallback question. The actual questions failed to load."
-            }
-        ];
+      getFallbackQuestions(subjectId) {
+        const subject = getSubjectConfig(subjectId);
+        return [{
+            question: `Sample question for ${subject.name}`,
+            options: ['Option 1', 'Option 2', 'Option 3', 'Option 4'],
+            answer: "A",
+            explanation: "This is a fallback question. The actual questions failed to load."
+        }];
     }
-
-      async startGame(subject) {
-        this.currentSubject = subject;
-        this.questions = await this.loadQuestions(subject);
+       async startGame(subjectId) {
+        this.currentSubject = subjectId;
+        const subject = getSubjectConfig(subjectId);
+        
+        this.questions = await this.loadQuestions(subjectId);
         this.currentQuestion = 0;
         this.score = 0;
         this.timeRemaining = GAME_CONFIG.defaultTimeLimit;
@@ -185,10 +203,13 @@ class QuizGame {
         this.welcomeScreen.style.display = 'none';
         this.gameScreen.style.display = 'block';
         
+        // Update UI with subject info
+        document.getElementById('currentSubject').textContent = subject.name;
+        document.getElementById('subjectIcon').textContent = subject.icon;
+        
         this.startTimer();
         this.displayQuestion();
     }
-
     displayQuestion() {
         const question = this.questions[this.currentQuestion];
         if (!question) {

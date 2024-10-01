@@ -98,8 +98,21 @@ class QuizGame {
         this.subjectButtons = document.getElementById('subjectButtons');
         
         this.initializeSubjects();
+        this.initializeTimeSelection();
         this.setupEventListeners();
     }
+
+    
+    initializeTimeSelection() {
+        const timeSlider = document.getElementById('timeSlider');
+        const timeDisplay = document.getElementById('timeDisplay');
+        
+        timeSlider.addEventListener('input', (e) => {
+            const seconds = e.target.value;
+            timeDisplay.textContent = `${seconds} seconds`;
+        });
+    }
+    
      initializeSubjects() {
         GAME_CONFIG.subjects.forEach(subject => {
             const button = document.createElement('button');
@@ -133,7 +146,13 @@ class QuizGame {
     }
 
     startGame(subject) {
+         if (!auth.currentUser) {
+            const proceed = confirm('You need to be logged in to save your score and compete on the leaderboard. Continue as guest?');
+            if (!proceed) return;
+        }
+        
         this.currentSubject = subject;
+        this.timeRemaining = parseInt(document.getElementById('timeSlider').value);
         this.questions = this.loadQuestions(subject);
         this.currentQuestion = 0;
         this.score = 0;
@@ -353,11 +372,17 @@ saveToLocalStorage(gameData) {
         // Leaderboard logic will be implemented in leaderboard.js
     }
 
-    showWelcomeScreen() {
-        document.getElementById('leaderboardScreen').style.display = 'none';
-        this.welcomeScreen.style.display = 'block';
+    showLeaderboard() {
+        if (!auth.currentUser) {
+            alert('Please sign in to view the leaderboard!');
+            return;
+        }
+        
+        this.resultScreen.style.display = 'none';
+        document.getElementById('leaderboardScreen').style.display = 'block';
+        // Trigger leaderboard data load
     }
-
+}
     resetGame() {
         this.resultScreen.style.display = 'none';
         this.startGame(this.currentSubject);

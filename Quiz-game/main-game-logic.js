@@ -1,9 +1,48 @@
+
+import { auth, db } from './auth.js';
+import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
+
+// Game settings
+const GAME_CONFIG = {
+    defaultTimeLimit: 60,
+    pointsPerCorrectAnswer: 10,
+    penalties: {
+        wrongAnswer: 5
+    },
+    subjects: [
+        {
+            id: 'math',
+            name: 'Mathematics',
+            icon: '✏️',
+            difficulty: 1
+        },
+        {
+            id: 'science',
+            name: 'Science',
+            icon: '🔬',
+            difficulty: 2
+        },
+        {
+            id: 'history',
+            name: 'History',
+            icon: '📚',
+            difficulty: 2
+        },
+        {
+            id: 'geography',
+            name: 'Geography',
+            icon: '🌍',
+            difficulty: 1
+        }
+    ]
+};
+
 class QuizGame {
     constructor() {
         this.currentQuestion = 0;
         this.score = 0;
         this.timer = null;
-        this.timeRemaining = 60;
+        this.timeRemaining = GAME_CONFIG.defaultTimeLimit;
         this.currentSubject = null;
         this.questions = [];
         
@@ -20,7 +59,6 @@ class QuizGame {
         this.initializeSubjects();
         this.setupEventListeners();
     }
-
     initializeSubjects() {
         const subjects = ['C Programming', 'Digital Electronics', 'Computer Graphics', 'Operating System', 'Software Engineering', 'Optimization Techniquies', 'Graph Theory'];
         subjects.forEach(subject => {
@@ -120,24 +158,36 @@ class QuizGame {
         this.showResultScreen(gameData);
     }
 
-    saveGameData(gameData) {
-        if (firebase.auth().currentUser) {
+   async saveGameData(gameData) {
+    if (auth.currentUser) {
+        try {
             // Save to Firestore
-            firebase.firestore().collection('gameHistory').add({
-                userId: firebase.auth().currentUser.uid,
+            const gameHistoryRef = collection(db, 'gameHistory');
+            await addDoc(gameHistoryRef, {
+                userId: auth.currentUser.uid,
                 ...gameData,
-                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                timestamp: serverTimestamp()
             });
-        } else {
-            // Save to localStorage
-            const localGameHistory = JSON.parse(localStorage.getItem('gameHistory') || '[]');
-            localGameHistory.push({
-                ...gameData,
-                timestamp: new Date().toISOString()
-            });
-            localStorage.setItem('gameHistory', JSON.stringify(localGameHistory));
+        } catch (error) {
+            console.error('Error saving game data to Firestore:', error);
+            // Fallback to localStorage if Firestore save fails
+            this.saveToLocalStorage(gameData);
         }
+    } else {
+        // Save to localStorage
+        this.saveToLocalStorage(gameData);
     }
+}
+
+// Helper method to save to localStorage
+saveToLocalStorage(gameData) {
+    const localGameHistory = JSON.parse(localStorage.getItem('gameHistory') || '[]');
+    localGameHistory.push({
+        ...gameData,
+        timestamp: new Date().toISOString()
+    });
+    localStorage.setItem('gameHistory', JSON.stringify(localGameHistory));
+}
 
     showResultScreen(gameData) {
         this.gameScreen.style.display = 'none';

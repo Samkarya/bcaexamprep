@@ -1,0 +1,142 @@
+    /* Light Mode */
+    .tools-page-container {
+        max-width: 1200px;
+        margin: 0 auto;
+       
+    }
+
+    .tools-page-container .header {
+        background-color: #1e88e5; /* Primary Color */
+        padding: 20px 0px;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .tools-page-container .header h1 {
+        color: #ffffff; /* Secondary Color */
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+    }
+
+    .tools-page-container .header p {
+        color: #ffffff; /* Secondary Color */
+        opacity: 0.8;
+        font-size: 1.1rem;
+    }
+
+    .tools-page-container .project-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+    }
+
+    .tools-page-container .project-card {
+        background-color: #f5f5f5; /* Card Background */
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Card Shadow */
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .tools-page-container .project-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    }
+
+    .tools-page-container .project-card img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
+
+    .tools-page-container .project-info {
+        padding: 1.5rem;
+    }
+
+    .tools-page-container .project-info h3 {
+        margin-bottom: 0.5rem;
+        font-size: 1.4rem;
+        color: #1e88e5; /* Accent Color */
+    }
+
+    .tools-page-container .project-info p {
+        margin-bottom: 1rem;
+        font-size: 1rem;
+        color: #333; /* Text Color */
+    }
+
+    .tools-page-container .tech-stack {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .tools-page-container .tech-tag {
+        background-color: #1e88e5; /* Accent Color */
+        color: #ffffff; /* Tag Text Color */
+        padding: 0.2rem 0.5rem;
+        border-radius: 15px;
+        font-size: 0.8rem;
+    }
+
+    .tools-page-container .button {
+        display: inline-block;
+        padding: 0.6rem 1.2rem;
+        background-color: #1e88e5; /* Button Color */
+        color: #ffffff; /* Button Text Color */
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+        font-weight: bold;
+    }
+
+    .tools-page-container .button:hover {
+        background-color: #0056b3; /* Hover Color */
+    }
+
+    /* Dark Mode */
+    .dark-mode .tools-page-container .header {
+        background-color: #0d47a1; /* Dark Primary Color */
+    }
+
+    .dark-mode .tools-page-container .header h1,
+    .dark-mode .tools-page-container .header p {
+        color: #ffffff; /* Secondary Text in Dark Mode */
+    }
+
+    .dark-mode .tools-page-container .project-card {
+        background-color: #424242; /* Dark Card Background */
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25); /* Dark Card Shadow */
+    }
+
+    .dark-mode .tools-page-container .project-info h3 {
+        color: #90caf9; /* Dark Accent Color */
+    }
+
+    .dark-mode .tools-page-container .project-info p {
+        color: #e0e0e0; /* Dark Text Color */
+    }
+
+    .dark-mode .tools-page-container .tech-tag {
+        background-color: #90caf9; /* Dark Tech Tag Color */
+        color: #212121; /* Dark Tag Text */
+    }
+
+    .dark-mode .tools-page-container .button {
+        background-color: #1976d2; /* Dark Button Color */
+    }
+
+    .dark-mode .tools-page-container .button:hover {
+        background-color: #0056b3; /* Dark Hover Color */
+    }
+
+    @media (max-width: 768px) {
+        .tools-page-container .project-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+  .post-title.entry-title, .post-header
+  {
+   display:none; 
+  }

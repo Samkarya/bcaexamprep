@@ -1,0 +1,162 @@
+          .post-header, .post-title.entry-title{
+    display:none;
+  }
+        .ac-dash .auth-container-dash {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .ac-dash h1, .ac-dash h2 {
+            color: #333;
+        }
+        .ac-dash .section {
+            background-color: #f4f4f4;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .ac-dash .form-group {
+            margin-bottom: 15px;
+        }
+        .ac-dash label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .ac-dash input[type="text"],
+        .ac-dash input[type="number"],
+        .ac-dash select,
+        .ac-dash textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .ac-dash .btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .ac-dash .btn-save {
+            background-color: #007BFF;
+            color: white;
+        }
+        .ac-dash .btn-cancel {
+            background-color: #dc3545;
+            color: white;
+        }
+        .ac-dash .verify-email {
+            display: inline-block;
+            margin-top: 10px;
+            color: #007BFF;
+            cursor: pointer;
+        }
+        
+        .ac-dash #loading-indicator {
+            text-align: center;
+            margin-top: 20px;
+            display: none;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 600px) {
+            .ac-dash .auth-container-dash {
+                padding: 10px;
+            }
+            .ac-dash .btn {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+        
+        .dark-mode .ac-dash .section {
+            background-color: #444;
+        }
+        .dark-mode .ac-dash h1, .dark-mode .ac-dash h2 {
+            color: #fff;
+        }
+        .dark-mode .ac-dash input[type="text"],
+        .dark-mode .ac-dash input[type="number"],
+        .dark-mode .ac-dash select,
+        .dark-mode .ac-dash textarea {
+            background-color: #555;
+            color: #fff;
+            border-color: #666;
+        }
+       
+       .ac-dash .education-entry {
+        border: 1px solid #ddd;
+        padding: 15px;
+        margin-bottom: 15px;
+        border-radius: 4px;
+        background-color: #f9f9f9;
+    }
+
+    .ac-dash .education-entry input,
+    .ac-dash .education-entry textarea {
+        width: calc(100% - 16px);
+        margin-bottom: 10px;
+    }
+
+    .ac-dash .btn-remove-education {
+        background-color: #dc3545;
+        color: white;
+        padding: 5px 10px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    .ac-dash .btn-add-education {
+        background-color: #28a745;
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        margin-top: 10px;
+    }
+
+    /* Responsive design for education fields */
+    @media (max-width: 600px) {
+        .ac-dash .education-entry {
+            padding: 10px;
+        }
+
+        .ac-dash .education-entry input,
+        .ac-dash .education-entry textarea {
+            font-size: 14px;
+        }
+
+        .ac-dash .btn-remove-education,
+        .ac-dash .btn-add-education {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+    }
+
+    /* Dark mode styles for education fields */
+    .dark-mode .ac-dash .education-entry {
+        background-color: #3a3a3a;
+        border-color: #555;
+    }
+
+    .dark-mode .ac-dash .education-entry input,
+    .dark-mode .ac-dash .education-entry textarea {
+        background-color: #444;
+        color: #fff;
+        border-color: #666;
+    }
+
+    .dark-mode .ac-dash .btn-remove-education {
+        background-color: #c82333;
+    }
+
+    .dark-mode .ac-dash .btn-add-education {
+        background-color: #218838;
+    }

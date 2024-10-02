@@ -1,1 +1,91 @@
+#Featured-Post {
+  position: fixed;
+  bottom: 8%;
+  right: 5%;
+  width: 300px;
+  max-width: 90%; /* Make sure it's responsive on smaller screens */
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  z-index: 1001;
+  display: none;
+  transition: all 0.3s ease-in-out;
+}
 
+#Featured-Post.active {
+  display: block;
+}
+
+#Featured-Post h2 {
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+#Featured-Post h3 a {
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: bold;
+  color: #007BFF;
+}
+
+#Featured-Post h3 a:hover {
+  color: #0056b3;
+}
+
+#Featured-Post p {
+  font-size: 14px;
+  color: #666;
+  margin: 10px 0;
+}
+
+#Featured-Post img {
+  width: 100%;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+#Featured-Post .close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 28px; /* Increased font size */
+  font-weight: bold;
+  cursor: pointer;
+  color: #ff0000; /* Changed color to bright red */
+  transition: color 0.2s ease;
+}
+
+#Featured-Post .close-btn:hover {
+  color: #cc0000; /* Darker red on hover for contrast */
+}
+
+
+/* Adjustments for smaller screens */
+@media (max-width: 768px) {
+  #Featured-Post {
+    right: 2%;
+    width: 90%; /* Take more space on small screens */
+  }
+}
+
+@media (max-width: 480px) {
+  #Featured-Post {
+    right: 2%;
+    bottom: 5%;
+    width: 100%; /* Full width on very small screens */
+  }
+
+  #Featured-Post h2 {
+    font-size: 16px;
+  }
+
+  #Featured-Post h3 a {
+    font-size: 14px;
+  }
+
+  #Featured-Post p {
+    font-size: 12px;
+  }
+}

@@ -282,6 +282,119 @@
         grid-template-columns: 1fr;
     }
 }
+.dark-mode .quiz-game-container {
+    background-color: #121212;
+    color: #e0e0e0;
+}
+
+.dark-mode .quiz-game-container .header {
+    background-color: #1e1e1e;
+    box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode .quiz-game-container .logo {
+    color: #64b5f6;
+}
+
+.dark-mode .quiz-game-container .subject-btn {
+    background-color: #2196f3;
+    color: #e0e0e0;
+    box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode .quiz-game-container .subject-btn:hover {
+    background-color: #1976d2;
+}
+
+.dark-mode .quiz-game-container .difficulty {
+    color: #ffd54f;
+}
+
+.dark-mode .quiz-game-container .auth-buttons button {
+    color: #e0e0e0;
+}
+
+.dark-mode .quiz-game-container #loginBtn {
+    background-color: #2196f3;
+}
+
+.dark-mode .quiz-game-container #signupBtn {
+    background-color: #4caf50;
+}
+
+.dark-mode .quiz-game-container #logoutBtn {
+    background-color: #f44336;
+}
+
+.dark-mode .quiz-game-container .screen {
+    background-color: #1e1e1e;
+    box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode .quiz-game-container .option {
+    border-color: #2196f3;
+    color: #e0e0e0;
+}
+
+.dark-mode .quiz-game-container .option:hover {
+    background-color: #2c2c2c;
+}
+
+.dark-mode .quiz-game-container .option.selected {
+    background-color: #2196f3;
+}
+
+.dark-mode .quiz-game-container .option.correct {
+    background-color: #43a047;
+}
+
+.dark-mode .quiz-game-container .option.incorrect {
+    background-color: #e53935;
+}
+
+.dark-mode .quiz-game-container .ad-container {
+    background-color: #2c2c2c;
+    border-color: #424242;
+}
+
+.dark-mode .quiz-game-container .modal-content {
+    background-color: #1e1e1e;
+}
+
+.dark-mode .quiz-game-container form input {
+    background-color: #2c2c2c;
+    border-color: #424242;
+    color: #e0e0e0;
+}
+
+.dark-mode .quiz-game-container .leaderboard-table th {
+    background-color: #2196f3;
+}
+
+.dark-mode .quiz-game-container .leaderboard-table td {
+    border-bottom-color: #424242;
+}
+
+.dark-mode .quiz-game-container .leaderboard-table tr:nth-child(even) {
+    background-color: #2c2c2c;
+}
+
+.dark-mode .quiz-game-container #playAgainBtn {
+    background-color: #4caf50;
+}
+
+.dark-mode .quiz-game-container #viewLeaderboardBtn {
+    background-color: #2196f3;
+}
+
+.dark-mode .quiz-game-container #backToMenuBtn {
+    background-color: #f44336;
+}
+
+.dark-mode .quiz-game-container button:focus, 
+.dark-mode .quiz-game-container input:focus {
+    outline-color: #64b5f6;
+}
 
 /* Hide Post Title, Header, Popular Section */
 .post-title.entry-title, .post-header, .popular-section {

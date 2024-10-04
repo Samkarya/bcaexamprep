@@ -40,23 +40,28 @@ class Game {
         });
     }
 handleInput(e) {
-        const inputChar = e.data;
-        if (inputChar === null) {
-            // Handle backspace
-            if (this.charIndex > 0) {
-                this.charIndex--;
-                this.moveCursor();
-            }
-        } else if (inputChar === this.currentSnippet[this.charIndex]) {
-            this.charIndex++;
+    const inputChar = e.data;
+    if (inputChar === null) {
+        // Handle backspace
+        if (this.charIndex > 0) {
+            this.charIndex--;
             this.moveCursor();
-            this.checkProgress();
-        } else {
-            // Incorrect input, prevent it
-            e.preventDefault();
-            this.codeInput.value = this.codeInput.value.slice(0, -1);
         }
+    } else if (inputChar === this.currentSnippet[this.charIndex]) {
+        this.charIndex++;
+        this.moveCursor();
+        this.checkProgress();
+    } else if (inputChar === '\n' && this.currentSnippet[this.charIndex] === '\n') {
+        // Handle Enter key, move to next line correctly
+        this.charIndex++;
+        this.moveCursor();
+    } else {
+        // Incorrect input, prevent it
+        e.preventDefault();
+        this.codeInput.value = this.codeInput.value.slice(0, -1);
     }
+}
+
 
     handleKeyDown(e) {
         if (e.key === 'Tab') {
@@ -75,15 +80,24 @@ handleInput(e) {
         const lastLine = lines[lines.length - 1];
         return lastLine.search(/\S|$/) / 4; // Assuming 4 spaces per indentation level
     }
-     moveCursor() {
-        const codeChars = this.codeDisplay.children;
-        this.cursor.remove();
-        if (this.charIndex < codeChars.length) {
-            codeChars[this.charIndex].insertAdjacentElement('beforebegin', this.cursor);
+   moveCursor() {
+    const codeChars = this.codeDisplay.children;
+    this.cursor.remove();
+    
+    if (this.charIndex < codeChars.length) {
+        const currentChar = codeChars[this.charIndex].textContent;
+
+        // Handle moving cursor to next line correctly
+        if (currentChar === '\n') {
+            codeChars[this.charIndex].insertAdjacentElement('afterend', this.cursor);
         } else {
-            this.codeDisplay.appendChild(this.cursor);
+            codeChars[this.charIndex].insertAdjacentElement('beforebegin', this.cursor);
         }
+    } else {
+        this.codeDisplay.appendChild(this.cursor);
     }
+}
+
     startTimer() {
         let timeLeft = this.timeLimit;
         const timer = setInterval(() => {

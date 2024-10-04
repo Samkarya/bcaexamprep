@@ -5,19 +5,18 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeGame();
 });
 
+let game;
+
 function initializeGame() {
+    game = new Game();
     UI.showStartOptions();
-    const codeButton = document.getElementById('code-mode-btn');
-    const textButton = document.getElementById('text-mode-btn');
-    
-    codeButton.addEventListener('click', () => startGame('code'));
-    textButton.addEventListener('click', () => startGame('text'));
+    UI.updateUserInfo(firebase.auth().currentUser);
 }
 
-function startGame(mode) {
-    UI.hideStartOptions();
-    const gameInstance = new Game();
-    gameInstance.start(mode);
-}
+// Event listener for auth state changes
+firebase.auth().onAuthStateChanged((user) => {
+    UI.updateUserInfo(user);
+});
 
-
+// Initialize the game when the page loads
+window.addEventListener('load', initializeGame);

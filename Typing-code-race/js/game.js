@@ -67,7 +67,7 @@ start(mode = 'code') {
     }
 
     displayCodeWithSyntaxHighlighting(language) {
-        const highlightedCode = applySyntaxHighlighting(this.currentSnippet, language);
+        const highlightedCode = applySyntaxHighlighting(this.currentContent, language);
         this.codeDisplay.innerHTML = highlightedCode;
         
         // Wrap each character in a span for individual styling
@@ -174,7 +174,7 @@ start(mode = 'code') {
         this.wpmDisplay.textContent = `WPM: ${wpm}`;
         this.accuracyDisplay.textContent = `Accuracy: ${accuracy}%`;
 
-        if (currentInput === this.currentSnippet) {
+        if (currentInput === this.currentContent) {
             this.endGame();
         }
         UI.updateGameInfo(wpm, accuracy);
@@ -183,7 +183,7 @@ start(mode = 'code') {
     calculateAccuracy(input) {
         let correctChars = 0;
         for (let i = 0; i < input.length; i++) {
-            if (input[i] === this.currentSnippet[i]) {
+            if (input[i] === this.currentContent[i]) {
                 correctChars++;
             }
         }

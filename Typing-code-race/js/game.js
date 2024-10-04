@@ -27,7 +27,7 @@ class Game {
         UI.updateGameInfo(0, 100);
     }
     displayCodeWithCursor() {
-        const codeParts = this.currentSnippets.split('');
+        const codeParts = this.currentSnippet.split('');
         this.codeDisplay.innerHTML = '';
         codeParts.forEach((char, index) => {
             const span = document.createElement('span');

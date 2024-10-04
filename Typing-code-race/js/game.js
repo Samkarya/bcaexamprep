@@ -5,23 +5,83 @@ class Game {
         this.timerDisplay = document.getElementById('timer');
         this.wpmDisplay = document.getElementById('wpm');
         this.accuracyDisplay = document.getElementById('accuracy');
+        this.cursor = document.createElement('span');
+        this.cursor.className = 'cursor';
         this.startTime = 0;
         this.endTime = 0;
         this.currentSnippet = '';
         this.timeLimit = 60; // in seconds
+        this.charIndex = 0;
     }
 
     start() {
         this.currentSnippet = getRandomCodeSnippet();
-        this.codeDisplay.textContent = this.currentSnippet;
+        this.displayCodeWithCursor();
         this.codeInput.value = '';
         this.codeInput.focus();
         this.startTime = Date.now();
         this.startTimer();
         this.codeInput.addEventListener('input', () => this.checkProgress());
-        UI.updateGameInfo(0, 100);
+        this.codeInput.addEventListener('input', (e) => this.handleInput(e));
+        this.codeInput.addEventListener('keydown', (e) => this.handleKeyDown(e));
+    }
+    displayCodeWithCursor() {
+        const codeParts = this.currentSnippet.split('');
+        this.codeDisplay.innerHTML = '';
+        codeParts.forEach((char, index) => {
+            const span = document.createElement('span');
+            span.textContent = char;
+            if (index === 0) {
+                span.insertAdjacentElement('afterend', this.cursor);
+            }
+            this.codeDisplay.appendChild(span);
+        });
+    }
+handleInput(e) {
+        const inputChar = e.data;
+        if (inputChar === null) {
+            // Handle backspace
+            if (this.charIndex > 0) {
+                this.charIndex--;
+                this.moveCursor();
+            }
+        } else if (inputChar === this.currentSnippet[this.charIndex]) {
+            this.charIndex++;
+            this.moveCursor();
+            this.checkProgress();
+        } else {
+            // Incorrect input, prevent it
+            e.preventDefault();
+            this.codeInput.value = this.codeInput.value.slice(0, -1);
+        }
     }
 
+    handleKeyDown(e) {
+        if (e.key === 'Tab') {
+            e.preventDefault();
+            const indentationLevel = this.getIndentationLevel();
+            const spaces = '    '.repeat(indentationLevel);
+            if (this.currentSnippet.startsWith(spaces, this.charIndex)) {
+                this.codeInput.value += spaces;
+                this.charIndex += spaces.length;
+                this.moveCursor();
+            }
+        }
+    }
+     getIndentationLevel() {
+        const lines = this.currentSnippet.slice(0, this.charIndex).split('\n');
+        const lastLine = lines[lines.length - 1];
+        return lastLine.search(/\S|$/) / 4; // Assuming 4 spaces per indentation level
+    }
+     moveCursor() {
+        const codeChars = this.codeDisplay.children;
+        this.cursor.remove();
+        if (this.charIndex < codeChars.length) {
+            codeChars[this.charIndex].insertAdjacentElement('beforebegin', this.cursor);
+        } else {
+            this.codeDisplay.appendChild(this.cursor);
+        }
+    }
     startTimer() {
         let timeLeft = this.timeLimit;
         const timer = setInterval(() => {

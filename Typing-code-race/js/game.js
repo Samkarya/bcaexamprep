@@ -16,52 +16,67 @@ class Game {
 
     start() {
         const snippet = getRandomCodeSnippet();
-    this.currentSnippet = snippet.code;        
-        this.displayCodeWithCursor();
+        this.currentSnippet = snippet.code;
+        this.displayCodeWithSyntaxHighlighting(snippet.language);
         this.codeInput.value = '';
         this.codeInput.focus();
         this.startTime = Date.now();
         this.startTimer();
-        this.codeInput.addEventListener('input', () => this.checkProgress());
         this.codeInput.addEventListener('input', (e) => this.handleInput(e));
         this.codeInput.addEventListener('keydown', (e) => this.handleKeyDown(e));
         UI.updateGameInfo(0, 100);
     }
-    displayCodeWithCursor() {
-        const codeParts = this.currentSnippet.split('');
-        this.codeDisplay.innerHTML = '';
-        codeParts.forEach((char, index) => {
-            const span = document.createElement('span');
-            span.textContent = char;
-            if (index === 0) {
-                span.insertAdjacentElement('afterend', this.cursor);
+
+    displayCodeWithSyntaxHighlighting(language) {
+        const highlightedCode = applySyntaxHighlighting(this.currentSnippet, language);
+        this.codeDisplay.innerHTML = highlightedCode;
+        
+        // Wrap each character in a span for individual styling
+        const textNodes = Array.from(this.codeDisplay.childNodes);
+        let newHtml = '';
+        textNodes.forEach(node => {
+            if (node.nodeType === Node.TEXT_NODE) {
+                const chars = node.textContent.split('');
+                newHtml += chars.map(char => `<span class="char">${char}</span>`).join('');
+            } else {
+                const chars = node.textContent.split('');
+                const className = node.className;
+                newHtml += chars.map(char => `<span class="char ${className}">${char}</span>`).join('');
             }
-            this.codeDisplay.appendChild(span);
         });
-    }
-handleInput(e) {
-    const inputChar = e.data;
-    if (inputChar === null) {
-        // Handle backspace
-        if (this.charIndex > 0) {
-            this.charIndex--;
-            this.moveCursor();
+        this.codeDisplay.innerHTML = newHtml;
+        
+        // Insert cursor at the beginning
+        const firstChar = this.codeDisplay.querySelector('.char');
+        if (firstChar) {
+            firstChar.insertAdjacentElement('beforebegin', this.cursor);
         }
-    } else if (inputChar === this.currentSnippet[this.charIndex]) {
-        this.charIndex++;
+    }
+
+    handleInput(e) {
+        const inputText = this.codeInput.value;
+        const codeChars = this.codeDisplay.querySelectorAll('.char');
+        
+        // Reset all characters' styling
+        codeChars.forEach(char => {
+            char.classList.remove('correct', 'incorrect');
+        });
+        
+        // Apply styling for typed characters
+        for (let i = 0; i < inputText.length; i++) {
+            if (i < codeChars.length) {
+                if (inputText[i] === codeChars[i].textContent) {
+                    codeChars[i].classList.add('correct');
+                } else {
+                    codeChars[i].classList.add('incorrect');
+                }
+            }
+        }
+        
+        this.charIndex = inputText.length;
         this.moveCursor();
         this.checkProgress();
-    } else if (inputChar === '\n' && this.currentSnippet[this.charIndex] === '\n') {
-        // Handle Enter key, move to next line correctly
-        this.charIndex++;
-        this.moveCursor();
-    } else {
-        // Incorrect input, prevent it
-        e.preventDefault();
-        this.codeInput.value = this.codeInput.value.slice(0, -1);
     }
-}
-
 
     handleKeyDown(e) {
         if (e.key === 'Tab') {
@@ -69,34 +84,32 @@ handleInput(e) {
             const indentationLevel = this.getIndentationLevel();
             const spaces = '    '.repeat(indentationLevel);
             if (this.currentSnippet.startsWith(spaces, this.charIndex)) {
-                this.codeInput.value += spaces;
-                this.charIndex += spaces.length;
-                this.moveCursor();
+                const cursorPosition = this.codeInput.selectionStart;
+                const textBeforeCursor = this.codeInput.value.substring(0, cursorPosition);
+                const textAfterCursor = this.codeInput.value.substring(cursorPosition);
+                this.codeInput.value = textBeforeCursor + spaces + textAfterCursor;
+                this.codeInput.selectionStart = this.codeInput.selectionEnd = cursorPosition + spaces.length;
+                this.handleInput({ target: this.codeInput });
             }
         }
     }
-     getIndentationLevel() {
+
+    getIndentationLevel() {
         const lines = this.currentSnippet.slice(0, this.charIndex).split('\n');
         const lastLine = lines[lines.length - 1];
-        return lastLine.search(/\S|$/) / 4; // Assuming 4 spaces per indentation level
+        return lastLine.search(/\S|$/) / 4;
     }
-   moveCursor() {
-    const codeChars = this.codeDisplay.children;
-    this.cursor.remove();
-    
-    if (this.charIndex < codeChars.length) {
-        const currentChar = codeChars[this.charIndex].textContent;
 
-        // Handle moving cursor to next line correctly
-        if (currentChar === '\n') {
-            codeChars[this.charIndex].insertAdjacentElement('afterend', this.cursor);
-        } else {
+    moveCursor() {
+        const codeChars = this.codeDisplay.querySelectorAll('.char');
+        this.cursor.remove();
+        
+        if (this.charIndex < codeChars.length) {
             codeChars[this.charIndex].insertAdjacentElement('beforebegin', this.cursor);
+        } else {
+            this.codeDisplay.appendChild(this.cursor);
         }
-    } else {
-        this.codeDisplay.appendChild(this.cursor);
     }
-}
 
     startTimer() {
         let timeLeft = this.timeLimit;
@@ -122,7 +135,7 @@ handleInput(e) {
         if (currentInput === this.currentSnippet) {
             this.endGame();
         }
-      UI.updateGameInfo(wpm, accuracy);
+        UI.updateGameInfo(wpm, accuracy);
     }
 
     calculateAccuracy(input) {
@@ -132,7 +145,7 @@ handleInput(e) {
                 correctChars++;
             }
         }
-        return Math.round((correctChars / input.length) * 100);
+        return input.length === 0 ? 100 : Math.round((correctChars / input.length) * 100);
     }
 
     calculateWPM(charCount) {
@@ -151,7 +164,8 @@ handleInput(e) {
             this.saveScore(finalWPM, finalAccuracy);
         });
     }
-  saveScore(wpm, accuracy) {
+
+    saveScore(wpm, accuracy) {
         const user = firebase.auth().currentUser;
         if (user) {
             firebase.firestore().collection('scores').add({

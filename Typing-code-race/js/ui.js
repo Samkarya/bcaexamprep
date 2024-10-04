@@ -1,9 +1,41 @@
 class UI {
-    static updateGameInfo(wpm, accuracy) {
-        document.getElementById('wpm').textContent = `WPM: ${wpm}`;
-        document.getElementById('accuracy').textContent = `Accuracy: ${accuracy}%`;
+    static showStartOptions() {
+        const startContainer = document.createElement('div');
+        startContainer.id = 'start-options';
+        startContainer.className = 'start-options';
+        
+        startContainer.innerHTML = `
+            <h2>Choose Your Practice Mode</h2>
+            <div class="mode-buttons">
+                <button id="code-mode-btn" class="mode-btn code-mode">
+                    <span class="mode-icon">⌨️</span>
+                    <span class="mode-title">Code Practice</span>
+                    <span class="mode-desc">Practice typing actual code snippets</span>
+                </button>
+                <button id="text-mode-btn" class="mode-btn text-mode">
+                    <span class="mode-icon">📝</span>
+                    <span class="mode-title">Concept Practice</span>
+                    <span class="mode-desc">Practice typing code descriptions</span>
+                </button>
+            </div>
+        `;
+        
+        document.body.appendChild(startContainer);
+    }
+    
+    static hideStartOptions() {
+        const startContainer = document.getElementById('start-options');
+        if (startContainer) {
+            startContainer.remove();
+        }
     }
 
+    static updateGameInfo(wpm, accuracy) {
+        const wpmDisplay = document.getElementById('wpm');
+        const accuracyDisplay = document.getElementById('accuracy');
+        if (wpmDisplay) wpmDisplay.textContent = `WPM: ${wpm}`;
+        if (accuracyDisplay) accuracyDisplay.textContent = `Accuracy: ${accuracy}%`;
+    }
     static showStartButton() {
         document.getElementById('start-btn').style.display = 'block';
         document.getElementById('code-input').style.display = 'none';
@@ -16,18 +48,22 @@ class UI {
     }
 
     static showGameOver(time, wpm, accuracy) {
-        const gameOverHTML = `
-            <div id="game-over">
-                <h2>Game Over!</h2>
-                <p>Time: ${time.toFixed(2)}s</p>
-                <p>WPM: ${wpm}</p>
-                <p>Accuracy: ${accuracy}%</p>
-                <button id="play-again-btn">Play Again</button>
-            </div>
+        const gameOverContainer = document.createElement('div');
+        gameOverContainer.className = 'game-over';
+        gameOverContainer.innerHTML = `
+            <h2>Game Over!</h2>
+            <p>Time: ${time.toFixed(1)} seconds</p>
+            <p>WPM: ${wpm}</p>
+            <p>Accuracy: ${accuracy}%</p>
+            <button id="restart-btn">Play Again</button>
         `;
-        document.getElementById('game-container').innerHTML = gameOverHTML;
-        document.getElementById('play-again-btn').addEventListener('click', () => {
-            location.reload();
+        
+        document.body.appendChild(gameOverContainer);
+        
+        const restartButton = document.getElementById('restart-btn');
+        restartButton.addEventListener('click', () => {
+            gameOverContainer.remove();
+            initializeGame();
         });
     }
 

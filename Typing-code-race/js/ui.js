@@ -20,7 +20,11 @@ class UI {
             </div>
         `;
         
-       document.getElementById("start-box").appendChild(startContainer);
+        document.getElementById("start-box").appendChild(startContainer);
+        
+        // Add event listeners to the buttons
+        document.getElementById('code-mode-btn').addEventListener('click', () => game.start('code'));
+        document.getElementById('text-mode-btn').addEventListener('click', () => game.start('text'));
     }
     
     static hideStartOptions() {
@@ -47,7 +51,7 @@ class UI {
         document.getElementById('code-input').style.display = 'block';
     }
 
-    static showGameOver(time, wpm, accuracy) {
+  static showGameOver(time, wpm, accuracy) {
         const gameOverContainer = document.createElement('div');
         gameOverContainer.className = 'game-over';
         gameOverContainer.innerHTML = `
@@ -60,10 +64,10 @@ class UI {
         
         document.body.appendChild(gameOverContainer);
         
-        const restartButton = document.getElementById('restart-btn');
+         const restartButton = document.getElementById('restart-btn');
         restartButton.addEventListener('click', () => {
             gameOverContainer.remove();
-            initializeGame();
+            UI.showStartOptions(); // Show start options instead of directly initializing the game
         });
     }
 

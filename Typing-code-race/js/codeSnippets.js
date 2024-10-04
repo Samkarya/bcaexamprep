@@ -1,19 +1,24 @@
 const codeSnippets = [
-    `function fibonacci(n) {
+    {
+        code: `function fibonacci(n) {
     if (n <= 1) return n;
     return fibonacci(n - 1) + fibonacci(n - 2);
 }`,
-    `const quickSort = (arr) => {
-    if (arr.length <= 1) return arr;
-    const pivot = arr[arr.length - 1];
-    const left = [], right = [];
-    for (let i = 0; i < arr.length - 1; i++) {
-        if (arr[i] < pivot) left.push(arr[i]);
-        else right.push(arr[i]);
-    }
-    return [...quickSort(left), pivot, ...quickSort(right)];
-};`,
-    `class Node {
+        language: 'javascript'
+    },
+    {
+        code: `def quick_sort(arr):
+    if len(arr) <= 1:
+        return arr
+    pivot = arr[len(arr) // 2]
+    left = [x for x in arr if x < pivot]
+    middle = [x for x in arr if x == pivot]
+    right = [x for x in arr if x > pivot]
+    return quick_sort(left) + middle + quick_sort(right)`,
+        language: 'python'
+    },
+    {
+        code: `class Node {
     constructor(data) {
         this.data = data;
         this.next = null;
@@ -36,9 +41,36 @@ class LinkedList {
         }
         current.next = new Node(data);
     }
-}`
+}`,
+        language: 'javascript'
+    }
 ];
 
 function getRandomCodeSnippet() {
     return codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
+}
+
+function applySyntaxHighlighting(code, language) {
+    // This is a simple syntax highlighting function
+    // You may want to use a more robust solution like Prism.js for production
+    const keywords = {
+        'javascript': ['function', 'return', 'if', 'class', 'constructor', 'let', 'const', 'while'],
+        'python': ['def', 'return', 'if', 'for', 'in', 'len']
+    };
+
+    const highlighted = code.replace(/\b(\w+)\b/g, (match) => {
+        if (keywords[language] && keywords[language].includes(match)) {
+            return `<span class="keyword">${match}</span>`;
+        }
+        if (match.startsWith('function') || match.startsWith('def')) {
+            return `<span class="function">${match}</span>`;
+        }
+        return match;
+    });
+
+    return highlighted
+        .replace(/(["'])(?:(?=(\\?))\2.)*?\1/g, '<span class="string">$&</span>')
+        .replace(/(\d+)/g, '<span class="number">$&</span>')
+        .replace(/(\/\/.*)/g, '<span class="comment">$&</span>')
+        .replace(/(#.*)/g, '<span class="comment">$&</span>');
 }

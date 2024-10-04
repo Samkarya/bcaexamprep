@@ -8,7 +8,7 @@ const codeSnippets = [
 // Calculate the 10th Fibonacci number
 const result = fibonacci(10);`,
         language: 'javascript',
-        description: 'Recursive implementation of the Fibonacci sequence. This algorithm showcases the power of recursion but has exponential time complexity O(2^n).'
+        description: 'Recursion is a programming technique where a function calls itself to solve smaller instances of the same problem. It breaks down a complex problem into simpler sub-problems, with a base case to stop the recursive calls. Recursion is widely used in algorithms for problems like tree traversal, factorial computation, and dynamic programming. While elegant, recursive solutions can be less efficient than iterative ones in terms of space due to the use of the call stack.'
     },
     {
         code: `def quick_sort(arr):
@@ -24,7 +24,7 @@ const result = fibonacci(10);`,
 numbers = [64, 34, 25, 12, 22, 11, 90]
 sorted_numbers = quick_sort(numbers)`,
         language: 'python',
-        description: 'QuickSort implementation using Python list comprehensions. This efficient sorting algorithm has an average time complexity of O(n log n).'
+        description: 'QuickSort is a fast, divide-and-conquer sorting algorithm that works by selecting a pivot element from the array and partitioning the other elements into two groups—those less than the pivot and those greater than the pivot. The process is recursively applied to both groups, leading to a sorted array. QuickSort has an average-case time complexity of O(n log n) but can degrade to O(n²) in the worst case if the pivot selection is poor.'
     },
     {
         code: `class Node {
@@ -57,7 +57,7 @@ const list = new LinkedList();
 list.append(10);
 list.append(20);`,
         language: 'javascript',
-        description: 'Implementation of a singly linked list data structure. Linked lists are fundamental in computer science, offering dynamic memory allocation and O(1) insertion at the beginning.'
+        description: 'A linked list is a linear data structure where elements, called nodes, are connected by pointers. Each node contains two parts: the data and a reference to the next node in the sequence. Unlike arrays, linked lists allow for efficient insertion and deletion of elements without the need to shift other elements. There are different types of linked lists, including singly linked lists, doubly linked lists, and circular linked lists, each varying in how they connect the nodes.'
     },
     {
         code: `function binarySearch(arr, target) {
@@ -79,7 +79,7 @@ list.append(20);`,
 const sortedArray = [1, 3, 5, 7, 9, 11, 13];
 const index = binarySearch(sortedArray, 7);`,
         language: 'javascript',
-        description: 'Binary search implementation for finding elements in a sorted array. This algorithm has a time complexity of O(log n), making it highly efficient for large datasets.'
+        description: 'Binary search is an efficient algorithm used to find the position of a target value within a sorted array. It works by repeatedly dividing the search interval in half, comparing the target with the middle element of the array. If the target matches the middle element, the search is complete. Otherwise, the search continues in the half where the target could possibly exist. Binary search operates in O(log n) time complexity, making it faster than linear search for large datasets.'
     }
 ];
 

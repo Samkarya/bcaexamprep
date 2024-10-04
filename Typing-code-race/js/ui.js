@@ -20,7 +20,7 @@ class UI {
             </div>
         `;
         
-        document.main.appendChild(startContainer);
+       document.getElementById("start-box").appendChild(startContainer);
     }
     
     static hideStartOptions() {

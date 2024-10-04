@@ -13,11 +13,17 @@ class Game {
         this.timeLimit = 60; // in seconds
         this.charIndex = 0;
     }
-
-    start() {
+start(mode = 'code') {
+        this.isCodeMode = mode === 'code';
         const snippet = getRandomCodeSnippet();
-        this.currentSnippet = snippet.description;
-        this.displayCodeWithSyntaxHighlighting(snippet.language);
+        this.currentContent = this.isCodeMode ? snippet.code : snippet.description;
+        
+        if (this.isCodeMode) {
+            this.displayCodeWithSyntaxHighlighting(snippet.language);
+        } else {
+            this.displayTextWithWrapping();
+        }
+        
         this.codeInput.value = '';
         this.codeInput.focus();
         this.startTime = Date.now();
@@ -25,6 +31,39 @@ class Game {
         this.codeInput.addEventListener('input', (e) => this.handleInput(e));
         this.codeInput.addEventListener('keydown', (e) => this.handleKeyDown(e));
         UI.updateGameInfo(0, 100);
+    }
+ displayTextWithWrapping() {
+        const words = this.currentContent.split(' ');
+        let currentLine = '';
+        let lines = [];
+        const maxLineLength = 60; // Adjust based on your display width
+
+        words.forEach(word => {
+            if ((currentLine + word).length > maxLineLength) {
+                lines.push(currentLine.trim());
+                currentLine = '';
+            }
+            currentLine += word + ' ';
+        });
+        if (currentLine.trim()) {
+            lines.push(currentLine.trim());
+        }
+
+        const wrappedText = lines.join('\n');
+        this.currentContent = wrappedText; // Update currentContent with wrapped text
+
+        // Create spans for each character
+        const textHtml = wrappedText.split('').map(char => 
+            `<span class="char">${char === '\n' ? '↵\n' : char}</span>`
+        ).join('');
+
+        this.codeDisplay.innerHTML = textHtml;
+        
+        // Insert cursor at the beginning
+        const firstChar = this.codeDisplay.querySelector('.char');
+        if (firstChar) {
+            firstChar.insertAdjacentElement('beforebegin', this.cursor);
+        }
     }
 
     displayCodeWithSyntaxHighlighting(language) {
@@ -65,7 +104,10 @@ class Game {
         // Apply styling for typed characters
         for (let i = 0; i < inputText.length; i++) {
             if (i < codeChars.length) {
-                if (inputText[i] === codeChars[i].textContent) {
+                 const expectedChar = this.currentContent[i];
+                const typedChar = inputText[i];
+                
+                if (typedChar === expectedChar) {
                     codeChars[i].classList.add('correct');
                 } else {
                     codeChars[i].classList.add('incorrect');
@@ -78,12 +120,12 @@ class Game {
         this.checkProgress();
     }
 
-    handleKeyDown(e) {
-        if (e.key === 'Tab') {
+   handleKeyDown(e) {
+        if (this.isCodeMode && e.key === 'Tab') {
             e.preventDefault();
             const indentationLevel = this.getIndentationLevel();
             const spaces = '    '.repeat(indentationLevel);
-            if (this.currentSnippet.startsWith(spaces, this.charIndex)) {
+            if (this.currentContent.startsWith(spaces, this.charIndex)) {
                 const cursorPosition = this.codeInput.selectionStart;
                 const textBeforeCursor = this.codeInput.value.substring(0, cursorPosition);
                 const textAfterCursor = this.codeInput.value.substring(cursorPosition);
@@ -94,8 +136,8 @@ class Game {
         }
     }
 
-    getIndentationLevel() {
-        const lines = this.currentSnippet.slice(0, this.charIndex).split('\n');
+      getIndentationLevel() {
+        const lines = this.currentContent.slice(0, this.charIndex).split('\n');
         const lastLine = lines[lines.length - 1];
         return lastLine.search(/\S|$/) / 4;
     }

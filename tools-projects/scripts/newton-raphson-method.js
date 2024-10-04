@@ -36,41 +36,37 @@
         return true;
     }
     
-    // Newton's Method implementation
-    function newtonsMethod(equation, derivative, initialGuess, maxIterations) {
-        const steps = [];
-        let x = initialGuess;
+    // Newton-Raphson Method with math.js
+for (let i = 0; i < maxIterations; i++) {
+    const fx = parsedFunction.evaluate({ x });  // Using math.js to evaluate function
+    const fPrimeX = parsedDerivative.evaluate({ x }); // Using math.js to evaluate derivative
     
-        for (let i = 0; i < maxIterations; i++) {
-            const fx = evaluateFunction(equation, x);
-            const fPrimeX = evaluateFunction(derivative, x);
+    steps.push({ iteration: i, x, fx, fPrimeX });
     
-            steps.push({ iteration: i, x, fx, fPrimeX });
-    
-            if (Math.abs(fx) < tolerance) {
-                return { root: x, steps, converged: true };
-            }
-    
-            if (Math.abs(fPrimeX) < tolerance) {
-                return { root: x, steps, converged: false, message: "Derivative too close to zero." };
-            }
-    
-            x = x - fx / fPrimeX;
-        }
-    
-        return { root: x, steps, converged: false, message: "Max iterations reached." };
+    if (Math.abs(fx) < tolerance) {
+        return { root: x, steps, converged: true };
     }
     
-    // Function evaluation
-    function evaluateFunction(equation, x) {
-        const safeEquation = equation.replace(/\^/g, '**').replace(/x/g, `(${x})`);
-        try {
-            return Function(`return ${safeEquation}`)();
-        } catch (error) {
-            console.error("Error evaluating function:", error);
-            return NaN;
-        }
+    if (Math.abs(fPrimeX) < tolerance) {
+        return { root: x, steps, converged: false, message: "Derivative too close to zero." };
     }
+    
+    x = x - fx / fPrimeX;
+}
+
+return { root: x, steps, converged: false, message: "Max iterations reached." };
+
+// Parsing the input function and derivative using math.js
+let parsedFunction, parsedDerivative;
+
+try {
+    parsedFunction = math.parse(funcInput).compile();
+    parsedDerivative = math.parse(derivativeInput).compile();
+} catch (error) {
+    alert('Error parsing function or derivative. Please check your input.');
+    return;
+}
+
     
     // Result display
     function displayResult(result) {

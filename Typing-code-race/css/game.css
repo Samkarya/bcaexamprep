@@ -124,7 +124,6 @@ body {
     color: #a71d5d;
 }
 
-/* Keep your existing game-specific CSS */
 .char {
     font-family: monospace;
     white-space: pre;
@@ -135,6 +134,19 @@ body {
 .char.incorrect {
     color: #f44336;
     background-color: #ffebee;
+}
+/* Text typing specific styles */
+.text-mode .char {
+    font-family: 'Arial', sans-serif; /* More readable font for text */
+    white-space: pre-wrap;
+    line-height: 1.5;
+}
+
+/* Make newline characters visible */
+.text-mode .char:contains('↵') {
+    color: #888;
+    font-size: 0.8em;
+    vertical-align: middle;
 }
 .cursor {
     display: inline-block;

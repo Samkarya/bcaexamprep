@@ -15,7 +15,8 @@ class Game {
     }
 
     start() {
-        this.currentSnippet = getRandomCodeSnippet();
+        const snippet = getRandomCodeSnippet();
+    this.currentSnippet = snippet.code;        
         this.displayCodeWithCursor();
         this.codeInput.value = '';
         this.codeInput.focus();

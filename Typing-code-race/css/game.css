@@ -101,20 +101,41 @@ body {
 }
 
 
+/* Syntax highlighting */
+.keyword {
+    color: #0000ff;
+    font-weight: bold;
+}
+.function {
+    color: #795548;
+    font-weight: bold;
+}
+.string {
+    color: #008000;
+}
+.number {
+    color: #098658;
+}
+.comment {
+    color: #808080;
+    font-style: italic;
+}
+.operator {
+    color: #a71d5d;
+}
+
+/* Keep your existing game-specific CSS */
 .char {
     font-family: monospace;
     white-space: pre;
 }
-
 .char.correct {
     color: #4caf50;
 }
-
 .char.incorrect {
     color: #f44336;
     background-color: #ffebee;
 }
-
 .cursor {
     display: inline-block;
     width: 2px;
@@ -123,7 +144,6 @@ body {
     animation: blink 1s step-end infinite;
     vertical-align: text-bottom;
 }
-
 @keyframes blink {
     50% { opacity: 0; }
 }

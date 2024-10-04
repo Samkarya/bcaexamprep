@@ -16,7 +16,7 @@ class Game {
 
     start() {
         const snippet = getRandomCodeSnippet();
-        this.currentSnippet = snippet.code;
+        this.currentSnippet = snippet.description;
         this.displayCodeWithSyntaxHighlighting(snippet.language);
         this.codeInput.value = '';
         this.codeInput.focus();

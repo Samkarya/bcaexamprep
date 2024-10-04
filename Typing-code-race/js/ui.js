@@ -20,7 +20,7 @@ class UI {
             </div>
         `;
         
-        document.body.appendChild(startContainer);
+        document.main.appendChild(startContainer);
     }
     
     static hideStartOptions() {

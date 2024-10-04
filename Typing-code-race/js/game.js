@@ -9,7 +9,7 @@ class Game {
         this.cursor.className = 'cursor';
         this.startTime = 0;
         this.endTime = 0;
-        this.currentSnippet = '';
+        this.currentContent = '';
         this.timeLimit = 60; // in seconds
         this.charIndex = 0;
     }
@@ -155,11 +155,11 @@ start(mode = 'code') {
 
     startTimer() {
         let timeLeft = this.timeLimit;
-        const timer = setInterval(() => {
+        this.timerInterval = setInterval(() => {
             timeLeft--;
             this.timerDisplay.textContent = `Time: ${timeLeft}s`;
             if (timeLeft <= 0) {
-                clearInterval(timer);
+                clearInterval(this.timerInterval);
                 this.endGame();
             }
         }, 1000);
@@ -192,19 +192,20 @@ start(mode = 'code') {
 
     calculateWPM(charCount) {
         const minutes = (Date.now() - this.startTime) / 60000;
-        return Math.round((charCount / 5) / minutes);
+        return Math.round((charCount / 5) / minutes) || 0; // Prevent NaN when minutes is very small
     }
 
-    endGame() {
+
+     endGame() {
         this.endTime = Date.now();
         const totalTime = (this.endTime - this.startTime) / 1000;
-        const finalWPM = this.calculateWPM(this.currentSnippet.length);
+        const finalWPM = this.calculateWPM(this.currentContent.length);
         const finalAccuracy = this.calculateAccuracy(this.codeInput.value);
         
-        Ads.showInterstitialAd(() => {
-            UI.showGameOver(totalTime, finalWPM, finalAccuracy);
-            this.saveScore(finalWPM, finalAccuracy);
-        });
+        clearInterval(this.timerInterval); // Clear the timer interval
+        
+        UI.showGameOver(totalTime, finalWPM, finalAccuracy);
+        this.saveScore(finalWPM, finalAccuracy);
     }
 
     saveScore(wpm, accuracy) {

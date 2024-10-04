@@ -100,24 +100,38 @@ body {
     border-radius: 5px;
 }
 
+
+.char {
+    font-family: monospace;
+    white-space: pre;
+}
+
+.char.correct {
+    color: #4caf50;
+}
+
+.char.incorrect {
+    color: #f44336;
+    background-color: #ffebee;
+}
+
 .cursor {
     display: inline-block;
     width: 2px;
     height: 1.2em;
-    background-color: #f0f0f0;
-    animation: blink 0.7s infinite;
-    vertical-align: middle;
+    background-color: #000;
+    animation: blink 1s step-end infinite;
+    vertical-align: text-bottom;
 }
 
 @keyframes blink {
-    0% { opacity: 0; }
-    50% { opacity: 1; }
-    100% { opacity: 0; }
+    50% { opacity: 0; }
 }
 
-/* Syntax highlighting */
-.keyword { color: #569cd6; }
-.string { color: #ce9178; }
-.comment { color: #6A9955; }
-.function { color: #dcdcaa; }
-.number { color: #b5cea8; }
+/*syntax highlighting classes */
+.keyword { color: #0000ff; }
+.function { color: #795548; }
+.string { color: #008000; }
+.number { color: #098658; }
+.comment { color: #808080; }
+

@@ -24,6 +24,7 @@ class Game {
         this.codeInput.addEventListener('input', () => this.checkProgress());
         this.codeInput.addEventListener('input', (e) => this.handleInput(e));
         this.codeInput.addEventListener('keydown', (e) => this.handleKeyDown(e));
+        UI.updateGameInfo(0, 100);
     }
     displayCodeWithCursor() {
         const codeParts = this.currentSnippet.split('');

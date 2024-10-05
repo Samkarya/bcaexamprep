@@ -320,23 +320,37 @@ this.initialFontSize = parseInt(window.getComputedStyle(this.codeDisplay).fontSi
 
 
     displayTextWithWrapping()  {
-        // Implement text wrapping logic
-        const words = this.currentContent.split(' ');
-        let lines = [];
+               const words = this.currentContent.split(' ');
         let currentLine = '';
+        let lines = [];
+        const maxLineLength = 60; // Adjust based on your display width
 
-        for (const word of words) {
-            if ((currentLine + word).length > this.getMaxLineLength()) {
+        words.forEach(word => {
+            if ((currentLine + word).length > maxLineLength) {
                 lines.push(currentLine.trim());
                 currentLine = '';
             }
             currentLine += word + ' ';
-        }
-        if (currentLine) {
+        });
+        if (currentLine.trim()) {
             lines.push(currentLine.trim());
         }
 
-        this.codeDisplay.innerHTML = lines.join('<br>');
+        const wrappedText = lines.join('\n');
+        this.currentContent = wrappedText; // Update currentContent with wrapped text
+
+        // Create spans for each character
+        const textHtml = wrappedText.split('').map(char => 
+            `<span class="char">${char === '\n' ? '↵\n' : char}</span>`
+        ).join('');
+
+        this.codeDisplay.innerHTML = textHtml;
+
+        // Insert cursor at the beginning
+        const firstChar = this.codeDisplay.querySelector('.char');
+        if (firstChar) {
+            firstChar.insertAdjacentElement('beforebegin', this.cursor);
+        }
     }
     handleLongLines() {
         const codeLines = this.codeDisplay.querySelectorAll('.line');

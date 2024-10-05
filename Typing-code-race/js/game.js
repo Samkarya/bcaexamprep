@@ -2,6 +2,7 @@ class Game {
     constructor() {
         this.codeDisplay = document.getElementById('code-display');
         this.codeInput = document.getElementById('code-input');
+        this.gameInfo = document.getElementById('game-info');
         this.timerDisplay = document.getElementById('timer');
         this.wpmDisplay = document.getElementById('wpm');
         this.accuracyDisplay = document.getElementById('accuracy');
@@ -15,6 +16,7 @@ class Game {
     }
 start(mode = 'code') {
         this.isCodeMode = mode === 'code';
+    
         const snippet = getRandomCodeSnippet();
         this.currentContent = this.isCodeMode ? snippet.code : snippet.description;
         

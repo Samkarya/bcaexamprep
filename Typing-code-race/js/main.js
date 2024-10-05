@@ -1,22 +1,145 @@
-document.addEventListener('DOMContentLoaded', () => {
-    initializeFirebase();
-    Auth.init();
-    Ads.init();
-    initializeGame();
-});
-
+// Global game instance
 let game;
 
-function initializeGame() {
-    game = new Game();
-    UI.showStartOptions();
-    UI.updateUserInfo(firebase.auth().currentUser);
+
+
+// Main initialization function
+function initializeApp() {
+    try {
+        initializeFirebase();
+        initializeAuth();
+        initializeAds();
+        initializeEventListeners();
+        
+        // Create game instance
+        game = new Game();
+        
+        // Show start options
+        UI.showStartOptions();
+        
+        if (CONFIG.DEBUG) {
+            console.log('App initialized successfully');
+        }
+    } catch (error) {
+        console.error('Error initializing app:', error);
+        showErrorMessage('Failed to initialize the app. Please refresh the page.');
+    }
 }
 
-// Event listener for auth state changes
-firebase.auth().onAuthStateChanged((user) => {
-    UI.updateUserInfo(user);
-});
+// Initialize Firebase
+function initializeFirebase() {
+    if (!firebase.apps.length) {
+        firebase.initializeApp(CONFIG.FIREBASE_CONFIG);
+    }
+    
+    // Initialize Firestore
+    const db = firebase.firestore();
+    if (CONFIG.DEBUG) {
+        console.log('Firebase initialized');
+    }
+}
 
-// Initialize the game when the page loads
-window.addEventListener('load', initializeGame);
+// Initialize Authentication
+function initializeAuth() {
+    firebase.auth().onAuthStateChanged(user => {
+        UI.updateUserInfo(user);
+        if (user && CONFIG.DEBUG) {
+            console.log('User signed in:', user.email);
+        }
+    });
+}
+
+// Initialize Advertisements
+function initializeAds() {
+    if (typeof Ads !== 'undefined') {
+        Ads.init();
+        if (CONFIG.DEBUG) {
+            console.log('Ads initialized');
+        }
+    }
+}
+
+// Initialize Event Listeners
+function initializeEventListeners() {
+    // Handle keyboard shortcuts
+    document.addEventListener('keydown', handleKeyboardShortcuts);
+    
+    // Handle visibility change
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    
+    // Handle window resize
+    window.addEventListener('resize', debounce(handleWindowResize, 250));
+}
+
+// Keyboard shortcuts handler
+function handleKeyboardShortcuts(event) {
+    // Ctrl/Cmd + Enter to restart game
+    if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
+        event.preventDefault();
+        if (game && !game.isGameActive) {
+            UI.showStartOptions();
+        }
+    }
+}
+
+// Visibility change handler
+function handleVisibilityChange() {
+    if (document.hidden && game && game.isGameActive) {
+        game.pauseGame();
+    }
+}
+
+// Window resize handler
+function handleWindowResize() {
+    if (game) {
+        game.handleResize();
+    }
+}
+
+// Utility function to show error message
+function showErrorMessage(message) {
+    const errorContainer = document.createElement('div');
+    errorContainer.className = 'error-message';
+    errorContainer.textContent = message;
+    document.body.appendChild(errorContainer);
+}
+
+// Utility function to debounce function calls
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+// Load handling
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeApp);
+} else {
+    initializeApp();
+}
+
+// Handle service worker if available
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js')
+            .then(registration => {
+                if (CONFIG.DEBUG) {
+                    console.log('ServiceWorker registration successful');
+                }
+            })
+            .catch(error => {
+                console.error('ServiceWorker registration failed:', error);
+            });
+    });
+}
+
+// Expose game to window for debugging purposes if needed
+if (CONFIG.DEBUG) {
+    window.game = game;
+}

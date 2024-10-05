@@ -336,12 +336,12 @@ this.initialFontSize = parseInt(window.getComputedStyle(this.codeDisplay).fontSi
             lines.push(currentLine.trim());
         }
 
-        const wrappedText = lines.join('\n');
+        const wrappedText = lines.join('<br>');
         this.currentContent = wrappedText; // Update currentContent with wrapped text
 
         // Create spans for each character
         const textHtml = wrappedText.split('').map(char => 
-            `<span class="char">${char === '\n' ? '↵\n' : char}</span>`
+            `<span class="char">${char === '<br>' ? '↵\n' : char}</span>`
         ).join('');
 
         this.codeDisplay.innerHTML = textHtml;

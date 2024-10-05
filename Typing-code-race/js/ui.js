@@ -48,7 +48,7 @@ class UI {
     }
 
     static hideStartButton() {
-        document.getElementById('start-btn').style.display = 'none';
+        document.getElementById('start-options').style.display = 'none';
         document.getElementById('code-input').style.display = 'block';
         document.getElementById('game-info').style.display = 'block';
     }

@@ -50,7 +50,7 @@ body {
     font-size: 18px;
 }
 
-#start-btn, #play-again-btn {
+#text-mode-btn, #code-mode-btn, #play-again-btn {
     font-size: 18px;
     padding: 10px 20px;
     cursor: pointer;
@@ -61,7 +61,7 @@ body {
     transition: background-color 0.3s;
 }
 
-#start-btn:hover, #play-again-btn:hover {
+#text-mode-btn:hover, #code-mode-btn:hover, #play-again-btn:hover {
     background-color: #45a049;
 }
 
@@ -167,3 +167,8 @@ body {
 .number { color: #098658; }
 .comment { color: #808080; }
 
+#code-display,
+#code-input,
+#game-info{
+    display:none;
+}

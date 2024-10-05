@@ -9,6 +9,7 @@ let game;
 
 function initializeGame() {
     game = new Game();
+    UI.showStartButton();
     UI.showStartOptions();
     UI.updateUserInfo(firebase.auth().currentUser);
 }

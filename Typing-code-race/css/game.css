@@ -167,8 +167,4 @@ body {
 .number { color: #098658; }
 .comment { color: #808080; }
 
-#code-display,
-#code-input,
-#game-info{
-    display:none;
-}
+

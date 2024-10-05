@@ -107,7 +107,7 @@
                  try {
                 setLoading(true);
                 await setDoc(doc(db, 'users', user.uid), {
-                    name: nameInput.value,
+                    username: nameInput.value,
                     age: parseInt(ageInput.value),
                     gender: genderSelect.value,
                     education: getEducationData(),
@@ -288,7 +288,7 @@
                 try {
                     setLoading(true);
                     await setDoc(doc(db, 'users', user.uid), {
-                        name: nameInput.value,
+                        username: nameInput.value,
                         age: parseInt(ageInput.value),
                         gender: genderSelect.value,
                         education: educationTextarea.value,

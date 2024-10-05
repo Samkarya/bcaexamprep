@@ -238,22 +238,3 @@
       font-size: 12px;
     }
   }
-/* Password input container adjustments */
-.password-input-container {
-    position: relative;
-}
-
-.password-input-container input {
-    padding-right: 50px; /* Make room for the show/hide toggle */
-}
-
-.password-strength-container {
-    width: 100%;
-    background-color: #f0f0f0;
-    border-radius: 3px;
-    overflow: hidden;
-}
-
-body.dark-mode .password-strength-container {
-    background-color: #444;
-}

@@ -114,7 +114,10 @@ function debounce(func, wait) {
         timeout = setTimeout(later, wait);
     };
 }
-document.addEventListener('DOMContentLoaded', UI.hideLoading);
+document.addEventListener('DOMContentLoaded', () => {
+    UI.hideLoading();
+});
+
 // Load handling
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initializeApp);

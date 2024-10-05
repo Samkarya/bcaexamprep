@@ -21,7 +21,7 @@ class UI {
         `;
          document.getElementById('code-input').style.display = 'none';     
         document.getElementById('game-info').style.display = 'none';       
-        document.getElementById('code-display').textContent = 'Click Start to begin!'; 
+        document.getElementById('code-display').style.display = 'none';
         document.getElementById("start-box").appendChild(startContainer);
         
         // Add event listeners to the buttons
@@ -46,11 +46,13 @@ class UI {
         document.getElementById('start-options').style.display = 'block';
         document.getElementById('code-input').style.display = 'none';
         document.getElementById('game-info').style.display = 'none';
+         document.getElementById('code-display').style.display = 'block';
         document.getElementById('code-display').textContent = 'Click Start to begin!';
     }
 
     static hideStartButton() {
         document.getElementById('start-options').style.display = 'none';
+         document.getElementById('code-display').style.display = 'block';
         document.getElementById('code-input').style.display = 'block';
         document.getElementById('game-info').style.display = 'block';
     }

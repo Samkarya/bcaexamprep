@@ -61,7 +61,8 @@
                 const userDoc = await getDoc(doc(db, 'users', userId));
                 if (userDoc.exists()) {
                     const userData = userDoc.data();
-                    nameInput.value = userData.name || '';
+                    nameInput.value = userData.username || '';
+			usernameElement.textContent = userData.username || userData.email;
                     ageInput.value = userData.age || '';
                     genderSelect.value = userData.gender || '';
                 

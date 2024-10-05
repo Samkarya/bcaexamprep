@@ -21,25 +21,27 @@ class Game {
         this.wpmUpdateInterval = 500; // Update WPM every 500ms
         this.timerInterval = null;
         this.gameContainer = document.getElementById('game-container');
-this.initialFontSize = parseInt(window.getComputedStyle(this.codeDisplay).fontSize);
+        this.initialFontSize = parseInt(window.getComputedStyle(this.codeDisplay).fontSize);
         this.minFontSize = 12;
         this.maxFontSize = 24;
+        this.isCodeMode = true; // Default mode
+        this.correctChars = 0;
     }
 
     start(mode = 'code') {
         this.isCodeMode = mode === 'code';
         this.isGameActive = true;
         UI.hideStartOptions();
-        
+
         const snippet = getRandomCodeSnippet();
         this.currentContent = this.isCodeMode ? snippet.code : snippet.description;
-        
+
         if (this.isCodeMode) {
             this.displayCodeWithSyntaxHighlighting(snippet.language);
         } else {
-            this.displayTextWithWrapping();
+            this.displayTextWithWrapping(); // Use same logic for text display
         }
-        
+
         this.resetGameState();
         this.startTimer();
         this.setupEventListeners();
@@ -92,8 +94,10 @@ this.initialFontSize = parseInt(window.getComputedStyle(this.codeDisplay).fontSi
     }
     resetGameState() {
         this.codeInput.value = '';
+        this.codeInput.disabled = false; // Ensure input is enabled after replay
         this.charIndex = 0;
         this.mistakes = 0;
+        this.correctChars = 0;
         this.totalKeystrokes = 0;
         this.startTime = Date.now();
         this.lastWPMUpdate = this.startTime;
@@ -108,83 +112,44 @@ this.initialFontSize = parseInt(window.getComputedStyle(this.codeDisplay).fontSi
     displayCodeWithSyntaxHighlighting(language) {
         const formattedCode = this.formatCode(this.currentContent);
         const highlightedCode = applySyntaxHighlighting(formattedCode, language);
-        
-        // Convert highlighted HTML to a format where each character is wrapped in a span
-        const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = highlightedCode;
-        
-        let finalHtml = '';
-        const processNode = (node) => {
-            if (node.nodeType === Node.TEXT_NODE) {
-                return node.textContent.split('').map(char => 
-                    `<span class="char">${char === ' ' ? '&nbsp;' : char === '\n' ? '↵\n' : char}</span>`
-                ).join('');
-            } else {
-                const className = node.className;
-                return node.textContent.split('').map(char =>
-                    `<span class="char ${className}">${char === ' ' ? '&nbsp;' : char === '\n' ? '↵\n' : char}</span>`
-                ).join('');
-            }
-        };
-
-        const processChildren = (element) => {
-            Array.from(element.childNodes).forEach(child => {
-                finalHtml += processNode(child);
-            });
-        };
-
-        processChildren(tempDiv);
-        this.codeDisplay.innerHTML = finalHtml;
-        
-        // Insert cursor at the beginning
-        const firstChar = this.codeDisplay.querySelector('.char');
-        if (firstChar) {
-            firstChar.insertAdjacentElement('beforebegin', this.cursor);
-        }
-        this.handleLongLines();
+        this.codeDisplay.innerHTML = this.wrapInSpans(highlightedCode);
+        this.moveCursorToStart();
     }
 
-    formatCode(code) {
-        // Basic code formatting - you can enhance this based on needs
-        return code.split('\n').map(line => {
-            const trimmedLine = line.trimLeft();
-            const indentation = line.length - trimmedLine.length;
-            return '    '.repeat(Math.floor(indentation / 4)) + trimmedLine;
-        }).join('\n');
-    }
+
 
     handleInput(e) {
         if (!this.isGameActive) return;
-        
+
         const inputText = this.codeInput.value;
         const codeChars = this.codeDisplay.querySelectorAll('.char');
-        
+
         this.updateCharacterStyling(inputText, codeChars);
         this.updateGameMetrics(inputText);
         this.moveCursor();
-        
+
         if (inputText === this.currentContent) {
             this.endGame();
         }
     }
-
+    
     updateCharacterStyling(inputText, codeChars) {
         codeChars.forEach((char, index) => {
             char.classList.remove('correct', 'incorrect', 'current');
             if (index < inputText.length) {
                 const isCorrect = inputText[index] === this.currentContent[index];
                 char.classList.add(isCorrect ? 'correct' : 'incorrect');
+                if (isCorrect) this.correctChars++; // Track correct chars
             } else if (index === inputText.length) {
                 char.classList.add('current');
             }
         });
     }
 
-    updateGameMetrics(inputText) {
+     updateGameMetrics(inputText) {
         this.charIndex = inputText.length;
         this.totalKeystrokes++;
-        
-        // Update WPM and accuracy periodically to avoid too frequent updates
+
         const now = Date.now();
         if (now - this.lastWPMUpdate >= this.wpmUpdateInterval) {
             this.updateWPMAndAccuracy();
@@ -192,35 +157,18 @@ this.initialFontSize = parseInt(window.getComputedStyle(this.codeDisplay).fontSi
         }
     }
 
-    updateWPMAndAccuracy() {
+updateWPMAndAccuracy() {
         const elapsedMinutes = (Date.now() - this.startTime) / 60000;
-        const typedCharacters = this.codeInput.value.length;
-        const accuracy = this.calculateAccuracy();
-        
-        // WPM calculation: (characters / 5) / time in minutes
-        // We use a weighted average of gross and net WPM
-        const grossWPM = Math.round((this.totalKeystrokes / 5) / elapsedMinutes);
-        const netWPM = Math.round((typedCharacters / 5) / elapsedMinutes);
-        const wpm = Math.round((grossWPM + netWPM) / 2);
+        const wpm = Math.round(this.correctChars / 5 / elapsedMinutes); // Correct chars used for WPM
+        const accuracy = Math.round((this.correctChars / this.totalKeystrokes) * 100);
 
         this.wpmDisplay.textContent = `WPM: ${wpm}`;
         this.accuracyDisplay.textContent = `Accuracy: ${accuracy}%`;
-        
+
         UI.updateGameInfo(wpm, accuracy);
     }
 
-    calculateAccuracy() {
-        const typed = this.codeInput.value;
-        let correctChars = 0;
-        
-        for (let i = 0; i < typed.length; i++) {
-            if (typed[i] === this.currentContent[i]) {
-                correctChars++;
-            }
-        }
-        
-        return typed.length === 0 ? 100 : Math.round((correctChars / typed.length) * 100);
-    }
+    
 
     handleKeyDown(e) {
         if (!this.isGameActive) return;
@@ -247,37 +195,31 @@ this.initialFontSize = parseInt(window.getComputedStyle(this.codeDisplay).fontSi
     this.handleInput({ target: this.codeInput }); // Update game logic
 }
 
-    startTimer() {
+   startTimer() {
         let timeLeft = this.timeLimit;
         this.timerDisplay.textContent = `Time: ${timeLeft}s`;
-        
+
         this.timerInterval = setInterval(() => {
             timeLeft--;
             this.timerDisplay.textContent = `Time: ${timeLeft}s`;
-            
+
             if (timeLeft <= 0) {
                 this.endGame();
             }
         }, 1000);
     }
-
     endGame() {
         this.isGameActive = false;
         this.endTime = Date.now();
         clearInterval(this.timerInterval);
-        
-        const totalTime = (this.endTime - this.startTime) / 1000;
-        const finalWPM = this.calculateFinalWPM(totalTime);
-        const finalAccuracy = this.calculateAccuracy();
-        
-        UI.showGameOver(totalTime, finalWPM, finalAccuracy);
-        this.saveScore(finalWPM, finalAccuracy);
-    }
 
-    calculateFinalWPM(totalTimeInSeconds) {
-        const minutes = totalTimeInSeconds / 60;
-        const wordsTyped = this.currentContent.length / 5; // Standard: 5 characters = 1 word
-        return Math.round(wordsTyped / minutes);
+        const totalTime = (this.endTime - this.startTime) / 1000;
+        const finalWPM = Math.round(this.correctChars / 5 / (totalTime / 60));
+        const finalAccuracy = Math.round((this.correctChars / this.totalKeystrokes) * 100);
+
+        UI.showGameOver(totalTime, finalWPM, finalAccuracy);
+        this.codeInput.disabled = true; // Prevent typing after game ends
+        this.saveScore(finalWPM, finalAccuracy);
     }
 
     saveScore(wpm, accuracy) {
@@ -292,11 +234,20 @@ this.initialFontSize = parseInt(window.getComputedStyle(this.codeDisplay).fontSi
             });
         }
     }
-
+wrapInSpans(text) {
+        return text.split('').map(char => `<span class="char">${char === ' ' ? '&nbsp;' : char}</span>`).join('');
+    }
+     moveCursorToStart() {
+        const firstChar = this.codeDisplay.querySelector('.char');
+        if (firstChar) {
+            firstChar.insertAdjacentElement('beforebegin', this.cursor);
+        }
+    }
+ 
     moveCursor() {
         const codeChars = this.codeDisplay.querySelectorAll('.char');
         this.cursor.remove();
-        
+
         if (this.charIndex < codeChars.length) {
             codeChars[this.charIndex].insertAdjacentElement('beforebegin', this.cursor);
         } else {
@@ -319,24 +270,11 @@ this.initialFontSize = parseInt(window.getComputedStyle(this.codeDisplay).fontSi
 }
 
 
-    displayTextWithWrapping()  {
-        // Implement text wrapping logic
-        const words = this.currentContent.split(' ');
-        let lines = [];
-        let currentLine = '';
-
-        for (const word of words) {
-            if ((currentLine + word).length > this.getMaxLineLength()) {
-                lines.push(currentLine.trim());
-                currentLine = '';
-            }
-            currentLine += word + ' ';
-        }
-        if (currentLine) {
-            lines.push(currentLine.trim());
-        }
-
-        this.codeDisplay.innerHTML = lines.join('<br>');
+    displayTextWithWrapping() {
+        const wrappedText = this.formatCode(this.currentContent);
+        const highlightedText = this.wrapInSpans(wrappedText);
+        this.codeDisplay.innerHTML = highlightedText;
+        this.moveCursorToStart();
     }
     handleLongLines() {
         const codeLines = this.codeDisplay.querySelectorAll('.line');

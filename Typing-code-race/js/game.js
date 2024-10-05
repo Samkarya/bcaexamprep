@@ -319,39 +319,51 @@ this.initialFontSize = parseInt(window.getComputedStyle(this.codeDisplay).fontSi
 }
 
 
-    displayTextWithWrapping()  {
-               const words = this.currentContent.split(' ');
-        let currentLine = '';
-        let lines = [];
-        const maxLineLength = 60; // Adjust based on your display width
+   displayTextWithWrapping() {
+    const words = this.currentContent.split(' ');
+    let currentLine = '';
+    let lines = [];
+    const maxLineLength = 80; 
+    const punctuationMarks = ['.', ',', ';', ':', '!', '?']; // Consider these marks for natural breaks
+    const threshold = maxLineLength * 0.75; // Allow early wrapping if the line has punctuation and exceeds 75% of the max
 
-        words.forEach(word => {
-            if ((currentLine + word).length > maxLineLength) {
+    words.forEach(word => {
+        // Check if adding this word would exceed the max line length
+        if ((currentLine + word).length > maxLineLength) {
+            // If the current line contains punctuation and is longer than the threshold, wrap it
+            if (punctuationMarks.some(mark => currentLine.includes(mark)) && currentLine.length > threshold) {
+                lines.push(currentLine.trim());
+                currentLine = '';
+            } else {
                 lines.push(currentLine.trim());
                 currentLine = '';
             }
-            currentLine += word + ' ';
-        });
-        if (currentLine.trim()) {
-            lines.push(currentLine.trim());
         }
+        currentLine += word + ' ';
+    });
 
-        const wrappedText = lines.join('\n');
-        this.currentContent = wrappedText; // Update currentContent with wrapped text
-
-        // Create spans for each character
-        const textHtml = wrappedText.split('').map(char => 
-            `<span class="char">${char === '\n' ? '↵\n' : char}</span>`
-        ).join('');
-
-        this.codeDisplay.innerHTML = textHtml;
-
-        // Insert cursor at the beginning
-        const firstChar = this.codeDisplay.querySelector('.char');
-        if (firstChar) {
-            firstChar.insertAdjacentElement('beforebegin', this.cursor);
-        }
+    // Push any remaining text in the currentLine after the loop
+    if (currentLine.trim()) {
+        lines.push(currentLine.trim());
     }
+
+    const wrappedText = lines.join('\n');
+    this.currentContent = wrappedText; // Update currentContent with wrapped text
+
+    // Create spans for each character
+    const textHtml = wrappedText.split('').map(char => 
+        `<span class="char">${char === '\n' ? '↵\n' : char}</span>`
+    ).join('');
+
+    this.codeDisplay.innerHTML = textHtml;
+
+    // Insert cursor at the beginning
+    const firstChar = this.codeDisplay.querySelector('.char');
+    if (firstChar) {
+        firstChar.insertAdjacentElement('beforebegin', this.cursor);
+    }
+}
+
     handleLongLines() {
         const codeLines = this.codeDisplay.querySelectorAll('.line');
         const maxWidth = this.codeDisplay.clientWidth - 20; // 20px for padding

@@ -5,7 +5,7 @@ class UI {
         startContainer.className = 'start-options';
         
         startContainer.innerHTML = `
-            <h2>Choose Your Practice Mode</h2>
+            <h2>Choose Your Typing Mode</h2>
             <div class="mode-buttons">
                 <button id="code-mode-btn" class="mode-btn code-mode">
                     <span class="mode-icon">⌨️</span>

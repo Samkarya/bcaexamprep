@@ -232,20 +232,20 @@ this.initialFontSize = parseInt(window.getComputedStyle(this.codeDisplay).fontSi
     }
 
     handleTabKey() {
-        const indentationLevel = this.getIndentationLevel();
-        const spaces = '    '.repeat(indentationLevel);
-        
-        if (this.currentContent.startsWith(spaces, this.charIndex)) {
-            const cursorPosition = this.codeInput.selectionStart;
-            const textBeforeCursor = this.codeInput.value.substring(0, cursorPosition);
-            const textAfterCursor = this.codeInput.value.substring(cursorPosition);
-            
-            this.codeInput.value = textBeforeCursor + spaces + textAfterCursor;
-            this.codeInput.selectionStart = this.codeInput.selectionEnd = cursorPosition + spaces.length;
-            
-            this.handleInput({ target: this.codeInput });
-        }
-    }
+    const indentationLevel = this.getIndentationLevel() + 1; // Add one level of indentation
+    const spaces = '    '.repeat(indentationLevel); // 4 spaces per indentation level
+
+    // Insert the correct number of spaces at the current cursor position
+    const cursorPosition = this.codeInput.selectionStart;
+    const textBeforeCursor = this.codeInput.value.substring(0, cursorPosition);
+    const textAfterCursor = this.codeInput.value.substring(cursorPosition);
+
+    // Update the value and reposition the cursor
+    this.codeInput.value = textBeforeCursor + spaces + textAfterCursor;
+    this.codeInput.selectionStart = this.codeInput.selectionEnd = cursorPosition + spaces.length;
+
+    this.handleInput({ target: this.codeInput }); // Update game logic
+}
 
     startTimer() {
         let timeLeft = this.timeLimit;
@@ -304,10 +304,20 @@ this.initialFontSize = parseInt(window.getComputedStyle(this.codeDisplay).fontSi
         }
     }
 
-    getIndentationLevel() {
-        // Implement indentation level logic here
-        return 1; // Placeholder return
-    }
+   getIndentationLevel() {
+    // Get the current value up to the cursor position
+    const cursorPosition = this.codeInput.selectionStart;
+    const textBeforeCursor = this.codeInput.value.substring(0, cursorPosition);
+
+    // Find the current line by splitting the text before the cursor on new lines
+    const lines = textBeforeCursor.split('\n');
+    const currentLine = lines[lines.length - 1]; // Get the last line (current line)
+
+    // Calculate the indentation level (number of spaces) based on the current line's leading spaces
+    const leadingSpaces = currentLine.match(/^\s+/); // Match any leading whitespace
+    return leadingSpaces ? leadingSpaces[0].length / 4 : 0; // Assuming 4 spaces per indent level
+}
+
 
     displayTextWithWrapping()  {
         // Implement text wrapping logic

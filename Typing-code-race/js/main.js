@@ -124,21 +124,6 @@ if (document.readyState === 'loading') {
     initializeApp();
 }
 
-// Handle service worker if available
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/service-worker.js')
-            .then(registration => {
-                if (CONFIG.DEBUG) {
-                    console.log('ServiceWorker registration successful');
-                }
-            })
-            .catch(error => {
-                console.error('ServiceWorker registration failed:', error);
-            });
-    });
-}
-
 // Expose game to window for debugging purposes if needed
 if (CONFIG.DEBUG) {
     window.game = game;

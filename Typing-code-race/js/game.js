@@ -274,11 +274,13 @@ this.initialFontSize = parseInt(window.getComputedStyle(this.codeDisplay).fontSi
         this.saveScore(finalWPM, finalAccuracy);
     }
 
-    calculateFinalWPM(totalTimeInSeconds) {
-        const minutes = totalTimeInSeconds / 60;
-        const wordsTyped = this.currentContent.length / 5; // Standard: 5 characters = 1 word
-        return Math.round(wordsTyped / minutes);
-    }
+   calculateFinalWPM(totalTimeInSeconds) {
+    const minutes = totalTimeInSeconds / 60;
+    const correctlyTypedCharacters = this.codeInput.value.length - this.mistakes; // Total correct characters
+    const wordsTyped = correctlyTypedCharacters / 5; // Standard: 5 characters = 1 word
+    return Math.round(wordsTyped / minutes); // Calculate WPM based on correct characters
+}
+
 
     saveScore(wpm, accuracy) {
         const user = firebase.auth().currentUser;
@@ -323,7 +325,7 @@ this.initialFontSize = parseInt(window.getComputedStyle(this.codeDisplay).fontSi
     const words = this.currentContent.split(' ');
     let currentLine = '';
     let lines = [];
-    const maxLineLength = 80; 
+    const maxLineLength = 60; 
     const punctuationMarks = ['.', ',', ';', ':', '!', '?']; // Consider these marks for natural breaks
     const threshold = maxLineLength * 0.75; // Allow early wrapping if the line has punctuation and exceeds 75% of the max
 
@@ -352,7 +354,7 @@ this.initialFontSize = parseInt(window.getComputedStyle(this.codeDisplay).fontSi
 
     // Create spans for each character
     const textHtml = wrappedText.split('').map(char => 
-        `<span class="char">${char === '\n' ? '↵\n' : char}</span>`
+        `<span class="char">${char === '\n' ? '\n' : char}</span>`
     ).join('');
 
     this.codeDisplay.innerHTML = textHtml;

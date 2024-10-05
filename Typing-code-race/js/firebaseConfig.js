@@ -1,13 +1,13 @@
-// Initialize Firebase
-const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_AUTH_DOMAIN",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_STORAGE_BUCKET",
-    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-    appId: "YOUR_APP_ID"
+// Configuration object
+const CONFIG = {
+    FIREBASE_CONFIG: {
+        // Add your Firebase configuration here
+        apiKey: "your-api-key",
+        authDomain: "your-auth-domain",
+        projectId: "your-project-id",
+        storageBucket: "your-storage-bucket",
+        messagingSenderId: "your-messaging-sender-id",
+        appId: "your-app-id"
+    },
+    DEBUG: false, // Set to true to enable console logging
 };
-
-function initializeFirebase() {
-    firebase.initializeApp(firebaseConfig);
-}

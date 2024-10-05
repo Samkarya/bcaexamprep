@@ -19,7 +19,9 @@ class UI {
                 </button>
             </div>
         `;
-        
+         document.getElementById('code-input').style.display = 'none';     
+        document.getElementById('game-info').style.display = 'none';       
+        document.getElementById('code-display').textContent = 'Click Start to begin!'; 
         document.getElementById("start-box").appendChild(startContainer);
         
         // Add event listeners to the buttons

@@ -20,6 +20,10 @@ class Game {
         this.lastWPMUpdate = 0;
         this.wpmUpdateInterval = 500; // Update WPM every 500ms
         this.timerInterval = null;
+        this.gameContainer = document.getElementById('game-container');
+this.initialFontSize = parseInt(window.getComputedStyle(this.codeDisplay).fontSize);
+        this.minFontSize = 12;
+        this.maxFontSize = 24;
     }
 
     start(mode = 'code') {
@@ -40,7 +44,52 @@ class Game {
         this.startTimer();
         this.setupEventListeners();
     }
+    handleResize() {
+        this.updateGameAreaDimensions();
+        this.adjustFontSize();
+        this.repositionElements();
+        this.reformatText();
+    }
+    updateGameAreaDimensions() {
+        this.gameWidth = this.gameContainer.clientWidth;
+        this.gameHeight = this.gameContainer.clientHeight;
+    }
 
+    adjustFontSize() {
+        const containerWidth = this.gameContainer.clientWidth;
+        let fontSize = this.initialFontSize;
+
+        // Adjust font size based on container width
+        if (containerWidth < 600) {
+            fontSize = Math.max(this.minFontSize, fontSize - 2);
+        } else if (containerWidth > 1200) {
+            fontSize = Math.min(this.maxFontSize, fontSize + 2);
+        }
+
+        this.codeDisplay.style.fontSize = `${fontSize}px`;
+        this.codeInput.style.fontSize = `${fontSize}px`;
+    }
+
+    repositionElements() {
+        // Adjust the height of the code display and input areas
+        const headerHeight = document.querySelector('header').offsetHeight;
+        const gameInfoHeight = document.getElementById('game-info').offsetHeight;
+        const availableHeight = window.innerHeight - headerHeight - gameInfoHeight - 40; // 40px for margins
+
+        const codeDisplayHeight = Math.floor(availableHeight * 0.6);
+        const codeInputHeight = availableHeight - codeDisplayHeight;
+
+        this.codeDisplay.style.height = `${codeDisplayHeight}px`;
+        this.codeInput.style.height = `${codeInputHeight}px`;
+    }
+
+    reformatText() {
+        if (this.isCodeMode) {
+            this.displayCodeWithSyntaxHighlighting(this.currentLanguage);
+        } else {
+            this.displayTextWithWrapping();
+        }
+    }
     resetGameState() {
         this.codeInput.value = '';
         this.charIndex = 0;
@@ -92,6 +141,7 @@ class Game {
         if (firstChar) {
             firstChar.insertAdjacentElement('beforebegin', this.cursor);
         }
+        this.handleLongLines();
     }
 
     formatCode(code) {
@@ -259,8 +309,41 @@ class Game {
         return 1; // Placeholder return
     }
 
-    displayTextWithWrapping() {
-        // Implement text wrapping logic here
-        this.codeDisplay.textContent = this.currentContent;
+    displayTextWithWrapping()  {
+        // Implement text wrapping logic
+        const words = this.currentContent.split(' ');
+        let lines = [];
+        let currentLine = '';
+
+        for (const word of words) {
+            if ((currentLine + word).length > this.getMaxLineLength()) {
+                lines.push(currentLine.trim());
+                currentLine = '';
+            }
+            currentLine += word + ' ';
+        }
+        if (currentLine) {
+            lines.push(currentLine.trim());
+        }
+
+        this.codeDisplay.innerHTML = lines.join('<br>');
+    }
+    handleLongLines() {
+        const codeLines = this.codeDisplay.querySelectorAll('.line');
+        const maxWidth = this.codeDisplay.clientWidth - 20; // 20px for padding
+
+        codeLines.forEach(line => {
+            if (line.scrollWidth > maxWidth) {
+                line.style.overflowX = 'auto';
+                line.style.whiteSpace = 'pre';
+            } else {
+                line.style.overflowX = 'visible';
+                line.style.whiteSpace = 'pre-wrap';
+            }
+        });
+    }
+    getMaxLineLength() {
+        const fontSize = parseFloat(window.getComputedStyle(this.codeDisplay).fontSize);
+        return Math.floor(this.codeDisplay.clientWidth / (fontSize * 0.6)); // Approximate character width
     }
 }

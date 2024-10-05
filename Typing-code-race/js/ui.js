@@ -75,7 +75,7 @@ class UI {
          const restartButton = document.getElementById('restart-btn');
         restartButton.addEventListener('click', () => {
             gameOverContainer.remove();
-            UI.showStartOptions(); // Show start options instead of directly initializing the game
+            UI.showStartButton(); // Show start  instead of directly initializing the game
         });
     }
 

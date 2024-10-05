@@ -41,17 +41,21 @@ class UI {
         if (accuracyDisplay) accuracyDisplay.textContent = `Accuracy: ${accuracy}%`;
     }
     static showStartButton() {
-        document.getElementById('start-btn').style.display = 'block';
+        document.getElementById('start-options').style.display = 'block';
         document.getElementById('code-input').style.display = 'none';
+        document.getElementById('game-info').style.display = 'none';
         document.getElementById('code-display').textContent = 'Click Start to begin!';
     }
 
     static hideStartButton() {
         document.getElementById('start-btn').style.display = 'none';
         document.getElementById('code-input').style.display = 'block';
+        document.getElementById('game-info').style.display = 'block';
     }
 
   static showGameOver(time, wpm, accuracy) {
+      document.getElementById('code-input').style.display = 'none';
+        document.getElementById('game-info').style.display = 'none';
         const gameOverContainer = document.createElement('div');
         gameOverContainer.className = 'game-over';
         gameOverContainer.innerHTML = `
@@ -62,7 +66,7 @@ class UI {
             <button id="restart-btn">Play Again</button>
         `;
         
-        document.body.appendChild(gameOverContainer);
+        document.getElementById('game-container').appendChild(gameOverContainer);
         
          const restartButton = document.getElementById('restart-btn');
         restartButton.addEventListener('click', () => {

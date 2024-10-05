@@ -16,7 +16,7 @@ class Game {
     }
 start(mode = 'code') {
         this.isCodeMode = mode === 'code';
-    
+        UI.hideStartButton();
         const snippet = getRandomCodeSnippet();
         this.currentContent = this.isCodeMode ? snippet.code : snippet.description;
         

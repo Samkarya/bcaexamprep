@@ -1,4 +1,4 @@
-// Configuration object
+ // Configuration object
 const CONFIG = {
     FIREBASE_CONFIG: {
         // Add your Firebase configuration here

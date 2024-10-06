@@ -380,11 +380,6 @@
     outline-color: #64b5f6;
 }
 
-/* Hide Post Title, Header, Popular Section */
-.post-title.entry-title, .post-header, .popular-section {
-    display: none;
-}
-
 /* Accessibility Improvements */
 .quiz-game-container button:focus, 
 .quiz-game-container input:focus {

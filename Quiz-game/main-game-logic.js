@@ -392,5 +392,7 @@ class QuizGame {
 
 // Initialize game when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
+    const gameSnippet = document.querySelector(".game-snippet");
+gameSnippet.style.display = "none";
     const game = new QuizGame();
 });

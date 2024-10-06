@@ -58,29 +58,34 @@ async function loadUserData(userId) {
         setLoading(true);
         const userDoc = await getDoc(doc(db, 'users', userId));
         if (userDoc.exists()) {
-            const userData = userDoc.data();
-            nameInput.value = userData.name || '';
-          usernameElement.textContent = userData.username || userData.email;
-            ageInput.value = userData.age || '';
-            genderSelect.value = userData.gender || '';
-            goalsTextarea.value = userData.goals || '';
+    const userData = userDoc.data();
 
-            // Load education data
-            educationFields.innerHTML = ''; // Clear existing fields
-            if (userData.education && userData.education.length > 0) {
-                userData.education.forEach(edu => addEducationField(edu));
-            } else {
-                addEducationField(); // Add an empty field if no data
-            }
+    nameInput.value = userData.name || ''; // Default to empty string if missing
+    usernameElement.textContent = userData.username || user.email; // Fall back to email if username is missing
+    ageInput.value = userData.age || ''; // Handle missing age
+    genderSelect.value = userData.gender || ''; // Handle missing gender
+    goalsTextarea.value = userData.goals || ''; // Handle missing goals
 
-            const lastChangeDate = userData.lastChangeDate;
-            const today = new Date().toISOString().split('T')[0];
-            if (lastChangeDate === today) {
-                profileChangesCount = userData.profileChangesCount || 0;
-            } else {
-                profileChangesCount = 0;
-            }
-        }
+    // Load education data
+    educationFields.innerHTML = ''; // Clear existing fields
+    if (userData.education && userData.education.length > 0) {
+        userData.education.forEach(edu => addEducationField(edu));
+    } else {
+        addEducationField(); // Add an empty field if no education data
+    }
+
+    // Handle profile change count logic
+    const lastChangeDate = userData.lastChangeDate;
+    const today = new Date().toISOString().split('T')[0];
+    if (lastChangeDate === today) {
+        profileChangesCount = userData.profileChangesCount || 0;
+    } else {
+        profileChangesCount = 0;
+    }
+} else {
+    console.error('User document does not exist');
+}
+
     } catch (error) {
         handleError(error);
     } finally {

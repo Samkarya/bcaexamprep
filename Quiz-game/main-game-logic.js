@@ -87,7 +87,6 @@ class QuizGame {
         this.questions = [];
         this.questionSets = new Map();
         
-        // DOM Elements
        // DOM Elements
         this.elements = {
             welcomeScreen: document.getElementById('welcomeScreen'),
@@ -145,7 +144,7 @@ class QuizGame {
 
     setupEventListeners() {
         document.getElementById('playAgainBtn').addEventListener('click', () => this.resetGame());
-        document.getElementById('viewLeaderboardBtn').addEventListener('click', () => this.showLeaderboard());
+        //document.getElementById('viewLeaderboardBtn').addEventListener('click', () => this.showLeaderboard());
         document.getElementById('backToMenuBtn').addEventListener('click', () => this.showWelcomeScreen());
     }
      
@@ -354,7 +353,7 @@ class QuizGame {
         document.getElementById('timeTaken').textContent = gameData.timeTaken + 's';
     }
 
-    async showLeaderboard() {
+   /* async showLeaderboard() {
         if (!auth.currentUser) {
             await this.showAlert('Please sign in to view the leaderboard!');
             return;
@@ -363,7 +362,7 @@ class QuizGame {
         this.elements.resultScreen.style.display = 'none';
         document.getElementById('leaderboardScreen').style.display = 'block';
         // Implement leaderboard data loading here
-    }
+    }*/
 
     resetGame() {
         this.elements.resultScreen.style.display = 'none';

@@ -351,6 +351,7 @@ class QuizGame {
         
         document.getElementById('finalScore').textContent = gameData.score;
         document.getElementById('timeTaken').textContent = gameData.timeTaken + 's';
+        triggerAchievementWhenResultVisible();
     }
 
    /* async showLeaderboard() {

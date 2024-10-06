@@ -60,6 +60,7 @@ async function loadUserData(userId) {
         if (userDoc.exists()) {
             const userData = userDoc.data();
             nameInput.value = userData.name || '';
+          usernameElement.textContent = userData.username || userData.email;
             ageInput.value = userData.age || '';
             genderSelect.value = userData.gender || '';
             goalsTextarea.value = userData.goals || '';
@@ -260,12 +261,3 @@ function setLoading(isLoading) {
     }
 }
 
-function showError(message) {
-    errorMessage.textContent = message;
-    errorMessage.style.display = 'block';
-}
-
-function showSuccess(message) {
-    successMessage.textContent = message;
-    successMessage.style.display = 'block';
-}

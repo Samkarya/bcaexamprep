@@ -1,6 +1,6 @@
 // Import Firebase modules
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
-import { getAuth, onAuthStateChanged, signOut} from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
+import { getAuth, onAuthStateChanged, signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
 import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
 import { initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app-check.js";
 import { firebaseConfig } from "https://samkarya.github.io/bcaexamprep/firebase/common-utils.js";
@@ -16,15 +16,22 @@ const appCheck = initializeAppCheck(app, {
 
 class AuthManager {
     constructor() {
+        this.setupAuthUI();
         this.setupAuthListeners();
     }
 
-   
+    setupAuthUI() {
+       
+        this.signupBtn = document.getElementById('signupBtn');
+        this.logoutBtn = document.getElementById('logoutBtn');
+    }
 
     setupAuthListeners() {
+        this.logoutBtn.addEventListener('click', () => this.logout());
         onAuthStateChanged(auth, user => this.handleAuthStateChange(user));
     }
 
+   
     handleAuthStateChange(user) {
         if (user) {
             this.signupBtn.style.display = 'none';

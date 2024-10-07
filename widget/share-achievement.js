@@ -146,107 +146,51 @@ class AchievementWidgetPopup {
         this.container.innerHTML = widgetHTML;
     }
 
+        isMobileDevice() {
+      return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    }
+
     shareAchievement() {
-    const shareText = this.config.shareText;
-    const shareUrl = this.config.websiteUrl;
-    
-    if (navigator.share) {
-      try {
-        navigator.share({
-          title: this.config.title,
-          text: shareText,
-          url: shareUrl
-        });
-      } catch (err) {
-        console.error('Sharing failed:', err);
-        this.fallbackToClipboard(shareText, shareUrl);
+      const shareText = this.config.shareText;
+      const shareUrl = this.config.websiteUrl;
+
+      if (this.isMobileDevice() && navigator.share) {
+        try {
+          navigator.share({
+            title: this.config.title,
+            text: shareText,
+            url: shareUrl
+          });
+        } catch (error) {
+          console.warn('Native sharing failed, falling back to clipboard:', error);
+          this.fallbackToClipboard(shareText);
+        }
+      } else {
+        this.fallbackToClipboard(shareText);
       }
-    } else {
-      this.fallbackToClipboard(shareText, shareUrl);
+    }
+
+    fallbackToClipboard(text) {
+      const textArea = document.createElement('textarea');
+      textArea.value = text;
+      textArea.style.position = 'fixed';
+      textArea.style.left = '-999999px';
+      textArea.style.top = '-999999px';
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+
+      try {
+        const successful = document.execCommand('copy');
+        const msg = successful ? 'Achievement copied to clipboard!' : 'Failed to copy achievement';
+        alert(msg);
+      } catch (err) {
+        console.error('Failed to copy text:', err);
+        alert('Could not copy achievement. Text:\n\n' + text);
+      }
+
+      document.body.removeChild(textArea);
     }
   }
 
-  fallbackToClipboard(shareText, shareUrl) {
-    const fullText = `${shareText}\n${shareUrl}`;
-    
-    if (navigator.clipboard && window.isSecureContext) {
-      navigator.clipboard.writeText(fullText)
-        .then(() => {
-          this.showCopiedMessage();
-        })
-        .catch(err => {
-          console.error('Clipboard write failed:', err);
-          this.showManualCopyMessage(fullText);
-        });
-    } else {
-      this.fallbackCopyToClipboard(fullText);
-    }
-  }
-
-  fallbackCopyToClipboard(text) {
-    // Create temporary textarea
-    const textArea = document.createElement('textarea');
-    textArea.value = text;
-    
-    // Avoid scrolling to bottom
-    textArea.style.top = '0';
-    textArea.style.left = '0';
-    textArea.style.position = 'fixed';
-    
-    document.body.appendChild(textArea);
-    textArea.focus();
-    textArea.select();
-    
-    try {
-      document.execCommand('copy');
-      textArea.remove();
-      this.showCopiedMessage();
-    } catch (err) {
-      console.error('Fallback clipboard copy failed:', err);
-      textArea.remove();
-      this.showManualCopyMessage(text);
-    }
-  }
-
-  showCopiedMessage() {
-    const messageDiv = document.createElement('div');
-    messageDiv.style.position = 'fixed';
-    messageDiv.style.top = '20px';
-    messageDiv.style.left = '50%';
-    messageDiv.style.transform = 'translateX(-50%)';
-    messageDiv.style.backgroundColor = '#4CAF50';
-    messageDiv.style.color = 'white';
-    messageDiv.style.padding = '10px 20px';
-    messageDiv.style.borderRadius = '5px';
-    messageDiv.style.zIndex = '10000';
-    messageDiv.textContent = 'Achievement copied to clipboard!';
-    
-    document.body.appendChild(messageDiv);
-    
-    setTimeout(() => {
-      messageDiv.remove();
-    }, 3000);
-  }
-
-  showManualCopyMessage(text) {
-    const modal = document.createElement('div');
-    modal.style.position = 'fixed';
-    modal.style.top = '50%';
-    modal.style.left = '50%';
-    modal.style.transform = 'translate(-50%, -50%)';
-    modal.style.backgroundColor = 'white';
-    modal.style.padding = '20px';
-    modal.style.borderRadius = '5px';
-    modal.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
-    modal.style.zIndex = '10000';
-    
-    modal.innerHTML = `
-      <h3>Copy this text:</h3>
-      <textarea readonly style="width: 100%; min-height: 100px; margin: 10px 0;">${text}</textarea>
-      <button onclick="this.parentElement.remove()" style="padding: 5px 10px;">Close</button>
-    `;
-    
-    document.body.appendChild(modal);
-  }
-}
 

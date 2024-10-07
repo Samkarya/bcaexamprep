@@ -292,11 +292,11 @@ class QuizGame {
 
     endGame() {
         clearInterval(this.timer);
-        
+        const startTime = parseInt(this.elements.timeSlider.value) || GAME_CONFIG.defaultTimeLimit;
         const gameData = {
             subject: this.currentSubject,
             score: this.score,
-            timeTaken: GAME_CONFIG.defaultTimeLimit - this.timeRemaining
+            timeTaken:  startTime - this.timeRemaining
         };
         
         this.saveGameData(gameData);

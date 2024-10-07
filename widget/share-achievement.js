@@ -32,7 +32,7 @@ class AchievementWidgetPopup {
         };
 
         this.render();
-        this.initOutsideClickListener();
+        
     }
 
     createStyles() {
@@ -53,6 +53,7 @@ class AchievementWidgetPopup {
                     display: none;
                 }
                 .unique-share-card-popup {
+                    position: relative;
                     background: white;
                     border-radius: 15px;
                     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -60,6 +61,21 @@ class AchievementWidgetPopup {
                     margin-bottom: 20px;
                     width: 100%;
                     max-width: 400px;
+                }
+                .unique-close-button-popup {
+                    position: absolute;
+                    top: 10px;
+                    right: 10px;
+                    font-size: 24px;
+                    color: #5f6368;
+                    cursor: pointer;
+                    background: none;
+                    border: none;
+                    padding: 0;
+                    line-height: 1;
+                }
+                .unique-close-button-popup:hover {
+                    color: #000;
                 }
                 .unique-achievement-title-popup {
                     font-size: 24px;
@@ -117,6 +133,7 @@ class AchievementWidgetPopup {
         const widgetHTML = `
             ${this.createStyles()}
             <div class="unique-share-card-popup">
+                <button class="unique-close-button-popup" onclick="widgetPopup.hidePopup()">×</button>
                 <h1 class="unique-achievement-title-popup">${this.config.title}</h1>
                 <div class="unique-achievement-label-popup">${this.config.score.label}</div>
                 <div class="unique-achievement-value-popup">${this.config.score.value}${this.config.score.unit}</div>
@@ -145,11 +162,4 @@ class AchievementWidgetPopup {
             alert('Share this achievement:\n\n' + shareText);
         }
     }
-     initOutsideClickListener() {
-        // Arrow function to preserve 'this' context
-        document.addEventListener('click', (event) => {
-            if (this.container && !this.container.contains(event.target)) {
-                this.hidePopup();
-            }
-        });
 }

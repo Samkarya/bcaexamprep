@@ -32,6 +32,7 @@ class AchievementWidgetPopup {
         };
 
         this.render();
+        this.initOutsideClickListener();
     }
 
     createStyles() {
@@ -144,4 +145,11 @@ class AchievementWidgetPopup {
             alert('Share this achievement:\n\n' + shareText);
         }
     }
+     initOutsideClickListener() {
+        // Arrow function to preserve 'this' context
+        document.addEventListener('click', (event) => {
+            if (this.container && !this.container.contains(event.target)) {
+                this.hidePopup();
+            }
+        });
 }

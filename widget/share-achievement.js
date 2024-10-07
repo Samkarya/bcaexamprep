@@ -163,7 +163,7 @@ class AchievementWidgetPopup {
           });
         } catch (error) {
           console.warn('Native sharing failed, falling back to clipboard:', error);
-          this.fallbackToClipboard(shareText url);
+          this.fallbackToClipboard(shareText, url);
         }
       } else {
         this.fallbackToClipboard(shareText, url);

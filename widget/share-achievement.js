@@ -163,16 +163,17 @@ class AchievementWidgetPopup {
           });
         } catch (error) {
           console.warn('Native sharing failed, falling back to clipboard:', error);
-          this.fallbackToClipboard(shareText);
+          this.fallbackToClipboard(shareText url);
         }
       } else {
-        this.fallbackToClipboard(shareText);
+        this.fallbackToClipboard(shareText, url);
       }
     }
 
-    fallbackToClipboard(text) {
+    fallbackToClipboard(text, url) {
+        const combinedText = `${text}\n${url}`;
       const textArea = document.createElement('textarea');
-      textArea.value = text;
+      textArea.value = combinedText;
       textArea.style.position = 'fixed';
       textArea.style.left = '-999999px';
       textArea.style.top = '-999999px';

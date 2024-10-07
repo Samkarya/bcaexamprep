@@ -152,7 +152,7 @@ class AchievementWidgetPopup {
 
     shareAchievement() {
       const shareText = this.config.shareText;
-      const shareUrl = this.config.websiteUrl;
+      const shareUrl = window.location.href;
 
       if (this.isMobileDevice() && navigator.share) {
         try {

@@ -152,7 +152,7 @@ class AchievementWidgetPopup {
     
     if (navigator.share) {
       try {
-        await navigator.share({
+        navigator.share({
           title: this.config.title,
           text: shareText,
           url: shareUrl

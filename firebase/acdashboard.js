@@ -57,7 +57,7 @@ async function loadUserData(userId) {
     try {
         setLoading(true);
         const userDoc = await getDoc(doc(db, 'users', userId));
-        console.log(userDoc);
+        
         if (userDoc.exists()) {
     const userData = userDoc.data();
 

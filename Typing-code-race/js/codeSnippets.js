@@ -1,133 +1,79 @@
 const codeSnippets = [
     {
-        code: `function fibonacci(n) {
-    if (n <= 1) return n;
-    return fibonacci(n - 1) + fibonacci(n - 2);
-}
-
-// Calculate the 10th Fibonacci number
-const result = fibonacci(10);`,
-        language: 'javascript',
-        description: 'Recursion is a programming technique where a function calls itself to solve smaller instances of the same problem. It breaks down a complex problem into simpler sub-problems, with a base case to stop the recursive calls. Recursion is widely used in algorithms for problems like tree traversal, factorial computation, and dynamic programming. While elegant, recursive solutions can be less efficient than iterative ones in terms of space due to the use of the call stack.'
-    },
-    {
-        code: `def quick_sort(arr):
-    if len(arr) <= 1:
-        return arr
-    pivot = arr[len(arr) // 2]
-    left = [x for x in arr if x < pivot]
-    middle = [x for x in arr if x == pivot]
-    right = [x for x in arr if x > pivot]
-    return quick_sort(left) + middle + quick_sort(right)
-
-# Example usage
-numbers = [64, 34, 25, 12, 22, 11, 90]
-sorted_numbers = quick_sort(numbers)`,
+        code: 
+"def fibonacci(n):\n\tif n <= 0:\n\t\treturn 0\n\telif n == 1:\n\t\treturn 1\n\telse:\n\t\treturn fibonacci(n-1) + fibonacci(n-2)\n\n# Calculate Fibonacci for n = 7\nresult = fibonacci(7)\0",
         language: 'python',
-        description: 'QuickSort is a fast, divide-and-conquer sorting algorithm that works by selecting a pivot element from the array and partitioning the other elements into two groups—those less than the pivot and those greater than the pivot. The process is recursively applied to both groups, leading to a sorted array. QuickSort has an average-case time complexity of O(n log n) but can degrade to O(n²) in the worst case if the pivot selection is poor.'
+        description: 
+"Fibonacci sequence is a popular\nsequence in mathematics. The\nfunction recursively calculates\neach term as the sum of the previous\ntwo terms. The base cases handle\n0 and 1. It can be optimized using\ndynamic programming. This approach,\nthough simple, becomes slow for\nlarge inputs because of repeated\ncalculations of the same\nsub-problems.\0"
     },
     {
-        code: `class Node {
-    constructor(data) {
-        this.data = data;
-        this.next = null;
-    }
-}
-
-class LinkedList {
-    constructor() {
-        this.head = null;
-    }
-
-    append(data) {
-        if (!this.head) {
-            this.head = new Node(data);
-            return;
-        }
-        let current = this.head;
-        while (current.next) {
-            current = current.next;
-        }
-        current.next = new Node(data);
-    }
-}
-
-// Create a new linked list
-const list = new LinkedList();
-list.append(10);
-list.append(20);`,
-        language: 'javascript',
-        description: 'A linked list is a linear data structure where elements, called nodes, are connected by pointers. Each node contains two parts: the data and a reference to the next node in the sequence. Unlike arrays, linked lists allow for efficient insertion and deletion of elements without the need to shift other elements. There are different types of linked lists, including singly linked lists, doubly linked lists, and circular linked lists, each varying in how they connect the nodes.'
+        code: 
+"public class Palindrome {\n\tpublic static boolean isPalindrome(String s) {\n\t\tint i = 0, j = s.length() - 1;\n\t\twhile (i < j) {\n\t\t\tif (s.charAt(i) != s.charAt(j))\n\t\t\t\treturn false;\n\t\t\ti++;\n\t\t\tj--;\n\t\t}\n\t\treturn true;\n\t}\n\n\tpublic static void main(String[] args) {\n\t\tString str = \"madam\";\n\t\tSystem.out.println(isPalindrome(str));\n\t}\n}\0",
+        language: 'java',
+        description: 
+"A palindrome is a word or phrase\nthat reads the same backward as\nforward. The method checks each\ncharacter from both ends of the\nstring and returns false if a\nmismatch is found. Otherwise,\nthe loop terminates when the middle\nis reached, confirming it is a\npalindrome. It's a linear-time\nsolution with O(n) complexity.\0"
     },
     {
-        code: `function binarySearch(arr, target) {
-    let left = 0;
-    let right = arr.length - 1;
-    
-    while (left <= right) {
-        const mid = Math.floor((left + right) / 2);
-        
-        if (arr[mid] === target) return mid;
-        if (arr[mid] < target) left = mid + 1;
-        else right = mid - 1;
-    }
-    
-    return -1;
-}
-
-// Example usage
-const sortedArray = [1, 3, 5, 7, 9, 11, 13];
-const index = binarySearch(sortedArray, 7);`,
-        language: 'javascript',
-        description: 'Binary search is an efficient algorithm used to find the position of a target value within a sorted array. It works by repeatedly dividing the search interval in half, comparing the target with the middle element of the array. If the target matches the middle element, the search is complete. Otherwise, the search continues in the half where the target could possibly exist. Binary search operates in O(log n) time complexity, making it faster than linear search for large datasets.'
+        code: 
+"#include<stdio.h>\n\nint factorial(int n) {\n\tif (n == 0)\n\t\treturn 1;\n\telse\n\t\treturn n * factorial(n-1);\n}\n\nint main() {\n\tint num = 6;\n\tprintf(\"Factorial of %d is %d\\n\", num, factorial(num));\n\treturn 0;\n}\0",
+        language: 'c',
+        description: 
+"The factorial function calculates\nthe product of an integer and all\nthe integers below it. This code\nuses recursion to compute the\nfactorial. A base case of 0 is\nhandled, returning 1. Recursion is\nwidely used but can lead to\nperformance problems for large\nnumbers due to stack overflow risks.\0"
+    },
+    {
+        code: 
+"#include<iostream>\nusing namespace std;\n\nint main() {\n\tint n, sum = 0;\n\tcout << \"Enter a positive integer: \";\n\tcin >> n;\n\tfor (int i = 1; i <= n; ++i) {\n\t\tsum += i;\n\t}\n\tcout << \"Sum = \" << sum << endl;\n\treturn 0;\n}\0",
+        language: 'cpp',
+        description: 
+"This C++ program calculates the\nsum of the first n positive\nintegers using a for loop. The\nuser inputs a value for n, and the\nprogram iterates from 1 to n,\naccumulating the sum. The time\ncomplexity is O(n), as the loop\nexecutes n times. It demonstrates\nthe use of loops and basic I/O in C++.\0"
+    },
+    {
+        code: 
+"def binary_search(arr, x):\n\tlow = 0\n\thigh = len(arr) - 1\n\twhile low <= high:\n\t\tmid = (low + high) // 2\n\t\tif arr[mid] == x:\n\t\t\treturn mid\n\t\telif arr[mid] < x:\n\t\t\tlow = mid + 1\n\t\telse:\n\t\t\thigh = mid - 1\n\treturn -1\n\n# Binary Search Example\nresult = binary_search([1, 3, 5, 7, 9], 7)\0",
+        language: 'python',
+        description: 
+"Binary search is an efficient search\nalgorithm for sorted arrays. The\nalgorithm repeatedly divides the\nsearch range in half, checking the\nmiddle element and adjusting the\nrange based on comparisons. This\nmethod operates in logarithmic time,\nO(log n), making it faster than\nlinear search for large datasets.\0"
+    },
+    {
+        code: 
+"public class BubbleSort {\n\tpublic static void bubbleSort(int[] arr) {\n\t\tint n = arr.length;\n\t\tfor (int i = 0; i < n-1; i++) {\n\t\t\tfor (int j = 0; n-i-1 > j; j++) {\n\t\t\t\tif (arr[j] > arr[j+1]) {\n\t\t\t\t\tint temp = arr[j];\n\t\t\t\t\tarr[j] = arr[j+1];\n\t\t\t\t\tarr[j+1] = temp;\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n\n\tpublic static void main(String[] args) {\n\t\tint[] arr = {64, 34, 25, 12, 22};\n\t\tbubbleSort(arr);\n\t\tfor (int i = 0; i < arr.length; i++)\n\t\t\tSystem.out.print(arr[i] + \" \");\n\t}\n}\0",
+        language: 'java',
+        description: 
+"Bubble Sort is a simple\ncomparison-based sorting algorithm\nthat repeatedly steps through the\nlist, compares adjacent elements,\nand swaps them if they are in the\nwrong order. It has a time complexity\nof O(n^2) in the worst case, which\nmakes it inefficient for large datasets.\0"
+    },
+    {
+        code: 
+"#include<stdio.h>\n\nint gcd(int a, int b) {\n\tif (b == 0)\n\t\treturn a;\n\telse\n\t\treturn gcd(b, a % b);\n}\n\nint main() {\n\tint a = 56, b = 98;\n\tprintf(\"GCD of %d and %d is %d\\n\", a, b, gcd(a, b));\n\treturn 0;\n}\0",
+        language: 'c',
+        description: 
+"The greatest common divisor (GCD)\nof two integers is the largest\ninteger that divides both without\nleaving a remainder. This\nimplementation uses the Euclidean\nalgorithm, which recursively\ncalculates the GCD by dividing\nthe larger number by the smaller\none and taking the remainder until\nzero is reached.\0"
+    },
+    {
+        code: 
+"#include<iostream>\nusing namespace std;\n\nvoid quickSort(int arr[], int low, int high) {\n\tif (low < high) {\n\t\tint pi = partition(arr, low, high);\n\t\tquickSort(arr, low, pi - 1);\n\t\tquickSort(arr, pi + 1, high);\n\t}\n}\n\nint partition(int arr[], int low, int high) {\n\tint pivot = arr[high];\n\tint i = (low - 1);\n\tfor (int j = low; j <= high - 1; j++) {\n\t\tif (arr[j] < pivot) {\n\t\t\ti++;\n\t\t\tswap(arr[i], arr[j]);\n\t\t}\n\t}\n\tswap(arr[i + 1], arr[high]);\n\treturn (i + 1);\n}\n\nint main() {\n\tint arr[] = {10, 7, 8, 9, 1, 5};\n\tint n = sizeof(arr)/sizeof(arr[0]);\n\tquickSort(arr, 0, n-1);\n\tcout << \"Sorted array: \\n\";\n\tfor (int i = 0; i < n; i++)\n\t\tcout << arr[i] << \" \";\n\treturn 0;\n}\0",
+        language: 'cpp',
+        description: 
+"QuickSort is a divide-and-conquer\nalgorithm that selects a pivot\nelement from the array and\npartitions the other elements into\ntwo sub-arrays according to whether\nthey are less than or greater than\nthe pivot. The sub-arrays are then\nsorted recursively. QuickSort has an\naverage-case time complexity of\nO(n log n).\0"
+    },
+    {
+        code: 
+"def merge_sort(arr):\n\tif len(arr) > 1:\n\t\tmid = len(arr) // 2\n\t\tL = arr[:mid]\n\t\tR = arr[mid:]\n\t\tmerge_sort(L)\n\t\tmerge_sort(R)\n\t\ti = j = k = 0\n\t\twhile i < len(L) and j < len(R):\n\t\t\tif L[i] < R[j]:\n\t\t\t\tarr[k] = L[i]\n\t\t\t\ti += 1\n\t\t\telse:\n\t\t\t\tarr[k] = R[j]\n\t\t\t\tj += 1\n\t\t\tk += 1\n\t\twhile i < len(L):\n\t\t\tarr[k] = L[i]\n\t\t\ti += 1\n\t\t\tk += 1\n\t\twhile j < len(R):\n\t\t\tarr[k] = R[j]\n\t\t\tj += 1\n\t\t\tk += 1\n\narr = [12, 11, 13, 5, 6, 7]\nmerge_sort(arr)\nprint(arr)\0",
+        language: 'python',
+        description: 
+"Merge Sort is a stable, comparison-based\nsorting algorithm. It divides the array\ninto halves, recursively sorts each half,\nand then merges the two sorted halves.\nIt has a time complexity of O(n log n),\nwhich makes it efficient for large\ndatasets compared to simpler sorting\nalgorithms like Bubble Sort.\0"
+    },
+    {
+        code: 
+"public class BinaryTree {\n\tclass Node {\n\t\tint key;\n\t\tNode left, right;\n\t\tpublic Node(int item) {\n\t\t\tkey = item;\n\t\t\tleft = right = null;\n\t\t}\n\t}\n\n\tNode root;\n\n\tBinaryTree() {\n\t\troot = null;\n\t}\n\n\tvoid insert(int key) {\n\t\troot = insertRec(root, key);\n\t}\n\n\tNode insertRec(Node root, int key) {\n\t\tif (root == null) {\n\t\t\troot = new Node(key);\n\t\t\treturn root;\n\t\t}\n\t\tif (key < root.key)\n\t\t\troot.left = insertRec(root.left, key);\n\t\telse if (key > root.key)\n\t\t\troot.right = insertRec(root.right, key);\n\t\treturn root;\n\t}\n\n\tpublic static void main(String[] args) {\n\t\tBinaryTree tree = new BinaryTree();\n\t\ttree.insert(50);\n\t\ttree.insert(30);\n\t\ttree.insert(20);\n\t\ttree.insert(40);\n\t\ttree.insert(70);\n\t\ttree.insert(60);\n\t\ttree.insert(80);\n\t}\n}\0",
+        language: 'java',
+        description: 
+"A binary tree is a hierarchical\ndata structure in which each node\nhas at most two children. This code\ndefines a binary tree and provides\nan insert method to add nodes in\nthe correct position. The tree\nensures that left children are\nsmaller, and right children are\nlarger than the root.\0"
     }
 ];
+
+
 
 function getRandomCodeSnippet() {
     return codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
 }
 
-function applySyntaxHighlighting(code, language) {
-    const keywords = {
-        'javascript': ['function', 'return', 'if', 'class', 'constructor', 'let', 'const', 'while', 'else', 'new'],
-        'python': ['def', 'return', 'if', 'for', 'in', 'len', 'while']
-    };
-    
-    const operators = {
-        'javascript': ['+', '-', '*', '/', '=', '==', '===', '<=', '>=', '=>'],
-        'python': ['+', '-', '*', '/', '=', '==', '<=', '>=', ':']
-    };
-
-    let highlighted = code;
-
-    // Highlight strings first
-    highlighted = highlighted.replace(/(["'`])(?:(?=(\\?))\2.)*?\1/g, '<span class="string">$&</span>');
-
-    // Highlight comments
-    if (language === 'javascript') {
-        highlighted = highlighted.replace(/(\/\/.*$)/gm, '<span class="comment">$&</span>');
-    } else if (language === 'python') {
-        highlighted = highlighted.replace(/(#.*$)/gm, '<span class="comment">$&</span>');
-    }
-
-    // Highlight numbers
-    highlighted = highlighted.replace(/\b(\d+)\b/g, '<span class="number">$&</span>');
-
-    // Highlight keywords
-    const keywordRegex = new RegExp(`\\b(${keywords[language].join('|')})\\b`, 'g');
-    highlighted = highlighted.replace(keywordRegex, '<span class="keyword">$&</span>');
-
-    // Highlight operators
-    const operatorRegex = new RegExp(operators[language].map(op => 
-        op.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|'), 'g');
-    highlighted = highlighted.replace(operatorRegex, '<span class="operator">$&</span>');
-
-    // Highlight function declarations
-    if (language === 'javascript') {
-        highlighted = highlighted.replace(/\b(function\s+)(\w+)/g, '$1<span class="function">$2</span>');
-    } else if (language === 'python') {
-        highlighted = highlighted.replace(/\b(def\s+)(\w+)/g, '$1<span class="function">$2</span>');
-    }
-
-    return highlighted;
-}

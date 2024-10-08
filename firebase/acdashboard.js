@@ -57,15 +57,17 @@ async function loadUserData(userId) {
     try {
         setLoading(true);
         const userDoc = await getDoc(doc(db, 'users', userId));
+        console.log(userDoc.exists());
         if (userDoc.exists()) {
     const userData = userDoc.data();
 
     nameInput.value = userData.name || ''; // Default to empty string if missing
-    usernameElement.textContent = userData.username || user.email; // Fall back to email if username is missing
+    usernameElement.textContent = userData.username || "🙏"; /
     ageInput.value = userData.age || ''; // Handle missing age
     genderSelect.value = userData.gender || ''; // Handle missing gender
     goalsTextarea.value = userData.goals || ''; // Handle missing goals
-
+      console.log(userData.name);
+      console.log(userData.email);
     // Load education data
     educationFields.innerHTML = ''; // Clear existing fields
     if (userData.education && userData.education.length > 0) {

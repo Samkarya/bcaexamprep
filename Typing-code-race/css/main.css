@@ -9,7 +9,7 @@
     --highlight-color: #ffd700;
 }
 
-body {
+.typing-game-container {
     font-family: 'Roboto', sans-serif;
     background-color: var(--bg-color);
     color: var(--text-color);
@@ -18,32 +18,32 @@ body {
     padding: 0;
 }
 
-header {
+.typing-game-container .header {
     background-color: var(--secondary-color);
     padding: 1rem;
     text-align: center;
 }
 
-h1 {
+.typing-game-container h1 {
     color: var(--primary-color);
     margin: 0;
 }
 
-main {
+.typing-game-container .main {
     display: flex;
     justify-content: center;
     padding: 2rem;
 }
 
 
-.auth-buttons {
+.typing-game-container .auth-buttons {
     display: flex;
     justify-content: center;
     gap: 1rem;
     margin-top: 1rem;
 }
 
-.auth-btn {
+.typing-game-container .auth-btn {
     background-color: var(--primary-color);
     border: none;
     border-radius: 4px;
@@ -53,30 +53,30 @@ main {
     transition: background-color 0.3s ease;
 }
 
-.auth-btn:hover {
+.typing-game-container .auth-btn:hover {
     background-color: var(--highlight-color);
 }
 
-.help-text {
+.typing-game-container .help-text {
     background-color: var(--bg-color);
     border-radius: 4px;
     margin-top: 2rem;
     padding: 1rem;
 }
 
-.help-text h2 {
+.typing-game-container .help-text h2 {
     color: var(--primary-color);
     margin-top: 0;
 }
 
-kbd {
+.typing-game-container kbd {
     background-color: var(--secondary-color);
     border: 1px solid var(--text-color);
     border-radius: 3px;
     padding: 2px 4px;
 }
 
-.error-message {
+.typing-game-container .error-message {
     background-color: var(--error-color);
     border-radius: 4px;
     color: var(--bg-color);
@@ -85,7 +85,7 @@ kbd {
     text-align: center;
 }
 
-#loading-overlay {
+.typing-game-container #loading-overlay {
     align-items: center;
     background-color: rgba(0, 0, 0, 0.8);
     display: flex;
@@ -98,7 +98,7 @@ kbd {
     z-index: 9999;
 }
 
-.spinner {
+.typing-game-container .spinner {
     border: 4px solid var(--text-color);
     border-top: 4px solid var(--primary-color);
     border-radius: 50%;
@@ -114,15 +114,15 @@ kbd {
 
 /* Responsive design */
 @media (max-width: 768px) {
-    main {
+   .typing-game-container .main {
         padding: 1rem;
     }
 
-    #game-container {
+    .typing-game-container #game-container {
         padding: 1rem;
     }
 
-    .mode-buttons {
+    .typing-game-container .mode-buttons {
         flex-direction: column;
     }
 }

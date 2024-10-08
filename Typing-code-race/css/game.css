@@ -13,14 +13,23 @@
     justify-content: space-between;
     margin-bottom: 1rem;
 }
-
-#game-info {
+@media screen and (max-width: 800px) {
+    /* Styles for screens smaller than or equal to 600px */
+    #game-header {
+        display: flex;
+        margin-bottom: 1rem;
+        flex-direction: column;
+        justify-content: space-evenly;
+        align-items: center;
+    }
+}
+#game-info, #saved-game-info {
     display: flex;
     justify-content: space-between;
     margin-bottom: 1rem;
 }
 
-.game-metric {
+.game-metric, .saved-game-metric {
     background-color: var(--bg-color);
     border-radius: 4px;
     padding: 0.5rem;
@@ -29,11 +38,15 @@
 
 #code-display {
     background-color: var(--bg-color);
+    max-height: 150px;
     border-radius: 4px;
     font-family: 'Fira Code', monospace;
     margin-bottom: 1rem;
     padding: 1rem;
     white-space: pre-wrap;
+    overflow-y: scroll;
+    scroll-behavior: smooth;
+
 }
 
 #code-input {
@@ -46,6 +59,7 @@
     padding: 1rem;
     resize: vertical;
     width: 100%;
+    white-space: pre-wrap;
 }
 
 .start-options {
@@ -89,10 +103,21 @@
 .char {
     display: inline-block;
     position: relative;
+    padding: 2px;
+    border-radius: 2px;
 }
 
-.char.correct { color: var(--success-color); }
-.char.incorrect { color: var(--error-color); }
+.char.correct {
+    background-color: #54ff7c96;
+    
+}
+
+.char.incorrect {
+    background-color: #ff445477;
+    
+}
+
+
 .char.current { background-color: var(--highlight-color); color: var(--bg-color); }
 
 .cursor {
@@ -103,8 +128,19 @@
     vertical-align: middle;
     animation: blink 0.7s step-end infinite;
 }
-
+.cursor {
+    position: relative;
+    
+}
 @keyframes blink {
     from, to { opacity: 0; }
     50% { opacity: 1; }
+}
+.game-over{
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
 }

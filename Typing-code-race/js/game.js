@@ -232,9 +232,9 @@ class Game {
     calculateAccuracy() {
         const typed = this.codeInput.value;
         let correctChars = 0;
-        
+        const charArray = Array.from(this.codeDisplay.querySelectorAll('.char')).map(charElement => charElement.textContent);
         for (let i = 0; i < typed.length; i++) {
-            if (typed[i] === this.currentContent[i]) {
+            if (typed[i] === charArray[i]) {
                 correctChars++;
             }
         }

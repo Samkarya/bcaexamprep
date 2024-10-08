@@ -62,7 +62,7 @@ async function loadUserData(userId) {
     const userData = userDoc.data();
 
     nameInput.value = userData.name || ''; // Default to empty string if missing
-    usernameElement.textContent = userData.username || "🙏"; /
+    usernameElement.textContent = userData.username || ''; /
     ageInput.value = userData.age || ''; // Handle missing age
     genderSelect.value = userData.gender || ''; // Handle missing gender
     goalsTextarea.value = userData.goals || ''; // Handle missing goals

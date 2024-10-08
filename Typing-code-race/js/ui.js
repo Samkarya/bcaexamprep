@@ -3,8 +3,8 @@ class UI {
         startBox: document.getElementById('start-box'),
         userInfo: document.getElementById('user-info'),
         username: document.getElementById('username'),
-        loginBtn: document.getElementById('login-btn'),
-        signupBtn: document.getElementById('signup-btn'),
+        //loginBtn: document.getElementById('login-btn'),
+        //signupBtn: document.getElementById('signup-btn'),
         gameInfo: document.getElementById('game-info'),
         codeDisplay: document.getElementById('code-display'),
         codeInput: document.getElementById('code-input'),
@@ -22,15 +22,18 @@ class UI {
                 <div class="mode-buttons">
                     <button class="mode-btn" onclick="game.start('code')">Code Mode</button>
                     <button class="mode-btn" onclick="game.start('text')">Text Mode</button>
+                    <button class="mode-btn" onclick="game.start('p-code')">Practice Code Mode</button>
+                    <button class="mode-btn" onclick="game.start('p-text')">Practice Text Mode</button>
                 </div>
-                <div class="difficulty-selector">
-                    <label for="difficulty">Difficulty:</label>
-                    <select id="difficulty">
-                        <option value="easy">Easy</option>
-                        <option value="medium" selected>Medium</option>
-                        <option value="hard">Hard</option>
+                <!--<div class="time-selector">
+                    <label for="time">Time:</label>
+                    <select id="time">
+                        <option value="30">30 sec</option>
+                        <option value="60" selected>1 min</option>
+                        <option value="300">5 min</option>
+                        <option value="600">10 min</option>
                     </select>
-                </div>
+                </div>-->
             </div>
         `;
         this.elements.startBox.style.display = 'block';
@@ -63,18 +66,19 @@ class UI {
 
     static showGameOver(totalTime, finalWPM, finalAccuracy) {
         this.elements.codeInput.disabled = true;
+        this.elements.codeInput.style.display = 'none';
         this.elements.startBox.innerHTML = `
-            <div class="game-over">
+            <div class="game-over" id ='game-over'>
                 <h2>Game Over!</h2>
-                <p>Time: ${totalTime.toFixed(2)} seconds</p>
-                <p>WPM: ${finalWPM}</p>
-                <p>Accuracy: ${finalAccuracy}%</p>
-                <button onclick="UI.showStartOptions()">Play Again</button>
+                <p id='time-para'>Time: ${totalTime.toFixed(2)} seconds</p>
+                <p id='wpm-para'>WPM: ${finalWPM}</p>
+                <p id='accuracy-para'>Accuracy: ${finalAccuracy}%</p>
+                <button onclick="game.restart()">Restart</button>
+                <button onclick="UI.showStartOptions()">Change Mode</button>
             </div>
         `;
         this.elements.startBox.style.display = 'block';
     }
-
     static showError(message) {
         this.elements.errorContainer.textContent = message;
         this.elements.errorContainer.style.display = 'block';
@@ -100,3 +104,4 @@ class UI {
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = UI;
 }
+

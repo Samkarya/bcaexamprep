@@ -29,7 +29,7 @@ const codeSnippets = [
     },
     {
         code: 
-"def binary_search(arr, x):\n\tlow = 0\n\thigh = len(arr) - 1\n\twhile low <= high:\n\t\tmid = (low + high) // 2\n\t\tif arr[mid] == x:\n\t\t\treturn mid\n\t\telif arr[mid] < x:\n\t\t\tlow = mid + 1\n\t\telse:\n\t\t\thigh = mid - 1\n\treturn -1\n\n# Binary Search Example\nresult = binary_search([1, 3, 5, 7, 9], 7)\0",
+"def binary_search(arr, x):\n\tlow = 0\n\thigh = len(arr) - 1\n\twhile low <= high:\n\t\tmid = (low + high) / 2\n\t\tif arr[mid] == x:\n\t\t\treturn mid\n\t\telif arr[mid] < x:\n\t\t\tlow = mid + 1\n\t\telse:\n\t\t\thigh = mid - 1\n\treturn -1\n\n# Binary Search Example\nresult = binary_search([1, 3, 5, 7, 9], 7)\0",
         language: 'python',
         description: 
 "Binary search is an efficient search\nalgorithm for sorted arrays. The\nalgorithm repeatedly divides the\nsearch range in half, checking the\nmiddle element and adjusting the\nrange based on comparisons. This\nmethod operates in logarithmic time,\nO(log n), making it faster than\nlinear search for large datasets.\0"
@@ -57,7 +57,7 @@ const codeSnippets = [
     },
     {
         code: 
-"def merge_sort(arr):\n\tif len(arr) > 1:\n\t\tmid = len(arr) // 2\n\t\tL = arr[:mid]\n\t\tR = arr[mid:]\n\t\tmerge_sort(L)\n\t\tmerge_sort(R)\n\t\ti = j = k = 0\n\t\twhile i < len(L) and j < len(R):\n\t\t\tif L[i] < R[j]:\n\t\t\t\tarr[k] = L[i]\n\t\t\t\ti += 1\n\t\t\telse:\n\t\t\t\tarr[k] = R[j]\n\t\t\t\tj += 1\n\t\t\tk += 1\n\t\twhile i < len(L):\n\t\t\tarr[k] = L[i]\n\t\t\ti += 1\n\t\t\tk += 1\n\t\twhile j < len(R):\n\t\t\tarr[k] = R[j]\n\t\t\tj += 1\n\t\t\tk += 1\n\narr = [12, 11, 13, 5, 6, 7]\nmerge_sort(arr)\nprint(arr)\0",
+"def merge_sort(arr):\n\tif len(arr) > 1:\n\t\tmid = len(arr) / 2\n\t\tL = arr[:mid]\n\t\tR = arr[mid:]\n\t\tmerge_sort(L)\n\t\tmerge_sort(R)\n\t\ti = j = k = 0\n\t\twhile i < len(L) and j < len(R):\n\t\t\tif L[i] < R[j]:\n\t\t\t\tarr[k] = L[i]\n\t\t\t\ti += 1\n\t\t\telse:\n\t\t\t\tarr[k] = R[j]\n\t\t\t\tj += 1\n\t\t\tk += 1\n\t\twhile i < len(L):\n\t\t\tarr[k] = L[i]\n\t\t\ti += 1\n\t\t\tk += 1\n\t\twhile j < len(R):\n\t\t\tarr[k] = R[j]\n\t\t\tj += 1\n\t\t\tk += 1\n\narr = [12, 11, 13, 5, 6, 7]\nmerge_sort(arr)\nprint(arr)\0",
         language: 'python',
         description: 
 "Merge Sort is a stable, comparison-based\nsorting algorithm. It divides the array\ninto halves, recursively sorts each half,\nand then merges the two sorted halves.\nIt has a time complexity of O(n log n),\nwhich makes it efficient for large\ndatasets compared to simpler sorting\nalgorithms like Bubble Sort.\0"

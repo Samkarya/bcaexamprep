@@ -8,13 +8,15 @@
     
     <!-- Preload critical fonts -->
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Fira+Code&display=swap" as="style">
-    <link rel="preload" href="https://samkarya.github.io/bcaexamprep/Typing-code-race/css/main.css" as="style">
-    <link rel="preload" href="https://samkarya.github.io/bcaexamprep/Typing-code-race/css/game.css" as="style">
-    
+    <link rel="preload" href="D:/hp/Documents/programs_coding_projects/type-code-race/css/main.css" as="style">
+    <link rel="preload" href="D:/hp/Documents/programs_coding_projects/type-code-race/css/game.css" as="style">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+
     <!-- Stylesheet loading -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Fira+Code&display=swap">
-    <link rel="stylesheet" href="https://samkarya.github.io/bcaexamprep/Typing-code-race/css/main.css">
-    <link rel="stylesheet" href="https://samkarya.github.io/bcaexamprep/Typing-code-race/css/game.css">
+    <link rel="stylesheet" href="D:/hp/Documents/programs_coding_projects/type-code-race/css/main.css">
+    <link rel="stylesheet" href="D:/hp/Documents/programs_coding_projects/type-code-race/css/game.css">
 </head>
 <body>
     <div id="top-ad-container" class="ad-container" aria-hidden="true"></div>
@@ -23,11 +25,11 @@
         <h1>Typing Code Race</h1>
         <nav id="user-nav">
             <div id="user-info" aria-live="polite">
-                <span id="username">Guest</span>
-                <div class="auth-buttons">
+                <span id="username">Beta Version</span>
+                <!--<div class="auth-buttons">
                     <button id="login-btn" class="auth-btn">Login</button>
                     <button id="signup-btn" class="auth-btn">Sign Up</button>
-                </div>
+                </div>-->
             </div>
         </nav>
     </header>
@@ -44,6 +46,20 @@
                     </div>
                     <div class="game-metric">
                         <span id="accuracy" class="metric-value">Accuracy: 100%</span>
+                    </div>
+                </div>
+                <div id="saved-game-info" aria-live="polite">
+                    <div class="saved-game-metric">
+                        <span id="best" class="metric-value">Personal Best: </span>
+                    </div>
+                    <div class="saved-game-metric">
+                        <span id="saved-time" class="metric-value">Time: 0s</span>
+                    </div>
+                    <div class="saved-game-metric">
+                        <span id="saved-wpm" class="metric-value">WPM: 0</span>
+                    </div>
+                    <div class="saved-game-metric">
+                        <span id="saved-accuracy" class="metric-value">Accuracy: 0%</span>
                     </div>
                 </div>
             </div>
@@ -81,22 +97,60 @@
         <div class="spinner"></div>
         <p>Loading...</p>
     </div>
-
+    <div id="typing-achievement-widget" class="unique-widget-popup" style="display: none;"></div>
     <!-- Error message container -->
     <div id="error-container" aria-live="assertive"></div>
 
-    <!-- Scripts -->
+    <script src="https://samkarya.github.io/bcaexamprep/widget/share-achievement.js"></script>
+    <script>
+  let widgetPopup = null;
+
+  function triggerAchievementOnGameOver() {
+    const gameOverScreen = document.getElementById('game-over');
+    if (gameOverScreen && window.getComputedStyle(gameOverScreen).display !== 'none') {
+      const timePara = document.getElementById('time-para');
+      const wpmPara = document.getElementById('wpm-para');
+      const accuracyPara = document.getElementById('accuracy-para');
+
+      if (timePara && wpmPara && accuracyPara) {
+        const timeText = timePara.innerText.split(': ')[1];
+        const wpmText = wpmPara.innerText.split(': ')[1];
+        const accuracyText = accuracyPara.innerText.split(': ')[1];
+
+        widgetPopup = new AchievementWidgetPopup('typing-achievement-widget', {
+          title: 'Typing Challenge Completed! ⌨️',
+          scoreLabel: 'Words Per Minute',
+          scoreValue: wpmText,
+          scoreUnit: ' WPM',
+          showTime: true,
+          timeLabel: 'Accuracy',
+          timeValue: accuracyText, 
+          timeUnit: ' ',
+          websiteName: 'BCA Exam Preparation',
+          websiteUrl: "https://bcaexamprep.blogspot.com/2024/10/typing-challenge.html",
+          primaryColor: '#FF4081',
+          secondaryColor: '#00BCD4',
+          backgroundColor: '#FFFFFF',
+          shareText: `I typed ${wpmText} WPM with ${accuracyText} accuracy in ${timeText} on BCA Exam Preparation Typing Challenge! ⌨️🎉`
+        });
+
+        widgetPopup.showPopup();
+      }
+    }
+  }
+     </script>
+    <!-- Scripts 
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js" defer></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js" defer></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js" defer></script>
-    
+    -->
     <!-- App scripts -->
-    <script src="https://samkarya.github.io/bcaexamprep/Typing-code-race/js/firebaseConfig.js" defer></script>
-    <script src="https://samkarya.github.io/bcaexamprep/Typing-code-race/js/codeSnippets.js" defer></script>
-    <script src="https://samkarya.github.io/bcaexamprep/Typing-code-race/js/game.js" defer></script>
-    <script src="https://samkarya.github.io/bcaexamprep/Typing-code-race/js/ui.js" defer></script>
-    <script src="https://samkarya.github.io/bcaexamprep/Typing-code-race/js/auth.js" defer></script>
-    <script src="https://samkarya.github.io/bcaexamprep/Typing-code-race/js/ads.js" defer></script>
-    <script src="https://samkarya.github.io/bcaexamprep/Typing-code-race/js/main.js" defer></script>
+    <!--<script src="D:/hp/Documents/programs_coding_projects/type-code-race/js/firebaseConfig.js" defer></script>-->
+    <script src="D:/hp/Documents/programs_coding_projects/type-code-race/js/codeSnippets.js" defer></script>
+    <script src="D:/hp/Documents/programs_coding_projects/type-code-race/js/game.js" defer></script>
+    <script src="D:/hp/Documents/programs_coding_projects/type-code-race/js/ui.js" defer></script>
+    <!--<script src="D:/hp/Documents/programs_coding_projects/type-code-race/js/auth.js" defer></script>
+    <script src="D:/hp/Documents/programs_coding_projects/type-code-race/js/ads.js" defer></script>-->
+    <script src="D:/hp/Documents/programs_coding_projects/type-code-race/js/main.js" defer></script>
 </body>
 </html>

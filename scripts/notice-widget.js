@@ -8,8 +8,8 @@ const notices = {
     ]
 };
 
-const globalNotices = ["📢 New Feature Alert: Try out our Bisection and False Position Method calculators—<a href='https://bcaexamprep.blogspot.com/p/portfolio-hub-tools-projects.html'>now available</a> for you!"];
-
+const globalNotices = [];
+//"📢 New Feature Alert: Try out our Bisection and False Position Method calculators—<a href='https://bcaexamprep.blogspot.com/p/portfolio-hub-tools-projects.html'>now available</a> for you!"
 // Helper functions
 const getMatchedNotices = (url) => {
     const matchedNotices = Object.entries(notices)

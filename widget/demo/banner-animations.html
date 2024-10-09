@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* Base styles */
+        :root {
+            --primary-bg: #ffffff;
+            --secondary-bg: #f3f4f6;
+            --primary-text: #1f2937;
+            --secondary-text: #4b5563;
+            --game-accent: #6366f1;
+            --article-accent: #ec4899;
+            --tool-accent: #10b981;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --primary-bg: #1f2937;
+                --secondary-bg: #374151;
+                --primary-text: #f9fafb;
+                --secondary-text: #d1d5db;
+            }
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--primary-bg);
+            color: var(--primary-text);
+        }
+
+        /* Animation Keyframes */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 5px rgba(99, 102, 241, 0.2); }
+            50% { box-shadow: 0 0 20px rgba(99, 102, 241, 0.6); }
+        }
+
+        @keyframes slide-in {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(0); }
+        }
+
+        /* Banner Styles */
+        .banner-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .animation-controls {
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .animation-button {
+            padding: 10px 15px;
+            background-color: var(--secondary-bg);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: var(--primary-text);
+        }
+
+        .animation-button:hover {
+            background-color: var(--game-accent);
+            color: white;
+        }
+
+        .banner {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            background-color: var(--secondary-bg);
+        }
+
+        .item-card {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            text-decoration: none;
+            color: var(--primary-text);
+        }
+
+        .item-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 12px;
+            margin-right: 20px;
+        }
+
+        .item-info h2 {
+            margin: 0 0 5px 0;
+            font-size: 1.5rem;
+        }
+
+        .item-category {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        /* Animation Classes */
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        .bounce {
+            animation: bounce 1s infinite;
+        }
+
+        .shimmer {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .shimmer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.2) 50%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            animation: shimmer 2s infinite;
+        }
+
+        .shake {
+            animation: shake 0.5s infinite;
+        }
+
+        .glow {
+            animation: glow 1.5s infinite;
+        }
+
+        .slide-in {
+            animation: slide-in 0.5s ease-out;
+        }
+
+        /* Category-specific styles */
+        .game .item-category { color: var(--game-accent); }
+        .article .item-category { color: var(--article-accent); }
+        .tool .item-category { color: var(--tool-accent); }
+    </style>
+</head>
+<body>
+    <div class="banner-container">
+        <div class="animation-controls">
+            <button class="animation-button" data-animation="none">No Animation</button>
+            <button class="animation-button" data-animation="pulse">Pulse</button>
+            <button class="animation-button" data-animation="bounce">Bounce</button>
+            <button class="animation-button" data-animation="shimmer">Shimmer</button>
+            <button class="animation-button" data-animation="shake">Shake</button>
+            <button class="animation-button" data-animation="glow">Glow</button>
+            <button class="animation-button" data-animation="slide-in">Slide In</button>
+        </div>
+        <div class="banner">
+            <a href="#" class="item-card game">
+                <img src="/api/placeholder/64/64" alt="Game Icon" class="item-icon">
+                <div class="item-info">
+                    <div class="item-category">Game</div>
+                    <h2>Cosmic Explorer</h2>
+                    <p>Embark on an epic space adventure!</p>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        const banner = document.querySelector('.banner');
+        const buttons = document.querySelectorAll('.animation-button');
+        let currentAnimation = '';
+
+        function setAnimation(animationName) {
+            // Remove all animation classes
+            banner.classList.remove('pulse', 'bounce', 'shimmer', 'shake', 'glow', 'slide-in');
+            
+            // If the animation isn't 'none', add the new animation class
+            if (animationName !== 'none') {
+                banner.classList.add(animationName);
+            }
+
+            // Update current animation
+            currentAnimation = animationName;
+
+            // Update button states
+            buttons.forEach(btn => {
+                if (btn.dataset.animation === animationName) {
+                    btn.style.backgroundColor = 'var(--game-accent)';
+                    btn.style.color = 'white';
+                } else {
+                    btn.style.backgroundColor = 'var(--secondary-bg)';
+                    btn.style.color = 'var(--primary-text)';
+                }
+            });
+        }
+
+        // Event listeners for buttons
+        buttons.forEach(button => {
+            button.addEventListener('click', () => {
+                const animation = button.dataset.animation;
+                setAnimation(animation);
+                
+                // For slide-in, we need to reset the animation
+                if (animation === 'slide-in') {
+                    banner.style.animation = 'none';
+                    banner.offsetHeight; // Trigger reflow
+                    banner.style.animation = null;
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -133,9 +133,6 @@
                     renderUniversities();
                 }
             });
-            requestButton.addEventListener('click', () => {
-                alert('University request feature coming soon!');
-            });
 
             // Initial render
             renderUniversities();

@@ -22,57 +22,81 @@ let interactiveEnabled = localStorage.getItem("interactiveMCQs") === "true";
 function toggleInteractiveMCQs() {
     interactiveEnabled = !interactiveEnabled;
     localStorage.setItem("interactiveMCQs", interactiveEnabled);
-
+    
     const button = document.querySelector(".interactivemcq-button");
-    if (interactiveEnabled) {
-        enableInteractiveMCQs();
-        button.textContent = "Deactivate Interactive MCQs";
-    } else {
-        disableInteractiveMCQs();
-        button.textContent = "Activate Interactive MCQs";
+    if (button) {
+        button.textContent = interactiveEnabled ? "Deactivate Interactive MCQs" : "Activate Interactive MCQs";
+        button.setAttribute('aria-pressed', interactiveEnabled);
     }
+    
+    interactiveEnabled ? enableInteractiveMCQs() : disableInteractiveMCQs();
+}
+
+// Function to create styled radio input
+function createStyledRadio() {
+    const radioContainer = document.createElement("div");
+    radioContainer.className = "custom-radio";
+    
+    const radioInput = document.createElement("input");
+    radioInput.type = "radio";
+    
+    const radioMark = document.createElement("span");
+    radioMark.className = "radio-mark";
+    
+    radioContainer.appendChild(radioInput);
+    radioContainer.appendChild(radioMark);
+    
+    return { radioContainer, radioInput };
 }
 
 // Function to enable interactive MCQs
 function enableInteractiveMCQs() {
     document.querySelectorAll(".question-box").forEach((questionBox, questionIndex) => {
         const answersList = questionBox.querySelector('ol[type="A"]');
-        if (answersList) {
-            const listItems = answersList.getElementsByTagName("li");
+        if (!answersList) return;
+
+        const listItems = answersList.getElementsByTagName("li");
+        
+        // Extract the correct answer
+        const answerElement = questionBox.querySelector(".answer details p i");
+        if (!answerElement) return;
+        
+        const correctAnswer = answerElement.textContent.trim().charCodeAt(16) - "A".charCodeAt(0);
+        
+        Array.from(listItems).forEach((listItem, index) => {
+            const choiceText = listItem.textContent.trim();
             
-            for (let i = 0; i < listItems.length; i++) {
-                const choiceText = listItems[i].textContent.trim();
-                
-                const label = document.createElement("label");
-                label.style.cursor = "pointer";
-
-                const radioInput = document.createElement("input");
-                radioInput.type = "radio";
-                radioInput.name = "answerOption" + questionIndex;
-                radioInput.value = i;
-                label.appendChild(radioInput);
-
-                const choiceLabel = document.createElement("span");
-                choiceLabel.textContent = choiceText;
-                label.appendChild(choiceLabel);
-
-                listItems[i].innerHTML = "";
-                listItems[i].appendChild(label);
-            }
-
-            // Extract the correct answer
-            const correctAnswer = questionBox.querySelector(".answer details p i").textContent.trim().charCodeAt(16) - "A".charCodeAt(0);
+            // Clear existing content
+            listItem.innerHTML = '';
             
-            // Set up event listeners for answer checking
-            questionBox.querySelectorAll('input[name="answerOption' + questionIndex + '"]').forEach(input => {
-                input.addEventListener("change", () => {
-                    const isCorrect = input.value == correctAnswer;
-                    questionBox.classList.toggle("correct-answer", isCorrect);
-                    questionBox.classList.toggle("incorrect-answer", !isCorrect);
-                    checkAllCorrect();
-                });
+            // Create new elements
+            const { radioContainer, radioInput } = createStyledRadio();
+            radioInput.name = `answerOption${questionIndex}`;
+            radioInput.value = index;
+            
+            const choiceLabel = document.createElement("span");
+            choiceLabel.className = "choice-text";
+            choiceLabel.textContent = choiceText;
+            
+            // Append elements
+            listItem.appendChild(radioContainer);
+            listItem.appendChild(choiceLabel);
+            
+            // Make entire li clickable
+            listItem.addEventListener("click", (e) => {
+                if (e.target !== radioInput) {
+                    radioInput.checked = true;
+                    radioInput.dispatchEvent(new Event('change'));
+                }
             });
-        }
+            
+            // Add answer checking logic
+            radioInput.addEventListener("change", () => {
+                const isCorrect = index === correctAnswer;
+                questionBox.className = 'question-box ' + (isCorrect ? 'correct-answer' : 'incorrect-answer');                
+                checkAllCorrect();
+            });
+        });
     });
 }
 
@@ -80,18 +104,17 @@ function enableInteractiveMCQs() {
 function disableInteractiveMCQs() {
     document.querySelectorAll(".question-box").forEach(questionBox => {
         const answersList = questionBox.querySelector('ol[type="A"]');
-        if (answersList) {
-            const listItems = answersList.getElementsByTagName("li");
-            for (let listItem of listItems) {
-                const label = listItem.querySelector("label");
-                if (label) {
-                    listItem.textContent = label.textContent.trim();
-                }
-            }
-            questionBox.classList.remove("correct-answer", "incorrect-answer");
-        }
-    });
+        if (!answersList) return;
+
+        const listItems = answersList.getElementsByTagName("li");
+        
+        Array.from(listItems).forEach(listItem => {
+            const choiceText = listItem.querySelector('.choice-text')?.textContent || 
+                              listItem.textContent.trim();
+            listItem.innerHTML = choiceText;
+        });
 }
+                                                       }                                
 
 // Function to check if all MCQs are answered correctly
 function checkAllCorrect() {

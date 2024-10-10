@@ -1,0 +1,44 @@
+[
+  {
+    "id": 1,
+    "name": "Mahatma Gandhi Kashi Vidyapith University",
+    "links": [
+      { "title": "Complete Detailed Syllabus", "url": "https://mgkvp.ac.in/Uploads/SyllabusHome/B.C.A._79.pdf" }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "Guru Jambheshwar University of Science and Technology",
+    "links": [
+      { "title": "Complete Course Syllabus", "url": "https://gjust.ac.in/portal/upload/c6d75bf3-d50d-4eaf-85ac-eb409a415626.pdf" }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Chaudhary Charan Singh University, Meerut",
+    "links": [
+      { "title": "Complete Course Syllabus", "url": "https://www.gngroup.org/asset/pdf/syllabus/management/BCA.pdf" }
+    ]
+  },
+  {
+    "id": 4,
+    "name": "Maharaja Ganga Singh University",
+    "links": [
+      { "title": "Complete Course Syllabus", "url": "https://www.mgsubikaner.ac.in/PDF/63da0c4b9bd9e.pdf" }
+    ]
+  },
+  {
+    "id": 5,
+    "name": "Hemvati Nandan Bahuguna Garhwal University",
+    "links": [
+      { "title": "Complete Course Syllabus", "url": "https://www.hnbgu.ac.in/sites/default/files/2023-09/BCA%20NEP%20SYLLABUS%20%281%29.pdf" }
+    ]
+  },
+  {
+    "id": 6,
+    "name": "The Indira Gandhi National Open University",
+    "links": [
+      { "title": "Complete Course Syllabus", "url": "http://www.ignou.ac.in/upload/programme/BCA%28Revised%29%20PG.pdf" }
+    ]
+  }
+]

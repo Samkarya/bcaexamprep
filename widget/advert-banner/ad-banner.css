@@ -38,7 +38,7 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 2rem auto;
             
-            animation: pulse 2s infinite;
+            animation: pulse 5s;
         }
 
         .banner-wrapper .carousel {
@@ -82,7 +82,7 @@
                 rgba(255, 255, 255, 0.2) 50%,
                 rgba(255, 255, 255, 0) 100%
             );
-            animation: shimmer 5s;
+            animation: shimmer 2s infinite;
             pointer-events: none;
         }
 

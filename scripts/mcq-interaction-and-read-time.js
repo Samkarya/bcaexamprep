@@ -113,8 +113,9 @@ function disableInteractiveMCQs() {
                               listItem.textContent.trim();
             listItem.innerHTML = choiceText;
         });
+});
 }
-                                                       }                                
+                                                                                       
 
 // Function to check if all MCQs are answered correctly
 function checkAllCorrect() {

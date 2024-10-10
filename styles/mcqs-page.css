@@ -539,3 +539,64 @@ body.dark-mode .question-box.incorrect-answer .option ol li.selected {
         animation: none;
     }
 }
+/* Radio button styling */
+.question-box ol li {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    margin-bottom: 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.question-box ol li:hover {
+    background-color: #f7fafc;
+}
+
+.custom-radio {
+    display: flex;
+    align-items: center;
+    margin-right: 12px;
+}
+
+.custom-radio input[type="radio"] {
+    display: none;
+}
+
+.radio-mark {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #4299e1;
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+}
+
+.custom-radio input[type="radio"]:checked + .radio-mark::after {
+    content: '';
+    width: 12px;
+    height: 12px;
+    background-color: #4299e1;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.choice-text {
+    flex-grow: 1;
+}
+/* Dark mode styles */
+body.dark-mode .question-box ol li:hover {
+    background-color: #2d3748;
+}
+
+body.dark-mode .radio-mark {
+    border-color: #63b3ed;
+}
+
+body.dark-mode .custom-radio input[type="radio"]:checked + .radio-mark::after {
+    background-color: #63b3ed;
+}

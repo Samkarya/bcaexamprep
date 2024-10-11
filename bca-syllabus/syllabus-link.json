@@ -40,5 +40,13 @@
     "links": [
       { "title": "Complete Course Syllabus", "url": "http://www.ignou.ac.in/upload/programme/BCA%28Revised%29%20PG.pdf" }
     ]
+  },
+  {
+    "id": 7,
+    "name": "Mahatma Gandhi Mission(MGM) University",
+    "links": [
+      { "title": "B.C.A (Hons) Science", "url": "https://www.mgmgyp.org/pdf/BCA%20Science.pdf" },
+      { "title": "B.C.A (Hons) Digital Marketing", "url": "https://www.mgmgyp.org/pdf/BCA%20Digital%20Marketing.pdf" }
+    ]
   }
 ]

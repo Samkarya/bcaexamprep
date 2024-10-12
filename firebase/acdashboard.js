@@ -6,7 +6,6 @@ import { firebaseConfig, showToast, handleError } from "https://samkarya.github.
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-firebase.firestore.setLogLevel('debug');
 const auth = getAuth();
 const db = getFirestore(app);
 

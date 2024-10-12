@@ -34,14 +34,14 @@ let currentUser = null;
 
 // Authentication listener
 onAuthStateChanged(auth, (user) => {
-  console.log("Auth state changed. User:", user ? user.uid : "null");
+  
     setLoading(true);
     if (user) {
         currentUser = user;
         noAccountMessage.style.display = 'none';
         authContainer.style.display = 'block';
         usernameElement.textContent =  user.email || "Warrior";
-        loadUserData(currentUser.uid);
+        loadUserData(user.uid);
         updateEmailVerificationUI(user);
     } else {
       
@@ -54,19 +54,18 @@ onAuthStateChanged(auth, (user) => {
 // Load user data
 async function loadUserData(userId) {
     try {
-      console.log("Loading user data for UID:", userId);
+      
         setLoading(true);
       const userDocRef = doc(db, 'users', userId);
         const userDoc = await getDoc(userDocRef);
-        console.log("User document exists:", userDoc.exists());
-        console.log("Raw user document data:", userDoc.data());
+        
         if (userDoc.exists()) {
             const userData = userDoc.data();
-          console.log("Processed user data:", userData);
+          
             displayUserProfile(userData);
             populateEditForm(userData);
         } else {
-          console.log("User document does not exist");
+          
              userData = {
                 name: '',
                 age: '',
@@ -87,7 +86,7 @@ async function loadUserData(userId) {
 
 // Display user profile
 function displayUserProfile(userData) {
-  console.log("Displaying user profile with data:", userData);
+  
     profileDetails.innerHTML = `
         <p><strong>Name:</strong> ${userData.name || 'Not set'}</p>
         <p><strong>Age:</strong> ${userData.age || 'Not set'}</p>
@@ -247,6 +246,15 @@ function setLoading(isLoading) {
     loadingIndicator.style.display = isLoading ? 'block' : 'none';
     Array.from(document.querySelectorAll('button')).forEach(btn => btn.disabled = isLoading);
 }
-
+function refreshUserData() {
+    if (currentUser) {
+        loadUserData(currentUser.uid);
+    } else {
+        showToast("No user logged in, Please Login", 'info');
+    }
+}
 // Initial setup
 setLoading(true);
+document.addEventListener('DOMContentLoaded', function() {
+    refreshUserData();
+});

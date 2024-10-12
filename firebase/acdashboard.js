@@ -41,7 +41,7 @@ onAuthStateChanged(auth, (user) => {
         noAccountMessage.style.display = 'none';
         authContainer.style.display = 'block';
         usernameElement.textContent =  user.email || "Warrior";
-        loadUserData(user.uid);
+        loadUserData(currentUser.uid);
         updateEmailVerificationUI(user);
     } else {
       

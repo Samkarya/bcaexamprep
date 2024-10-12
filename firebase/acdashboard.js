@@ -6,6 +6,7 @@ import { firebaseConfig, showToast, handleError } from "https://samkarya.github.
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+firebase.firestore.setLogLevel('debug');
 const auth = getAuth();
 const db = getFirestore(app);
 
@@ -35,6 +36,7 @@ let currentUser = null;
 // Authentication listener
 onAuthStateChanged(auth, (user) => {
     setLoading(true);
+  console.log('Auth State Changed: User:', user);
     if (user) {
         currentUser = user;
         noAccountMessage.style.display = 'none';
@@ -43,6 +45,7 @@ onAuthStateChanged(auth, (user) => {
         loadUserData(user.uid);
         updateEmailVerificationUI(user);
     } else {
+      console.log('User is not authenticated.');
         noAccountMessage.style.display = 'block';
         authContainer.style.display = 'none';
     }
@@ -53,9 +56,12 @@ onAuthStateChanged(auth, (user) => {
 async function loadUserData(userId) {
     try {
         setLoading(true);
+      console.log('Loading User Data for UID:', userId);
         const userDoc = await getDoc(doc(db, 'users', userId));
+      console.log('Firestore Document:', userDoc);
         if (userDoc.exists()) {
             const userData = userDoc.data();
+          console.log('Firestore Document:', userDoc);
             displayUserProfile(userData);
             populateEditForm(userData);
         } else {
@@ -70,6 +76,7 @@ async function loadUserData(userId) {
 
 // Display user profile
 function displayUserProfile(userData) {
+  console.log('Displaying User Profile:', userData);
     profileDetails.innerHTML = `
         <p><strong>Name:</strong> ${userData.name || 'Not set'}</p>
         <p><strong>Age:</strong> ${userData.age || 'Not set'}</p>

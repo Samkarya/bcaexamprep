@@ -1,6 +1,5 @@
-// Import Firebase modules 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
-import { getAuth, onAuthStateChanged, signOut, sendEmailVerification, updatePassword, sendPasswordResetEmail, updateEmail } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
+import { getAuth, onAuthStateChanged, signOut, sendEmailVerification, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
 import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
 import { initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app-check.js";
 import { firebaseConfig, showToast, handleError } from "https://samkarya.github.io/bcaexamprep/firebase/common-utils.js";
@@ -15,32 +14,29 @@ const appCheck = initializeAppCheck(app, {
   isTokenAutoRefreshEnabled: true
 });
 
-// Get DOM elements
+// DOM elements
 const noAccountMessage = document.getElementById('no-account-message');
-const authContainer = document.querySelector('.auth-container-dash');
-const resetPasswordBtn = document.getElementById('reset-password-btn');
+const authContainer = document.getElementById('auth-container');
+const loadingIndicator = document.getElementById('loading-indicator');
 const usernameElement = document.getElementById('username');
+const profileDetails = document.getElementById('profile-details');
 const profileForm = document.getElementById('profile-form');
-const nameInput = document.getElementById('name');
-const ageInput = document.getElementById('age');
-const genderSelect = document.getElementById('gender');
-const educationFields = document.getElementById('education-fields');
-const addEducationBtn = document.getElementById('add-education');
-const goalsTextarea = document.getElementById('goals');
+const profileView = document.getElementById('profile-view');
+const profileEdit = document.getElementById('profile-edit');
+const editProfileBtn = document.getElementById('edit-profile-btn');
+const cancelEditBtn = document.getElementById('cancel-edit');
+const resetPasswordBtn = document.getElementById('reset-password-btn');
 const verifyEmailBtn = document.getElementById('verify-email');
 const logoutBtn = document.getElementById('logout-btn');
-const errorMessage = document.getElementById('error-message');
-const successMessage = document.getElementById('success-message');
-const loadingIndicator = document.getElementById('loading-indicator');
-const toastElement = document.getElementById('toast');
 const createAccountButton = document.getElementById('create-account-button');
 
-let profileChangesCount = 0;
-const MAX_PROFILE_CHANGES = 5;
+let currentUser = null;
 
 // Authentication listener
 onAuthStateChanged(auth, (user) => {
+    setLoading(true);
     if (user) {
+        currentUser = user;
         noAccountMessage.style.display = 'none';
         authContainer.style.display = 'block';
         usernameElement.textContent = user.displayName || user.email;
@@ -50,42 +46,21 @@ onAuthStateChanged(auth, (user) => {
         noAccountMessage.style.display = 'block';
         authContainer.style.display = 'none';
     }
+    setLoading(false);
 });
 
-// Load user data from Firestore
+// Load user data
 async function loadUserData(userId) {
     try {
         setLoading(true);
         const userDoc = await getDoc(doc(db, 'users', userId));
-        
         if (userDoc.exists()) {
-    const userData = userDoc.data();
-
-    nameInput.value = userData.name || ''; // Default to empty string if missing
-    usernameElement.textContent = userData.username || '🙏'; 
-    ageInput.value = userData.age || ''; // Handle missing age
-    genderSelect.value = userData.gender || ''; // Handle missing gender
-    goalsTextarea.value = userData.goals || ''; // Handle missing goals
-    // Load education data
-    educationFields.innerHTML = ''; // Clear existing fields
-    if (userData.education && userData.education.length > 0) {
-        userData.education.forEach(edu => addEducationField(edu));
-    } else {
-        addEducationField(); // Add an empty field if no education data
-    }
-
-    // Handle profile change count logic
-    const lastChangeDate = userData.lastChangeDate;
-    const today = new Date().toISOString().split('T')[0];
-    if (lastChangeDate === today) {
-        profileChangesCount = userData.profileChangesCount || 0;
-    } else {
-        profileChangesCount = 0;
-    }
-} else {
-    console.error('User document does not exist');
-}
-
+            const userData = userDoc.data();
+            displayUserProfile(userData);
+            populateEditForm(userData);
+        } else {
+            showToast('User profile not found. Please update your profile.', 'error');
+        }
     } catch (error) {
         handleError(error);
     } finally {
@@ -93,41 +68,44 @@ async function loadUserData(userId) {
     }
 }
 
-// Save user data
-profileForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const user = auth.currentUser;
-    if (user) {
-        if (profileChangesCount >= MAX_PROFILE_CHANGES) {
-            showToast('You have reached the maximum number of profile changes for today.', 'warning');
-            return;
-        }
-        if (!validateForm()) {
-            return;
-        }
-        try {
-            setLoading(true);
-            await setDoc(doc(db, 'users', user.uid), {
-                name: nameInput.value,
-                age: parseInt(ageInput.value),
-                gender: genderSelect.value,
-                education: getEducationData(),
-                goals: goalsTextarea.value,
-                profileChangesCount: profileChangesCount + 1,
-                lastChangeDate: new Date().toISOString().split('T')[0]
-            });
-            profileChangesCount++;
-            showToast('Profile updated successfully!', 'success');
-        } catch (error) {
-            handleError(error);
-        } finally {
-            setLoading(false);
-        }
+// Display user profile
+function displayUserProfile(userData) {
+    profileDetails.innerHTML = `
+        <p><strong>Name:</strong> ${userData.name || 'Not set'}</p>
+        <p><strong>Age:</strong> ${userData.age || 'Not set'}</p>
+        <p><strong>Gender:</strong> ${userData.gender || 'Not set'}</p>
+        <p><strong>Education:</strong></p>
+        <ul>
+            ${userData.education ? userData.education.map(edu => `
+                <li>
+                    ${edu.collegeName} - ${edu.course} (Year: ${edu.year}, Semester: ${edu.semester})
+                    ${edu.otherInfo ? `<br>Additional Info: ${edu.otherInfo}` : ''}
+                </li>
+            `).join('') : '<li>No education information provided</li>'}
+        </ul>
+        <p><strong>Future Goals:</strong> ${userData.goals || 'Not set'}</p>
+    `;
+}
+
+// Populate edit form
+function populateEditForm(userData) {
+    document.getElementById('name').value = userData.name || '';
+    document.getElementById('age').value = userData.age || '';
+    document.getElementById('gender').value = userData.gender || '';
+    document.getElementById('goals').value = userData.goals || '';
+    
+    const educationFields = document.getElementById('education-fields');
+    educationFields.innerHTML = '';
+    if (userData.education && userData.education.length > 0) {
+        userData.education.forEach(edu => addEducationField(edu));
+    } else {
+        addEducationField();
     }
-});
+}
 
 // Add education field
 function addEducationField(data = {}) {
+    const educationFields = document.getElementById('education-fields');
     const educationEntry = document.createElement('div');
     educationEntry.className = 'education-entry';
     educationEntry.innerHTML = `
@@ -136,81 +114,51 @@ function addEducationField(data = {}) {
         <input type="number" placeholder="Year" class="year" min="1900" max="2099" required value="${data.year || ''}">
         <input type="number" placeholder="Semester" class="semester" min="1" max="12" required value="${data.semester || ''}">
         <textarea placeholder="Other related info" class="other-info">${data.otherInfo || ''}</textarea>
-        <button type="button" class="btn btn-remove-education">Remove</button>
+        <button type="button" class="btn btn-secondary remove-education">Remove</button>
     `;
     educationFields.appendChild(educationEntry);
 
-    educationEntry.querySelector('.btn-remove-education').addEventListener('click', () => {
+    educationEntry.querySelector('.remove-education').addEventListener('click', () => {
         educationFields.removeChild(educationEntry);
     });
 }
 
-// Get education data from form
-function getEducationData() {
-    const educationEntries = document.querySelectorAll('.education-entry');
-    return Array.from(educationEntries).map(entry => ({
-        collegeName: entry.querySelector('.college-name').value,
-        course: entry.querySelector('.course').value,
-        year: parseInt(entry.querySelector('.year').value),
-        semester: parseInt(entry.querySelector('.semester').value),
-        otherInfo: entry.querySelector('.other-info').value
-    }));
-}
-
-// Add education button functionality
-addEducationBtn.addEventListener('click', () => addEducationField());
-
-// Form validation
-function validateForm() {
-    let isValid = true;
-    if (!validateInput(nameInput.value, 'name')) {
-        showError('Please enter a valid name (2-30 characters, letters only).');
-        isValid = false;
-    }
-    if (!validateInput(ageInput.value, 'age')) {
-        showError('Please enter a valid age (1-120).');
-        isValid = false;
-    }
-    return isValid;
-}
-
-function validateInput(input, type) {
-    switch(type) {
-        case 'name':
-            return /^[a-zA-Z ]{2,30}$/.test(input);
-        case 'age':
-            const age = parseInt(input);
-            return age > 0 && age < 120;
-        default:
-            return true;
-    }
-}
-
-// Reset password functionality
-resetPasswordBtn.addEventListener('click', async () => {
-    if (await confirmAction('Are you sure you want to reset your password?')) {
-        const user = auth.currentUser;
-        if (user) {
-            try {
-                setLoading(true);
-                await sendPasswordResetEmail(auth, user.email);
-                showToast('Password reset email sent. Please check your inbox.');
-            } catch (error) {
-                handleError(error);
-            } finally {
-                setLoading(false);
-            }
-        }
-    }
+// Event Listeners
+editProfileBtn.addEventListener('click', () => {
+    profileView.style.display = 'none';
+    profileEdit.style.display = 'block';
 });
 
-// Logout functionality
-logoutBtn.addEventListener('click', async () => {
-    if (await confirmAction('Are you sure you want to log out?')) {
+cancelEditBtn.addEventListener('click', () => {
+    profileView.style.display = 'block';
+    profileEdit.style.display = 'none';
+});
+
+document.getElementById('add-education').addEventListener('click', () => addEducationField());
+
+profileForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (currentUser) {
         try {
             setLoading(true);
-            await signOut(auth);
-            window.showAuthPopup();
+            const formData = {
+                name: document.getElementById('name').value,
+                age: parseInt(document.getElementById('age').value),
+                gender: document.getElementById('gender').value,
+                goals: document.getElementById('goals').value,
+                education: Array.from(document.querySelectorAll('.education-entry')).map(entry => ({
+                    collegeName: entry.querySelector('.college-name').value,
+                    course: entry.querySelector('.course').value,
+                    year: parseInt(entry.querySelector('.year').value),
+                    semester: parseInt(entry.querySelector('.semester').value),
+                    otherInfo: entry.querySelector('.other-info').value
+                }))
+            };
+            await setDoc(doc(db, 'users', currentUser.uid), formData);
+            showToast('Profile updated successfully!', 'success');
+            loadUserData(currentUser.uid);
+            profileView.style.display = 'block';
+            profileEdit.style.display = 'none';
         } catch (error) {
             handleError(error);
         } finally {
@@ -219,50 +167,68 @@ logoutBtn.addEventListener('click', async () => {
     }
 });
 
-// Email verification
+resetPasswordBtn.addEventListener('click', async () => {
+    if (currentUser) {
+        try {
+            setLoading(true);
+            await sendPasswordResetEmail(auth, currentUser.email);
+            showToast('Password reset email sent. Please check your inbox.', 'success');
+        } catch (error) {
+            handleError(error);
+        } finally {
+            setLoading(false);
+        }
+    }
+});
+
+verifyEmailBtn.addEventListener('click', async () => {
+    if (currentUser && !currentUser.emailVerified) {
+        try {
+            setLoading(true);
+            await sendEmailVerification(currentUser);
+            showToast('Verification email sent. Please check your inbox.', 'success');
+        } catch (error) {
+            handleError(error);
+        } finally {
+            setLoading(false);
+        }
+    }
+});
+
+logoutBtn.addEventListener('click', async () => {
+    try {
+        setLoading(true);
+        await signOut(auth);
+        showToast('Logged out successfully.', 'success');
+    } catch (error) {
+        handleError(error);
+    } finally {
+        setLoading(false);
+    }
+});
+
+createAccountButton.addEventListener('click', () => {
+    window.showAuthPopup();
+});
+
 function updateEmailVerificationUI(user) {
     if (user.emailVerified) {
         verifyEmailBtn.textContent = 'Email Verified';
         verifyEmailBtn.disabled = true;
-        verifyEmailBtn.style.backgroundColor = 'green';
+        verifyEmailBtn.classList.remove('btn-secondary');
+        verifyEmailBtn.classList.add('btn-success');
     } else {
         verifyEmailBtn.textContent = 'Verify Email';
         verifyEmailBtn.disabled = false;
-        verifyEmailBtn.style.backgroundColor = '#007BFF';
-        verifyEmailBtn.addEventListener('click', sendVerificationEmail);
+        verifyEmailBtn.classList.remove('btn-success');
+        verifyEmailBtn.classList.add('btn-secondary');
     }
 }
 
-// Send verification email
-async function sendVerificationEmail() {
-    const user = auth.currentUser;
-    if (user && !user.emailVerified) {
-        try {
-            setLoading(true);
-            await sendEmailVerification(user);
-            showToast('Verification email sent. Please check your inbox.');
-        } catch (error) {
-            handleError(error);
-        } finally {
-            setLoading(false);
-        }
-    }
-}
-
-// Confirm action helper
-function confirmAction(message) {
-    return new Promise(resolve => {
-        const confirmed = confirm(message);
-        resolve(confirmed);
-    });
-}
-
-// Utility functions
 function setLoading(isLoading) {
-    if (isLoading) {
-        loadingIndicator.style.display = 'block';
-    } else {
-        loadingIndicator.style.display = 'none';
-    }
+    loadingIndicator.style.display = isLoading ? 'block' : 'none';
+    Array.from(document.querySelectorAll('button')).forEach(btn => btn.disabled = isLoading);
 }
 
+// Initial setup
+setLoading(true);

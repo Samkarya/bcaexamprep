@@ -70,9 +70,6 @@ async function loadUserData(userId) {
 
 // Display user profile
 function displayUserProfile(userData) {
-   console.log(userData);
-  console.log(userData.name);
-  console.log(userData.age);
     profileDetails.innerHTML = `
         <p><strong>Name:</strong> ${userData.name || 'Not set'}</p>
         <p><strong>Age:</strong> ${userData.age || 'Not set'}</p>

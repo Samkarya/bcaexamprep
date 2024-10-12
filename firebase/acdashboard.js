@@ -255,6 +255,8 @@ function refreshUserData() {
 }
 // Initial setup
 setLoading(true);
-document.addEventListener('DOMContentLoaded', function() {
-    refreshUserData();
-});
+window.onload = function() {
+    setTimeout(function() {
+        refreshUserData();
+    }, 1000);
+};

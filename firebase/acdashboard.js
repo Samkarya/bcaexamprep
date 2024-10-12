@@ -34,8 +34,8 @@ let currentUser = null;
 
 // Authentication listener
 onAuthStateChanged(auth, (user) => {
+  console.log("Auth state changed. User:", user ? user.uid : "null");
     setLoading(true);
-  
     if (user) {
         currentUser = user;
         noAccountMessage.style.display = 'none';
@@ -54,16 +54,19 @@ onAuthStateChanged(auth, (user) => {
 // Load user data
 async function loadUserData(userId) {
     try {
+      console.log("Loading user data for UID:", userId);
         setLoading(true);
-      
-        const userDoc = await getDoc(doc(db, 'users', userId));
-      console.log('Firestore Document:', userDoc);
+      const userDocRef = doc(db, 'users', userId);
+        const userDoc = await getDoc(userDocRef);
+        console.log("User document exists:", userDoc.exists());
+        console.log("Raw user document data:", userDoc.data());
         if (userDoc.exists()) {
             const userData = userDoc.data();
-          console.log('Firestore Document:', userDoc);
+          console.log("Processed user data:", userData);
             displayUserProfile(userData);
             populateEditForm(userData);
         } else {
+          console.log("User document does not exist");
              userData = {
                 name: '',
                 age: '',
@@ -75,6 +78,7 @@ async function loadUserData(userId) {
             showToast('New user profile created. Please update your profile.', 'info');
         }
     } catch (error) {
+      console.error("Error in loadUserData:", error);
         handleError(error);
     } finally {
         setLoading(false);
@@ -83,7 +87,7 @@ async function loadUserData(userId) {
 
 // Display user profile
 function displayUserProfile(userData) {
-  console.log('Displaying User Profile:', userData);
+  console.log("Displaying user profile with data:", userData);
     profileDetails.innerHTML = `
         <p><strong>Name:</strong> ${userData.name || 'Not set'}</p>
         <p><strong>Age:</strong> ${userData.age || 'Not set'}</p>

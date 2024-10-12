@@ -35,7 +35,7 @@ let currentUser = null;
 // Authentication listener
 onAuthStateChanged(auth, (user) => {
     setLoading(true);
-  console.log('Auth State Changed: User:', user);
+  
     if (user) {
         currentUser = user;
         noAccountMessage.style.display = 'none';
@@ -44,7 +44,7 @@ onAuthStateChanged(auth, (user) => {
         loadUserData(user.uid);
         updateEmailVerificationUI(user);
     } else {
-      console.log('User is not authenticated.');
+      
         noAccountMessage.style.display = 'block';
         authContainer.style.display = 'none';
     }
@@ -55,7 +55,7 @@ onAuthStateChanged(auth, (user) => {
 async function loadUserData(userId) {
     try {
         setLoading(true);
-      console.log('Loading User Data for UID:', userId);
+      
         const userDoc = await getDoc(doc(db, 'users', userId));
       console.log('Firestore Document:', userDoc);
         if (userDoc.exists()) {
@@ -64,7 +64,15 @@ async function loadUserData(userId) {
             displayUserProfile(userData);
             populateEditForm(userData);
         } else {
-            showToast('User profile not found. Please update your profile.', 'error');
+             userData = {
+                name: '',
+                age: '',
+                gender: '',
+                education: [],
+                goals: ''
+            };
+            await setDoc(userDocRef, userData);
+            showToast('New user profile created. Please update your profile.', 'info');
         }
     } catch (error) {
         handleError(error);

@@ -256,7 +256,9 @@ function refreshUserData() {
 // Initial setup
 setLoading(true);
 window.onload = function() {
+  showToast('Give us a sec we loading your account info', 'info');
     setTimeout(function() {
         refreshUserData();
+      showToast('Account Load SuccessFul.', 'success');
     }, 1000);
 };

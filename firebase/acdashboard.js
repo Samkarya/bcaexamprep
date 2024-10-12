@@ -39,7 +39,7 @@ onAuthStateChanged(auth, (user) => {
         currentUser = user;
         noAccountMessage.style.display = 'none';
         authContainer.style.display = 'block';
-        usernameElement.textContent = user.displayName || user.email;
+        usernameElement.textContent =  user.email || "Warrior";
         loadUserData(user.uid);
         updateEmailVerificationUI(user);
     } else {
@@ -70,6 +70,9 @@ async function loadUserData(userId) {
 
 // Display user profile
 function displayUserProfile(userData) {
+   console.log(userData);
+  console.log(userData.name);
+  console.log(userData.age);
     profileDetails.innerHTML = `
         <p><strong>Name:</strong> ${userData.name || 'Not set'}</p>
         <p><strong>Age:</strong> ${userData.age || 'Not set'}</p>

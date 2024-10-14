@@ -1,0 +1,228 @@
+{
+  "subject": "Computer Awareness",
+  "year": {
+  "2024":[
+    {
+      "id": 1,
+      "question": "Given that numbers A and B are two 8 bit 2's Complement numbers with A = 11111111; B = 11111111. Then sum A + B is",
+      "options": [
+        "00000010",
+        "11111100",
+        "11111110",
+        "00000000"
+      ],
+      "answer": "3"
+    },
+    {
+      "id": 2,
+      "question": "Consider an arbitrary number system with independent digits as 0, 1 and A. If we generate first few numbers in sequence as 00, 01, 0A, 10, 11, 1A and if this process is continued to generate the numbers, then the position of 10A is",
+      "options": [
+        "15",
+        "12",
+        "9",
+        "10"
+      ],
+      "answer": "2"
+    },
+    {
+      "id": 3,
+      "question": "The Boolean expression for the following truth table is<br><pre>x | y | z | f\n0 | 0 | 0 | 0\n0 | 0 | 1 | 0\n0 | 1 | 0 | 1\n0 | 1 | 1 | 0\n1 | 0 | 0 | 0\n1 | 0 | 1 | 1\n1 | 1 | 0 | 0\n1 | 1 | 1 | 1</pre>",
+      "options": [
+        "F = x' yz' + xy' z + x' y' z'",
+        "F = x' y' z' + xy' z + xyz'",
+        "F = x' yz' + xy' z + xyz",
+        "None of these"
+      ],
+      "answer": "4"
+    },
+    {
+      "id": 4,
+      "question": "Consider the following 4-bit binary numbers represented in the 2's complement form: 1101 and 0100. What would be the result when we add them?",
+      "options": [
+        "0001 and an overflow",
+        "1001 and no overflow",
+        "1001 and an overflow",
+        "0001 and no overflow"
+      ],
+      "answer": "4"
+    },
+    {
+      "id": 5,
+      "question": "Which of the following interfaces perform the transfer of data between the memory and the I/O peripheral without involving the CPU?",
+      "options": [
+        "Branch Interface",
+        "Serial Interface",
+        "DMA",
+        "DDA"
+      ],
+      "answer": "3"
+    },
+    {
+      "id": 6,
+      "question": "Which of the following is the smallest unit of data in a computer?",
+      "options": [
+        "Byte",
+        "Bit",
+        "Nibble",
+        "KB"
+      ],
+      "answer": "2"
+    },
+    {
+      "id": 7,
+      "question": "Consider the program below which uses six temporary variables a, b, c, d, e and f.<br><pre>a = 10\nb = 20\nc = 30\nd = a + c\ne = b + d\nf = c + e\nb = c + e\ne = b + f\nd = 5 + e\nreturn d + f</pre>Assuming that all the above operations take their operands from registers, the minimum number of registers needed to execute this program without spilling is ________.",
+      "options": [
+        "5",
+        "6",
+        "3",
+        "4"
+      ],
+      "answer": "3"
+    },
+    {
+      "id": 8,
+      "question": "The quotient, if the binary number 11010111 is divided by 101, is",
+      "options": [
+        "101011",
+        "101010",
+        "101101",
+        "111001"
+      ],
+      "answer": "1"
+    },
+    {
+      "id": 9,
+      "question": "Which of the following components is used to establish a communication link between a CPU and the peripheral devices to transfer data?",
+      "options": [
+        "Memory address register",
+        "Instruction register",
+        "Memory data register",
+        "Index register"
+      ],
+      "answer": "3"
+    },
+    {
+      "id": 10,
+      "question": "A computer system has 16-bit wide address/data bus that uses RAM chips of 4K×8-bit capacity. The number of RAM chips are needed to provide a memory capacity of 64 Kbytes memory is",
+      "options": [
+        "32",
+        "16",
+        "64",
+        "8"
+      ],
+      "answer": "2"
+    },
+    {
+      "id": 11,
+      "question": "The primary purpose of cache memory in a computer system is",
+      "options": [
+        "to manage input and output operations between the CPU and peripherals",
+        "to temporarily store frequently accessed data and instructions for faster access by the CPU",
+        "to permanently store data and programs",
+        "to provide additional storage space when the main memory is full"
+      ],
+      "answer": "2"
+    },
+    {
+      "id": 12,
+      "question": "Which of the following do not affects CPU performance?",
+      "options": [
+        "Cache size",
+        "Number of cores",
+        "Amount of RAM",
+        "Clock speed"
+      ],
+      "answer": "3"
+    },
+    {
+      "id": 13,
+      "question": "A CPU generates 32 bits virtual addresses. The page size is 4 KB. The processor has a translation look-aside buffer (TLB) which can hold a total of 128-page table entries and is 4 way set associate. The minimum size of the TLB tag is",
+      "options": [
+        "11 bits",
+        "15 bits",
+        "13 bits",
+        "20 bits"
+      ],
+      "answer": "2"
+    },
+    {
+      "id": 14,
+      "question": "In the figure, the circle stands for employed, the square stands for a social worker, the triangle stands for illiterate, and the rectangle stands for truthful. Study the figure with its regions and find the number of neither truthful nor illiterate people among the employed only.<img src ='api/handler/300x300></img>'",
+      "options": [
+        "4",
+        "8",
+        "1",
+        "11"
+      ],
+      "answer": "2"
+    },
+    {
+      "id": 15,
+      "question": "Cache memory functions as an intermediary between",
+      "options": [
+        "RAM and ROM",
+        "CPU and RAM",
+        "CPU and Hard Disk",
+        "None of these"
+      ],
+      "answer": "2"
+    },
+    {
+      "id": 16,
+      "question": "Let the given numbers 11001, 1001 and 111001 be correspond to the 2's complement representation. Then with which one of the following decimal numbers, the given numbers match?",
+      "options": [
+        "-25, -9 and -57, respectively",
+        "-7, -7, and -7, respectively",
+        "-6, -6, and -6, respectively",
+        "25, 9 and 57, respectively"
+      ],
+      "answer": "2"
+    },
+    {
+      "id": 17,
+      "question": "The range of the exponent E in the IEEE754 double precision (Binary 64) format is",
+      "options": [
+        "-1023 ≤ E ≤ 1023",
+        "-1022 ≤ E ≤ 1022",
+        "-1023 ≤ E ≤ 1022",
+        "-1022 ≤ E ≤ 1023"
+      ],
+      "answer": "4"
+    },
+    {
+      "id": 18,
+      "question": "Which of the following components is not a part of an instruction format in CPU processing?",
+      "options": [
+        "Source operand",
+        "Register file",
+        "Destination operand",
+        "Opcode"
+      ],
+      "answer": "2"
+    },
+    {
+      "id": 19,
+      "question": "Any given truth table can be represented by",
+      "options": [
+        "a product of sum Boolean expression",
+        "All of the options",
+        "a sum of product Boolean expression",
+        "a Karnaugh map"
+      ],
+      "answer": "2"
+    },
+    {
+      "id": 20,
+      "question": "The expression P + QR is the reduced form of",
+      "options": [
+        "(P + Q)R",
+        "(P + R)Q",
+        "(P + Q) (P + R)",
+        "PQ + QR"
+      ],
+      "answer": "3"
+    }
+  ],
+  "2023": []
+}
+}

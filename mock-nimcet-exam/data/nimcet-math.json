@@ -554,6 +554,557 @@
       "answer": "3"
     }
   ],
-  "2023": []
+  "2023": [  
+    {
+      "id": 1,
+      "question": "A circle touches the x-axis and also touches the circle with centre (0, 3) and radius 2. The locus of the centre of the circle is",
+      "options": [
+        "a circle",
+        "an ellipse",
+        "a parabola",
+        "a hyperbola"
+      ],
+      "answer": "3"
+    },
+    {
+      "id": 2,
+      "question": "A computer producing factory has only two plants T<sub>1</sub> and T<sub>2</sub>. Plant T<sub>1</sub> produces 20% and plant T<sub>2</sub> produces 80% of total computers produced. 7% of computers produced in the factory turn out to be defective. It is known that P (computer turns out to be defective given that it is produced in plant T<sub>1</sub>) = 10P (computer turns out to be defective given that it is produced in plant T<sub>2</sub>). where P(E) denotes the probability of an event E. A computer produced in the factory is randomly selected and it does not turn out to be defective. Then the probability that it is produced in plant T<sub>2</sub> is",
+      "options": [
+        "\\(\\frac{36}{47}\\)",
+        "\\(\\frac{78}{93}\\)",
+        "\\(\\frac{79}{93}\\)",
+        "\\(\\frac{83}{93}\\)"
+      ],
+      "answer": "3"
+    },
+    {
+      "id": 3,
+      "question": "The mean of 5 observation is 5 and their variance is 124. If three of the observations are 1, 2 and 6; then the mean deviation from the mean of the data is:",
+      "options": [
+        "2.5",
+        "2.6",
+        "2.8",
+        "2.4"
+      ],
+      "answer": "3"
+    },
+    {
+      "id": 4,
+      "question": "The perimeter of a ∆ABC is 6 times the arithmetic mean of the sines of its angles. If the side a is 1, then the angle A is",
+      "options": [
+        "\\(\\frac{\\pi}{6}\\)",
+        "\\(\\frac{\\pi}{3}\\)",
+        "\\(\\pi\\)",
+        "\\(\\frac{\\pi}{2}\\)"
+      ],
+      "answer": "1"
+    },
+    {
+      "id": 5,
+      "question": "In an examination of nine papers, a candidate has to pass in more papers than the number of papers in which he fails in order to be successful. The number of ways in which he can be unsuccessful is",
+      "options": [
+        "255",
+        "256",
+        "128",
+        "9 × 8!"
+      ],
+      "answer": "2"
+    },
+    {
+      "id": 6,
+      "question": "For a group of 100 candidates, the mean and standard deviation of scores were found to be 40 and 15 respectively. Later on, it was found that the scores 25 and 35 were misread as 52 and 53 respectively. Then the corrected mean and standard deviation corresponding to the corrected figures are",
+      "options": [
+        "39.9, 14.97",
+        "39.5, 14",
+        "39.55, 14.97",
+        "40.19, 15.1"
+      ],
+      "answer": "3"
+    },
+    {
+      "id": 7,
+      "question": "Consider the following frequency distribution table.<br><pre>Class interval  10-20  20-30  30-40  40-50  50-60  60-70  70-80<br>Frequency      180    f1     34     180    136    f2     50</pre>If the total frequency is 685 & median is 42.6 then the values of f1 and f2 are",
+      "options": [
+        "80, 25",
+        "83, 22",
+        "79, 26",
+        "82, 23"
+      ],
+      "answer": "4"
+    },
+    {
+      "id": 8,
+      "question": "If f(x) = \\(\\lim_{x \\to 0} \\frac{6^x - 3^x - 2^x + 1}{\\log_e 9(1 - \\cos x)}\\) is a real number then \\(\\lim_{x \\to 0} f(x)\\) =",
+      "options": [
+        "2",
+        "3",
+        "\\(\\log_e 2\\)",
+        "\\(\\log_e 3\\)"
+      ],
+      "answer": "3"
+    },
+    {
+      "id": 9,
+      "question": "The sum of infinite terms of decreasing GP is equal to the greatest value of the function f(x) = x<sup>3</sup> + 3x - 9 in the interval [-2, 3] and difference between the first two terms is f'(0). Then the common ratio of the GP is",
+      "options": [
+        "\\(-\\frac{2}{3}\\)",
+        "\\(\\frac{4}{3}\\)",
+        "\\(\\frac{2}{3}\\)",
+        "\\(-\\frac{4}{3}\\)"
+      ],
+      "answer": "3"
+    },
+    {
+      "id": 10,
+      "question": "The value of \\(\\int_{-\\pi}^{\\pi/3} x \\sin x dx\\) is",
+      "options": [
+        "\\(\\frac{1}{3}(4\\pi + 1)\\)",
+        "\\(4\\pi - 2 \\log \\tan \\frac{5\\pi}{12}\\)",
+        "\\(4\\pi + \\log \\tan \\frac{5\\pi}{12}\\)",
+        "\\(4\\pi - \\log \\tan \\frac{5\\pi}{3}\\)"
+      ],
+      "answer": "2"
+    },
+    {
+      "id": 11,
+      "question": "The equation of the tangent at any point of curve x = a cos 2t, y = 2a sin<sup>2</sup> t with m as its slope is",
+      "options": [
+        "\\(y = mx + a\\sqrt{\\frac{m^2 - 1}{m}}\\)",
+        "\\(y = mx - a\\sqrt{\\frac{m^2 + 1}{m}}\\)",
+        "\\(y = mx + a\\sqrt{\\frac{a^2 + 1}{m}}\\)",
+        "\\(y = amx + a\\sqrt{\\frac{m^2 - 1}{a}}\\)"
+      ],
+      "answer": "2"
+    },
+    {
+      "id": 12,
+      "question": "If \\(\\prod_{i=1}^n \\tan (\\frac{\\alpha_i}{2}) = 1\\) \\(\\forall \\alpha_i \\in (0, \\pi)\\) where i = 1, 2, 3, ..., n. Then maximum of value of \\(\\prod_{i=1}^n \\sin \\alpha_i\\) is",
+      "options": [
+        "\\(\\frac{1}{2^n}\\)",
+        "\\(\\frac{1}{2^{n/2}}\\)",
+        "1",
+        "None of these"
+      ],
+      "answer": "2"
+    },
+    {
+      "id": 13,
+      "question": "A speaks truth in 60% and B speaks the truth in 50% cases. In what percentage of cases they are likely to contradict each other while narrating some incident is",
+      "options": [
+        "1/2",
+        "1/4",
+        "2/3",
+        "1/3"
+      ],
+      "answer": "1"
+    },
+    {
+      "id": 14,
+      "question": "If a and b are vectors in space, given by a = \\(\\hat{i} - 2\\hat{j}\\) and b = \\(2\\hat{i} + \\hat{j} + 3\\hat{k}\\), then the value of \\((2\\mathbf{a} + \\mathbf{b}) \\cdot [(\\mathbf{a} \\times \\mathbf{b}) \\times (\\mathbf{a} - 2\\mathbf{b})]\\) is",
+      "options": [
+        "3",
+        "4",
+        "5",
+        "6"
+      ],
+      "answer": "3"
+    },
+    {
+      "id": 15,
+      "question": "Let A = 2i + j - 2k and B = i + j, If C is a vector such that |C - A| = 3 and the angle between A × B and C is 30°, then [(A × B) × C] = 3 then the value of A⋅C is equal to",
+      "options": [
+        "25/8",
+        "2",
+        "5",
+        "1/8"
+      ],
+      "answer": "2"
+    },
+    {
+      "id": 16,
+      "question": "Let A and B be sets. A ∩ X = B ∩ X = φ and A ∪ X = B ∪ X for some set X, relation between A & B.",
+      "options": [
+        "A = B",
+        "A ∪ B = X",
+        "B = X",
+        "A = X"
+      ],
+      "answer": "1"
+    },
+    {
+      "id": 17,
+      "question": "If a, b, c, d are in HP and arithmetic mean of ab, bc, cd is 9 then which of the following number is the value of ad?",
+      "options": [
+        "3",
+        "9",
+        "12",
+        "4"
+      ],
+      "answer": "2"
+    },
+    {
+      "id": 18,
+      "question": "Find foci of the equation x<sup>2</sup> + 2x - 4y<sup>2</sup> + 8y - 7 = 0",
+      "options": [
+        "(±√3, 1)",
+        "(±1, √3)",
+        "(±√2, 1)",
+        "(±1, √2)"
+      ],
+      "answer": "2"
+    },
+    {
+      "id": 19,
+      "question": "The locus of the mid-point of all chords of the parabola y<sup>2</sup> = 4x which are drawn through its vertex is",
+      "options": [
+        "y<sup>2</sup> = 8x",
+        "y<sup>2</sup> = 2x",
+        "y<sup>2</sup> + 4y<sup>2</sup> = 16",
+        "x<sup>2</sup> = 2y"
+      ],
+      "answer": "2"
+    },
+    {
+      "id": 20,
+      "question": "If a = \\(\\hat{i} - \\hat{k}\\), b = \\(x\\hat{i} + \\hat{j} + (1-x)\\hat{k}\\) and c = \\(y\\hat{i} + x\\hat{j} + (1+x-y)\\hat{k}\\), then |a b c| depends on",
+      "options": [
+        "Neither x nor y",
+        "Only x",
+        "Only y",
+        "Both x and y"
+      ],
+      "answer": "1"
+    },
+    {
+      "id": 21,
+      "question": "If \\(\\vec{a}\\) and \\(\\vec{b}\\) are unit vectors such that \\(\\vec{2a} + \\vec{b} = \\vec{3}\\) then which of the following statement is true?",
+      "options": [
+        "\\(\\vec{a}\\) is parallel to \\(\\vec{b}\\)",
+        "\\(\\vec{a}\\) is perpendicular to \\(\\vec{b}\\)",
+        "\\(\\vec{a}\\) is perpendicular to \\(\\vec{2a} + \\vec{b}\\)",
+        "\\(\\vec{b}\\) is parallel to \\(\\vec{2a} + \\vec{b}\\)"
+      ],
+      "answer": "1"
+    },
+    {
+      "id": 22,
+      "question": "If \\(\\int f(x)dx = g(x)\\) then \\(\\int x^5f(x^3)dx\\) is equal to",
+      "options": [
+        "\\(\\frac{1}{3}x^3g(x^3) - 3\\int x^4g(x^3)dx + c\\)",
+        "\\(\\frac{1}{3}x^3g(x^3) - \\int x^2g(x^3)dx + c\\)",
+        "\\(\\frac{1}{3}x^3g(x^3) - \\int x^3g(x^3)dx + c\\)",
+        "None of these"
+      ],
+      "answer": "2"
+    },
+    {
+      "id": 23,
+      "question": "If \\(\\lim_{x \\to 1} \\frac{x^4 - 1}{x^3 - k^2} = \\lim_{x \\to k} \\frac{x - 1}{x^2 - k^2}\\) then find k",
+      "options": [
+        "8/3",
+        "4/3",
+        "2/3",
+        "1"
+      ],
+      "answer": "1"
+    },
+    {
+      "id": 24,
+      "question": "The graph of function f(x) = log<sub>e</sub>(x<sup>3</sup> + \\(\\sqrt{x^6 + 1}\\)) is symmetric about:",
+      "options": [
+        "x-axis",
+        "y-axis",
+        "origin",
+        "y = x"
+      ],
+      "answer": "3"
+    },
+    {
+      "id": 25,
+      "question": "If the equation |x<sup>2</sup> - 6x + 8| = a has four real solutions then find the value of a?",
+      "options": [
+        "a ∈ (0)",
+        "a = 1",
+        "a ∈ (0,1)",
+        "a ∈ [1, 2]"
+      ],
+      "answer": "3"
+    },
+    {
+      "id": 26,
+      "question": "Largest value of cos<sup>2</sup> θ - 6sin θ cos θ + 3sin<sup>2</sup> θ + 2 is",
+      "options": [
+        "4",
+        "0",
+        "\\(4 + \\sqrt{10}\\)",
+        "\\(4 - \\sqrt{10}\\)"
+      ],
+      "answer": "3"
+    },
+    {
+      "id": 27,
+      "question": "Given two events A and B such that odds in favour A are 2 : 1 and odds in favour of A ∪ B are 3 : 1. Consistent with this information the smallest and largest value for the probability of event B are given by",
+      "options": [
+        "\\(\\frac{1}{12} \\leq P(B) \\leq \\frac{3}{4}\\)",
+        "\\(\\frac{1}{3} \\leq P(B) \\leq \\frac{1}{2}\\)",
+        "\\(\\frac{1}{6} \\leq P(B) \\leq \\frac{1}{3}\\)",
+        "None of these"
+      ],
+      "answer": "1"
+    },
+    {
+      "id": 28,
+      "question": "If A and B are square matrices such that B = -A<sup>-1</sup>BA, then (A + B)<sup>2</sup> is",
+      "options": [
+        "0",
+        "A<sup>2</sup> + B<sup>2</sup>",
+        "A<sup>2</sup> + 2AB + B<sup>2</sup>",
+        "A + B"
+      ],
+      "answer": "2"
+    },
+    {
+      "id": 29,
+      "question": "A bag contains different kind of balls in which 5 yellow, 4 black & 3 green balls. If 3 balls are drawn at random then find the probability that no black ball is chosen",
+      "options": [
+        "14/55",
+        "6/66",
+        "2/9",
+        "None of these"
+      ],
+      "answer": "1"
+    },
+    {
+      "id": 30,
+      "question": "Between any two real roots of the equation e<sup>x</sup>sin x = 1, the equation e<sup>x</sup>cos x = -1 has",
+      "options": [
+        "At least one root",
+        "Exactly one root",
+        "No root",
+        "None of these"
+      ],
+      "answer": "1"
+    },
+    {
+      "id": 31,
+      "question": "If f(x) is a polynomial of degree 4, f(n) = n + 1 & f(0) = 25, then find f(5) = ?",
+      "options": [
+        "30",
+        "20",
+        "25",
+        "None of these"
+      ],
+      "answer": "1"
+    },
+    {
+      "id": 32,
+      "question": "The maximum value of f(x) = (x - 1)<sup>2</sup> (x + 1)<sup>3</sup> is equal to \\(\\frac{2^p3^q}{3125}\\) then the ordered pair of (p, q) will be",
+      "options": [
+        "(3, 7)",
+        "(7, 3)",
+        "(5, 5)",
+        "(4, 4)"
+      ],
+      "answer": "2"
+    },
+    {
+      "id": 33,
+      "question": "The coefficient of x<sup>50</sup> in the expression of (1 + x)<sup>1000</sup> + 2x(1 + x)<sup>999</sup> + 3x<sup>2</sup>(1 + x)<sup>998</sup> + ... + 1001x<sup>1000</sup>",
+      "options": [
+        "\\(_{1005}C_{50}\\)",
+        "\\(_{1005}C_{51}\\)",
+        "\\(_{1002}C_{50}\\)",
+        "\\(_{1002}C_{51}\\)"
+      ],
+      "answer": "3"
+    },
+    {
+      "id": 34,
+      "question": "If x = \\(\\cos \\frac{2\\pi k}{n} + i \\sin \\frac{2\\pi k}{n}\\), then \\(\\sum_{k=1}^n (x_k)\\) = ?",
+      "options": [
+        "1",
+        "-1",
+        "0",
+        "None of these"
+      ],
+      "answer": "3"
+    },
+    {
+      "id": 35,
+      "question": "Number of points at which f(x) is not differentiable f(x) = | cos x | + 3 in [-π, π]",
+      "options": [
+        "2",
+        "3",
+        "4",
+        "None of these"
+      ],
+      "answer": "1"
+    },
+    {
+      "id": 36,
+      "question": "If n<sub>1</sub> and n<sub>2</sub> are the number of real valued solutions x = | sin x | & x = sin(x) respectively, then the value of n<sub>2</sub> - n<sub>1</sub> is",
+      "options": [
+        "1",
+        "0",
+        "2",
+        "3"
+      ],
+      "answer": "1"
+    },
+    {
+      "id": 37,
+      "question": "Let a, b, c, d be non-zero numbers. If the point of intersection of the line 4ax + 2ay + c = 0 & 5bx + 2by + d = 0 lies in the fourth quadrant and is equidistant from the two axes then",
+      "options": [
+        "a + b + c + d = 0",
+        "ad - bc = 0",
+        "3bc - 2ad = 0",
+        "3bc + 2ad = 0"
+      ],
+      "answer": "3"
+    },
+    {
+      "id": 38,
+      "question": "The negation of ~S∨ (~R ∧S) is equivalent to",
+      "options": [
+        "S∨ (R ∨ ~S)",
+        "S∧ ~R",
+        "S ∧ R",
+        "S ∧ (R∧ ~S)"
+      ],
+      "answer": "3"
+    },
+    {
+      "id": 39,
+      "question": "A point P in the first quadrant, lies on y<sup>2</sup> = 4ax, a > 0, and keeps a distance of 5a units from its focus. Which of the following points lies on the locus of P?",
+      "options": [
+        "(a, 2a)",
+        "(2a, 2a)",
+        "(3a, 2a)",
+        "(4a, 2a)"
+      ],
+      "answer": "2"
+    },
+    {
+      "id": 40,
+      "question": "If \\(\\int x \\sin x \\sec^3 x dx = \\frac{1}{2}f(x)\\sec^2 x + g(x)\\tan x + c\\) then which of the following is true",
+      "options": [
+        "f(x) - g(x) = 0",
+        "f(x) . g(x) = 0",
+        "f(x) + g(x) = 0",
+        "f(x) + g(x) = 1"
+      ],
+      "answer": "3"
+    },
+    {
+      "id": 41,
+      "question": "If \\(\\theta = \\cos^{-1} \\frac{3}{5}\\) is the angle between \\(\\vec{a} = \\hat{i} - 2x\\hat{j} + 2y\\hat{k}\\) & \\(\\vec{b} = x\\hat{i} + \\hat{j} + y\\hat{k}\\) then possible values of (x, y) that lie on the locus are",
+      "options": [
+        "(0, 1)",
+        "(1, 0)",
+        "(1, 1)",
+        "(0, 0)"
+      ],
+      "answer": "1"
+    },
+    {
+      "id": 42,
+      "question": "Let R be a reflexive relation on the finite set A having 10 elements and if m is the number of ordered pairs in R, then",
+      "options": [
+        "m ≥ 10",
+        "m = 100",
+        "m = 10",
+        "m ≤ 10"
+      ],
+      "answer": "1"
+    },
+    {
+      "id": 43,
+      "question": "If |x - 6| = |x<sup>2</sup> - 4x| - |x<sup>2</sup> - 5x + 6|, where x is a real variable, then",
+      "options": [
+        "x = (2, 5)",
+        "x ∈ [2, 3] ∪ [6, ∞)",
+        "R - [2, 6]",
+        "None of these"
+      ],
+      "answer": "2"
+    },
+    {
+      "id": 44,
+      "question": "The range of values of θ in the interval (0, π) such that the points (3, 2) and (cos θ, sin θ) lie on the same sides of the line x + y - 1 = 0, is",
+      "options": [
+        "(0, \\(\\frac{3\\pi}{4}\\))",
+        "(0, \\(\\frac{\\pi}{2}\\))",
+        "(0, \\(\\frac{\\pi}{3}\\))",
+        "(0, \\(\\frac{\\pi}{4}\\))"
+      ],
+      "answer": "2"
+    },
+    {
+      "id": 45,
+      "question": "Which of the following number is the coefficient of x<sup>100</sup> in the expansion of log<sub>e</sub> \\(\\frac{1 + x}{1 + x^2}\\), |x| < 1?",
+      "options": [
+        "0.01",
+        "0.02",
+        "-0.03",
+        "-0.01"
+      ],
+      "answer": "1"
+    },
+    {
+      "id": 46,
+      "question": "A real valued function f is defined as f(x) = \\(\\begin{cases} -1 & -2 \\leq x \\leq 0 \\\\ x - 1 & 0 \\leq x \\leq 2 \\end{cases}\\). Which of the following statement is FALSE?",
+      "options": [
+        "f(|x|) = |x| - 1, if 0 ≤ x ≤ 1",
+        "|f(x)| = x - 1, if 1 ≤ x ≤ 2",
+        "f(|x|) + |f(x)| = 1, if 0 ≤ x ≤ 1",
+        "f(|x|) - |f(x)| = 0, if 1 ≤ x ≤ 2"
+      ],
+      "answer": "3"
+    },
+    {
+      "id": 47,
+      "question": "A line segment AB of length 10 meters is passing through the foot of the perpendicular of a pillar, which is standing at right angle to the ground. Tip of the pillar subtends angles tan<sup>-1</sup> 3 and tan<sup>-1</sup> 2 at A and B respectively. Which of the following choice represents the height of the pillar?",
+      "options": [
+        "10 meter",
+        "8 meter",
+        "12 meter",
+        "15 meter"
+      ],
+      "answer": "3"
+    },
+    {
+      "id": 48,
+      "question": "If a vector having magnitude of 5 units, makes equal angle with each of the three mutually perpendicular axes, then the sum of the magnitudes of the projections on each of the axis is",
+      "options": [
+        "15/√3 unit",
+        "5√3 unit",
+        "15√3/2 units",
+        "None of these"
+      ],
+      "answer": "2"
+    },
+    {
+      "id": 49,
+      "question": "Bag I contains 3 red, 4 black and 3 white balls and Bag II contains 2 red, 5 black and 2 white balls. One ball is transferred from Bag I to Bag II and then a ball is drawn from Bag II. The ball so drawn is found to be black in colour. Then the probability, that the transferred ball is red, is:",
+      "options": [
+        "4/9",
+        "5/18",
+        "1/6",
+        "3/10"
+      ],
+      "answer": "2"
+    },
+    {
+      "id": 50,
+      "question": "Let f(x) = (|x| - 1)<sup>2</sup>. Then the value of lim<sub>x→-1</sub> f(x) is",
+      "options": [
+        "-1",
+        "1",
+        "2",
+        "3"
+      ],
+      "answer": "3"
+    }
+  ]
 }
 }

@@ -1,0 +1,76 @@
+
+    <link rel="stylesheet" href="style.css">
+
+    <div class="page-container">
+        <header class="main-header">
+            <h1>Code Showcase</h1>
+            <div class="controls">
+                <div class="theme-control">
+                    <label for="themeSelect">Theme:</label>
+                    <select id="themeSelect">
+                        <option value="default">Default Editor</option>
+                        <option value="word-light">MS Word Light</option>
+                    </select>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn primary" onclick="addNewProgram()">
+                        <span class="icon">+</span> Add Program
+                    </button>
+                    <button class="btn secondary" onclick="savePrograms()">
+                        <span class="icon">💾</span> Save
+                    </button>
+                    <button class="btn print-btn" onclick="preparePrint()">
+                        <span class="icon">🖨️</span> Print
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main id="programsContainer"></main>
+
+        <div id="printHeader" class="print-only">
+            <h1>Code Collection</h1>
+            <div class="print-meta">
+                <p>Generated: <span id="printDate"></span></p>
+                <p>Total Programs: <span id="programCount"></span></p>
+            </div>
+        </div>
+    </div>
+
+    <template id="programTemplate">
+        <div class="program-container">
+            <div class="program-header">
+                <input type="text" class="program-title" placeholder="Program Title">
+                <div class="program-actions">
+                    <button class="btn-icon" title="Delete Program" onclick="deleteProgram(this)">
+                        <span class="icon">🗑️</span>
+                    </button>
+                </div>
+            </div>
+            <div class="code-section theme-target">
+                <div class="section-header">
+                    <h3>PROGRAM</h3>
+                    <div class="code-actions">
+                        <button class="btn-icon" title="Copy Code" onclick="copyCode(this)">
+                            <span class="icon">📋</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="code-wrapper">
+                    <div class="line-numbers"></div>
+                    <textarea class="code-area" data-type="code" spellcheck="false"></textarea>
+                </div>
+            </div>
+            <div class="output-section theme-target">
+                <div class="section-header">
+                    <h3>OUTPUT</h3>
+                </div>
+                <div class="code-wrapper">
+                    <div class="line-numbers"></div>
+                    <textarea class="code-area" data-type="output" spellcheck="false"></textarea>
+                </div>
+            </div>
+        </div>
+    </template>
+    <script src="themes.js"></script>
+    <script type="module" src="programs.js"></script>

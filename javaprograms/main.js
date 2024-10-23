@@ -1,4 +1,4 @@
-import { defaultPrograms } from './programs.js';
+import { defaultPrograms } from 'https://samkarya.github.io/bcaexamprep/javaprograms/programs.js';
 let programData = JSON.parse(localStorage.getItem('programs')) || defaultPrograms;
 
 // Program Management

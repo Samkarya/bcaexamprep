@@ -49,7 +49,7 @@ function renderPrograms() {
     applyTheme(document.getElementById('themeSelect').value);
 }
 
-function addNewProgram() {
+export function addNewProgram() {
     const newId = Math.max(0, ...programData.programs.map(p => p.id)) + 1;
     const newProgram = {
         id: newId,
@@ -64,7 +64,7 @@ function addNewProgram() {
 }
 
 // Utility Functions
-function savePrograms() {
+export function savePrograms() {
     const containers = document.querySelectorAll('.program-container');
     programData.programs = Array.from(containers).map(container => ({
         id: parseInt(container.dataset.id),
@@ -77,7 +77,7 @@ function savePrograms() {
     showToast('Changes saved successfully');
 }
 
-function deleteProgram(button) {
+export function deleteProgram(button) {
     if (confirm('Are you sure you want to delete this program?')) {
         const container = button.closest('.program-container');
         const id = parseInt(container.dataset.id);
@@ -87,7 +87,7 @@ function deleteProgram(button) {
     }
 }
 
-function copyCode(button) {
+export function copyCode(button) {
     const container = button.closest('.code-section');
     const code = container.querySelector('.code-area').value;
     navigator.clipboard.writeText(code).then(() => {
@@ -111,7 +111,7 @@ function showToast(message) {
 }
 
 // Print Functionality
-function preparePrint() {
+export function preparePrint() {
     // Update print metadata
     document.getElementById('printDate').textContent = new Date().toLocaleString();
     document.getElementById('programCount').textContent = programData.programs.length;
@@ -122,11 +122,6 @@ function preparePrint() {
     // Print the page
     window.print();
 }
-
-// Event Listeners
-document.getElementById('themeSelect').addEventListener('change', (e) => {
-    applyTheme(e.target.value);
-});
 
 // Initialize on load
 document.addEventListener('DOMContentLoaded', () => {

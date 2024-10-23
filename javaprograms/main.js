@@ -1,4 +1,6 @@
 import { defaultPrograms } from 'https://samkarya.github.io/bcaexamprep/javaprograms/programs.js';
+
+// Initialize program data from localStorage or use defaults
 let programData = JSON.parse(localStorage.getItem('programs')) || defaultPrograms;
 
 // Program Management
@@ -60,6 +62,7 @@ function addNewProgram() {
     renderPrograms();
     savePrograms();
 }
+
 // Utility Functions
 function savePrograms() {
     const containers = document.querySelectorAll('.program-container');

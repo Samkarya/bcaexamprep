@@ -110,7 +110,6 @@ function showToast(message) {
     }, 100);
 }
 
-// Print Functionality
 export function preparePrint() {
     // Update print metadata
     document.getElementById('printDate').textContent = new Date().toLocaleString();
@@ -119,10 +118,28 @@ export function preparePrint() {
     // Remove focus from any active element
     document.activeElement.blur();
     
+    // Add print styles dynamically
+    const printStyle = document.createElement('style');
+    printStyle.textContent = `
+        @media print {
+            body > *:not(.page-container) {
+                display: none !important;
+            }
+            .page-container {
+                display: block !important;
+            }
+        }
+    `;
+    document.head.appendChild(printStyle);
+    
     // Print the page
     window.print();
+    
+    // Remove the print styles after printing
+    setTimeout(() => {
+        printStyle.remove();
+    }, 100);
 }
-
 // Initialize on load
 document.addEventListener('DOMContentLoaded', () => {
     renderPrograms();

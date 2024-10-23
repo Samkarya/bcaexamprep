@@ -1,4 +1,4 @@
-const defaultPrograms = {
+export const defaultPrograms = {
     "programs": [
         {
             "id": 1,

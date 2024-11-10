@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         showToast('Error loading content. Please try again later.', 'error');
     }
 });
-
+async function loadInitialContent() {
  // Show loading states
     const trendingContent = document.getElementById('trendingContent');
     const recentContent = document.getElementById('recentContent');

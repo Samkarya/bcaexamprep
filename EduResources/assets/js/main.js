@@ -40,7 +40,6 @@ function checkAuthStatus() {
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 showToast("Authentication successful", "success");
-                loadRE
                 resolve(true);
             } else {
                 

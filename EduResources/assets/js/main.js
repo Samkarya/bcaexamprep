@@ -1,23 +1,5 @@
 // assets/js/main.js
-// Firebase App Initialization
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
-import { getFirestore, collection, getDocs, addDoc, updateDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
-import { initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app-check.js";
-import {firebaseConfig, showToast} from "https://samkarya.github.io/bcaexamprep/firebase/common-utils.js";
-// Firebase configuration
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-//let currentResourceId = null;
-let resources = [];
-// Initialize App Check
-const appCheck = initializeAppCheck(app, {
-    provider: new ReCaptchaV3Provider('6LeER1AqAAAAABaic_YKxvN30vuPQPlMJfpS9e1L'),
-    isTokenAutoRefreshEnabled: true
-});
 // Initialize components when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     // Initialize content cards
@@ -25,97 +7,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialize search
     new Search();
-    initializeApp1();
+
     // Load initial content
-    //loadInitialContent();
+    loadInitialContent();
 
     // Initialize filters
     initializeFilters();
 });
-async function initializeApp1() {
-    await checkAuthStatus();
-    await loadResources();
-}
-function checkAuthStatus() {
-    return new Promise((resolve) => {
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                showToast("Authentication successful", "success");
-                resolve(true);
-            } else {
-                
-                showToast("Please Login To Aceess", "warning");
-                resolve(false);
-            }
-        });
-    });
-}
-// Load Resources
-async function loadResources() {
-    try {
-        const resourcesCollection = collection(db, 'eduResources');
-        const snapshot = await getDocs(resourcesCollection);
-        resources = snapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
-        }));
-        renderResources(resources);
-    } catch (error) {
-        console.error('Error loading resources:', error);
-        showToast('Error loading resources', 'error');
-    }
-}
-
-async function renderResources(resources) {
-    try {
-        // Get container elements
-        const trendingContent = document.getElementById('trendingContent');
-        const recentContent = document.getElementById('recentContent');
-        
-        if (!resources || !resources.length) {
-            const noContentMessage = '<p class="no-content">No resources available</p>';
-            if (trendingContent) trendingContent.innerHTML = noContentMessage;
-            if (recentContent) recentContent.innerHTML = noContentMessage;
-            return;
-        }
-
-        // Sort resources by date for recent content
-        const sortedByDate = [...resources].sort((a, b) => 
-            new Date(b.dateAdded) - new Date(a.dateAdded)
-        );
-
-        // Sort resources by rating for trending content
-        const sortedByRating = [...resources].sort((a, b) => 
-            (b.rating || 0) - (a.rating || 0)
-        );
-
-        // Take top 6 items for each section
-        const recentResources = sortedByDate.slice(0, 3);
-        const trendingResources = sortedByRating.slice(0, 6);
-
-        // Render recent resources
-        if (recentContent) {
-            recentContent.innerHTML = recentResources
-                .map(resource => new ContentCard(resource).render())
-                .join('');
-        }
-
-        // Render all resources (or trending, depending on your needs)
-        if (trendingContent) {
-            trendingContent.innerHTML = trendingResources
-                .map(resource => new ContentCard(resource).render())
-                .join('');
-        }
-
-        // Initialize event listeners
-        ResourceCard.init();
-
-    } catch (error) {
-        console.error('Error rendering resources:', error);
-        showToast('Error displaying resources', 'error');
-    }
-}
-
 
 function loadInitialContent() {
     // Load trending content

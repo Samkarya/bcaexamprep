@@ -121,26 +121,6 @@ function setupLoadingIndicator() {
     
     observer.observe(loadingIndicator);
 }
-
-async function loadMoreContent() {
-    try {
-        const newContent = await firebaseData.loadMoreData();
-        if (newContent.length > 0) {
-            // Append new content to grid
-            const contentGrid = document.querySelector('.content-grid');
-            const newElements = newContent
-                .map(content => new ContentCard(content).render())
-                .join('');
-            contentGrid.insertAdjacentHTML('beforeend', newElements);
-            
-            // Update content count
-            updateContentCount();
-        }
-    } catch (error) {
-        console.error('Error loading more content:', error);
-        showToast('Error loading more content. Please try again.', 'error');
-    }
-}
 async function loadMoreContent() {
     try {
         const newContent = await firebaseData.loadMoreData();

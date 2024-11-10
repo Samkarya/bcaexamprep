@@ -24,24 +24,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialize search
     new Search();
-    checkAuthStatus();
+    initializeApp1()
     // Load initial content
-    loadInitialContent();
+    //loadInitialContent();
 
     // Initialize filters
     initializeFilters();
 });
+async function initializeApp1() {
+    await checkAuthStatus();
+    await loadResources();
+}
 function checkAuthStatus() {
     return new Promise((resolve) => {
         onAuthStateChanged(auth, (user) => {
-            if (user && user.uid === "eXFePReNxLZuEbzFikfQYrysqIs2") {
-                removeOverlay();
+            if (user) {
                 showToast("Authentication successful", "success");
+                loadRE
                 resolve(true);
             } else {
-                displayOverlay();
-                showToast("Only Admin Can Access Content", "warning");
-                window.location.href = "https://bcaexamprep.blogspot.com/p/bca-exam-prep-account.html";
+                
+                showToast("Please Login To Aceess", "warning");
                 resolve(false);
             }
         });

@@ -1,0 +1,179 @@
+/* assets/css/components/filters.css */
+
+.filters-section {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: var(--card-shadow);
+}
+
+.filters-section h2 {
+    font-size: 1.2rem;
+    color: var(--secondary-color);
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.filter-group {
+    margin-bottom: 25px;
+}
+
+.filter-group:last-child {
+    margin-bottom: 0;
+}
+
+.filter-group h3 {
+    font-size: 1rem;
+    color: var(--secondary-color);
+    margin-bottom: 12px;
+}
+
+/* Checkbox Styles */
+.checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.checkbox-group label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--text-color);
+}
+
+.checkbox-group input[type="checkbox"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--border-color);
+    border-radius: 4px;
+    outline: none;
+    cursor: pointer;
+    position: relative;
+    transition: all var(--transition-speed);
+}
+
+.checkbox-group input[type="checkbox"]:checked {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.checkbox-group input[type="checkbox"]:checked::before {
+    content: '\2714';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 12px;
+}
+
+.checkbox-group input[type="checkbox"]:hover {
+    border-color: var(--primary-color);
+}
+
+/* Range Slider Styles */
+.range-slider {
+    padding: 10px 0;
+}
+
+.price-inputs {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.price-inputs input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+/* Filter Tags */
+.active-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid var(--border-color);
+}
+
+.filter-tag {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 8px;
+    background-color: var(--background-color);
+    border-radius: 4px;
+    font-size: 12px;
+    color: var(--secondary-color);
+}
+
+.filter-tag button {
+    background: none;
+    border: none;
+    color: var(--secondary-color);
+    cursor: pointer;
+    padding: 2px;
+    font-size: 12px;
+}
+
+.filter-tag button:hover {
+    color: var(--error-color);
+}
+
+/* Clear Filters Button */
+.clear-filters {
+    width: 100%;
+    padding: 8px;
+    margin-top: 15px;
+    background: none;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    color: var(--secondary-color);
+    font-size: 14px;
+    cursor: pointer;
+    transition: all var(--transition-speed);
+}
+
+.clear-filters:hover {
+    background-color: var(--background-color);
+    border-color: var(--secondary-color);
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+    .filters-section {
+        margin-bottom: 20px;
+    }
+    
+    .filters-toggle {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        padding: 15px;
+        background-color: white;
+        border: none;
+        border-radius: 8px;
+        box-shadow: var(--card-shadow);
+        cursor: pointer;
+    }
+    
+    .filters-content {
+        display: none;
+        margin-top: 10px;
+    }
+    
+    .filters-content.active {
+        display: block;
+    }
+}

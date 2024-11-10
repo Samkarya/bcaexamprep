@@ -1,5 +1,5 @@
 // assets/js/main.js
-import firebaseData from './utils/mockData.js';
+import firebaseData from 'https://samkarya.github.io/bcaexamprep/EduResources/assets/js/utils/mockData.js';
 
 // Initialize components when DOM is loaded
 document.addEventListener('DOMContentLoaded', async () => {

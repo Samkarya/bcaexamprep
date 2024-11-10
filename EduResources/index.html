@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduContent Hub - Educational Content Aggregation Platform</title>
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="https://samkarya.github.io/bcaexamprep/EduResources/assets/css/main.css">
+    <link rel="stylesheet" href="https://samkarya.github.io/bcaexamprep/EduResources/assets/css/components/navbar.css">
+    <link rel="stylesheet" href="https://samkarya.github.io/bcaexamprep/EduResources/assets/css/components/cards.css">
+    <link rel="stylesheet" href="https://samkarya.github.io/bcaexamprep/EduResources/assets/css/components/search.css">
+    <link rel="stylesheet" href="https://samkarya.github.io/bcaexamprep/EduResources/assets/css/components/rating.css">
+    <link rel="stylesheet" href="https://samkarya.github.io/bcaexamprep/EduResources/assets/css/components/filters.css">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <div class="navbar-brand">
+            <h1>EduContent Hub</h1>
+        </div>
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Search for content...">
+            <button class="search-btn">
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
+        <div class="nav-links">
+            <button class="auth-btn" id="loginBtn">Login</button>
+            <button class="auth-btn" id="signupBtn">Sign Up</button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Filters Section -->
+        <aside class="filters-section">
+            <h2>Filters</h2>
+            <div class="filter-group">  
+                <div class="checkbox-group bookmark-filter">
+                    <label><input type="checkbox">Bookmarks</label>                  
+                </div>
+            </div>
+            <div class="filter-group">
+                <h3>Content Type</h3>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" value="video">Videos</label>
+                    <label><input type="checkbox" value="pdf">PDFs</label>
+                    <label><input type="checkbox" value="article">Articles</label>
+                    <label><input type="checkbox" value="interactive">Interactive Tools</label>
+                </div>
+            </div>
+            
+            <div class="filter-group">
+                <h3>Categories</h3>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" data-category="mca">MCA</label>
+                    <label><input type="checkbox" data-category="bca">BCA</label>
+                    <label><input type="checkbox" data-category="nimcet">NIMCET</label>
+                    <label><input type="checkbox" data-category="cuet">CUET</label>
+                </div>
+            </div>
+            <div class="filter-group">
+                <h3>Rating</h3>
+                <div class="range-slider">
+                    <input type="range" min="1" max="5" value="3" class="rating-slider">
+                    <span class="rating-value">3+ Stars</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Content Section -->
+        <section class="content-section">
+            <!-- Trending Section -->
+            <section class="trending-section">
+                <div id ="trending-bar"><h2>Trending Resources</h2>
+                <div class="pagination-controls">
+                    <button class="pagination-button prev-page">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <div class="pagination-info"></div>
+                    <button class="pagination-button next-page">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+                <div class="content-grid" id="trendingContent">
+                    <!-- Content cards will be dynamically inserted here -->
+                </div>
+            </section>
+
+            <!-- Recently Added Section -->
+            <section class="recent-section">
+                <h2>Recently Added</h2>
+                <div class="content-grid" id="recentContent">
+                    <!-- Content cards will be dynamically inserted here -->
+                </div>
+            </section>
+        </section>
+    </div>
+
+
+    <!-- JavaScript Files -->
+    <script src="https://samkarya.github.io/bcaexamprep/EduResources/assets/js/utils/mockData.js"></script>
+    <script src="https://samkarya.github.io/bcaexamprep/EduResources/assets/js/utils/helpers.js"></script>
+    <script src="https://samkarya.github.io/bcaexamprep/EduResources/assets/js/components/contentCard.js"></script>
+    <script src="https://samkarya.github.io/bcaexamprep/EduResources/assets/js/components/rating.js"></script>
+    <script src="https://samkarya.github.io/bcaexamprep/EduResources/assets/js/components/search.js"></script>
+    <script src="https://samkarya.github.io/bcaexamprep/EduResources/assets/js/components/filter.js"></script>
+    <script src="https://samkarya.github.io/bcaexamprep/EduResources/assets/js/main.js"></script>
+</body>
+</html>

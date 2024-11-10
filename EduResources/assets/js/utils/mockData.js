@@ -243,5 +243,5 @@ class FirebaseDataService {
 }
 
 
-const mockData = new FirebaseDataService();
-//export default firebaseData;
+const firebaseData = new FirebaseDataService();
+export default firebaseData;

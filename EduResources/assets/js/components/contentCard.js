@@ -25,7 +25,7 @@ class ContentCard {
                     src="${thumbnail}" 
                     alt="${title}" 
                     class="content-card-image"
-                    onerror="this.src='assets/img/placeholder.jpg'"
+                    onerror="this.src='https://samkarya.github.io/bcaexamprep/EduResources/assets/img/placeholder.jpg'"
                 >
                 <div class="content-card-body">
                     <span class="content-type-badge content-type-${type}">

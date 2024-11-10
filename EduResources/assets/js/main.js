@@ -11,7 +11,8 @@ import {firebaseConfig, showToast} from "https://samkarya.github.io/bcaexamprep/
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-
+//let currentResourceId = null;
+let resources = [];
 // Initialize App Check
 const appCheck = initializeAppCheck(app, {
     provider: new ReCaptchaV3Provider('6LeER1AqAAAAABaic_YKxvN30vuPQPlMJfpS9e1L'),

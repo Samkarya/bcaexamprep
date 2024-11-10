@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialize search
     new Search();
-    initializeApp1()
+    initializeApp1();
     // Load initial content
     //loadInitialContent();
 

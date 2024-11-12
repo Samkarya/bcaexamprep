@@ -29,7 +29,7 @@ class Rating {
         document.querySelectorAll('.rating-container').forEach(container => {
             const contentId = container.closest('.content-card').dataset.id;
             const currentRating = parseFloat(container.dataset.rating) || 0;
-            this.renderStars(container, currentRating);
+            //this.renderStars(container, currentRating);
             this.updateRatingDisplay(container, currentRating);
         });
     }
@@ -51,10 +51,9 @@ class Rating {
         this.showThankYouMessage(container);
     }
 
-    renderStars(container, rating) {
+  /*  renderStars(container, rating) {
         const starsContainer = document.createElement('div');
         starsContainer.className = 'stars-interactive';
-        console.log("p" + {container});
         for (let i = 1; i <= 5; i++) {
             const star = document.createElement('span');
             star.className = 'star-rating' + (i <= rating ? ' active' : '');
@@ -70,7 +69,7 @@ class Rating {
         } else {
             container.appendChild(starsContainer);
         }
-    }
+    }*/
 
     updateRatingDisplay(container, rating) {
         // Update stars

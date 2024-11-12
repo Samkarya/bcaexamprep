@@ -7,6 +7,8 @@ class Rating {
     init() {
         // Add event delegation for rating stars and hover effects
         document.addEventListener('mousemove', (e) => {
+            if (!e.target || !(e.target instanceof Element)) return;
+            
             const ratingContainer = e.target.closest('.rating-container');
             if (!ratingContainer) return;
 
@@ -17,23 +19,29 @@ class Rating {
         });
 
         document.addEventListener('mouseleave', (e) => {
+            if (!e.target || !(e.target instanceof Element)) return;
+            
             const ratingContainer = e.target.closest('.rating-container');
             if (!ratingContainer) return;
 
             // Reset to actual rating when mouse leaves
-            const contentId = ratingContainer.closest('.content-card')?.dataset.id;
+            const contentCard = ratingContainer.closest('.content-card');
+            const contentId = contentCard ? contentCard.dataset.id : null;
             const currentRating = this.ratings.get(contentId) || parseFloat(ratingContainer.dataset.rating) || 0;
             this.updateRatingDisplay(ratingContainer, currentRating);
         }, true);
 
         document.addEventListener('click', (e) => {
+            if (!e.target || !(e.target instanceof Element)) return;
+            
             const ratingContainer = e.target.closest('.rating-container');
             if (!ratingContainer) return;
 
             const starElement = e.target.closest('.star-rating');
             if (!starElement) return;
 
-            const contentId = ratingContainer.closest('.content-card')?.dataset.id;
+            const contentCard = ratingContainer.closest('.content-card');
+            const contentId = contentCard ? contentCard.dataset.id : 'default';
             const rating = this.calculateRating(e, starElement);
 
             this.handleRating(contentId, rating, ratingContainer);
@@ -59,8 +67,10 @@ class Rating {
     }
 
     initializeRatingContainers() {
-        document.querySelectorAll('.rating-container').forEach(container => {
-            const contentId = container.closest('.content-card')?.dataset.id;
+        const containers = document.querySelectorAll('.rating-container');
+        containers.forEach(container => {
+            const contentCard = container.closest('.content-card');
+            const contentId = contentCard ? contentCard.dataset.id : 'default';
             const currentRating = parseFloat(container.dataset.rating) || 0;
             
             this.renderStars(container, currentRating);
@@ -72,7 +82,7 @@ class Rating {
         this.ratings.set(contentId, rating);
         this.updateRatingDisplay(container, rating);
         this.animateRating(container);
-        console.log(`Content ID: ${contentId || 'undefined'} rated ${rating} stars`);
+        console.log(`Content ID: ${contentId} rated ${rating} stars`);
         this.showThankYouMessage(container);
     }
 
@@ -100,7 +110,8 @@ class Rating {
     }
 
     updateRatingDisplay(container, rating, isHover = false) {
-        container.querySelectorAll('.star-rating').forEach((star, index) => {
+        const stars = container.querySelectorAll('.star-rating');
+        stars.forEach((star, index) => {
             const starRating = index + 1;
             star.classList.remove('active', 'half', 'hover', 'hover-half');
             
@@ -161,6 +172,7 @@ class Rating {
             .star-rating {
                 cursor: pointer;
                 transition: transform 0.1s ease, color 0.2s ease;
+                padding: 2px;
             }
 
             .star-rating:hover {

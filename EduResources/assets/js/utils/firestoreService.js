@@ -59,7 +59,7 @@ class FirestoreService {
             await setDoc(doc(this.db, 'resourceViews', `${resourceId}_${Date.now()}`), {
                 resourceId,
                 userId,
-                timestamp: new Date().toISOString()
+                viewtimestamp: new Date().toISOString()
             });
         } catch (error) {
             console.error('Error incrementing views:', error);

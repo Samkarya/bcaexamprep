@@ -1,4 +1,5 @@
 // assets/js/components/contentCard.js
+import firestoreService from 'https://samkarya.github.io/bcaexamprep/EduResources/assets/js/utils/firestoreService.js';
 
 class ContentCard {
     constructor(data) {
@@ -42,7 +43,7 @@ class ContentCard {
                     </div>
                     
                     <div class="rating-container">
-                     ${helpers.renderStars(rating)}
+                        ${helpers.renderStars(rating)}
                         <span class="rating-count">
                             (${helpers.formatNumber(ratingCount)})
                         </span>
@@ -61,30 +62,56 @@ class ContentCard {
         `;
     }
 
-    static init() {
+    static async init() {
         // Add event listeners for bookmark buttons
-        document.addEventListener('click', (e) => {
+        document.addEventListener('click', async (e) => {
             if (e.target.closest('.bookmark-btn')) {
-                const btn = e.target.closest('.bookmark-btn');
+                try {
+                    const btn = e.target.closest('.bookmark-btn');
+                    const id = btn.dataset.id;
+                    const icon = btn.querySelector('i');
+                    
+                    // Toggle bookmark in Firestore
+                    const isBookmarked = await firestoreService.toggleBookmark(id);
+                    
+                    // Update UI
+                    icon.classList.toggle('far', !isBookmarked);
+                    icon.classList.toggle('fas', isBookmarked);
+                } catch (error) {
+                    console.error('Error handling bookmark:', error);
+                    // You might want to show an error message to the user
+                }
+            }
+            
+            if (e.target.closest('.view-btn')) {
+                try {
+                    const btn = e.target.closest('.view-btn');
+                    const id = btn.dataset.id;
+                    
+                    // Increment view count in Firestore
+                    await firestoreService.incrementViews(id);
+                } catch (error) {
+                    console.error('Error handling view:', error);
+                    // Silent fail for view counts
+                }
+            }
+        });
+
+        // Initialize bookmark states
+        try {
+            const bookmarkedIds = await firestoreService.getUserBookmarks();
+            document.querySelectorAll('.bookmark-btn').forEach(btn => {
                 const id = btn.dataset.id;
                 const icon = btn.querySelector('i');
-                
-                // Toggle bookmark state
-                icon.classList.toggle('far');
-                icon.classList.toggle('fas');
-                
-                // In real implementation, this would update the database
-                console.log(`Toggled bookmark for content ID: ${id}`);
-            }
-            if (e.target.closest('.view-btn')) {
-                const btn = e.target.closest('.view-btn');
-                const id = btn.dataset.id;
-                
-                
-                // In real implementation, this would update the database
-                console.log(`View content ID: ${id}`);
-            }
-        }); 
+                if (bookmarkedIds.includes(id)) {
+                    icon.classList.remove('far');
+                    icon.classList.add('fas');
+                }
+            });
+        } catch (error) {
+            console.error('Error initializing bookmark states:', error);
+        }
     }
 }
+
 export default ContentCard;

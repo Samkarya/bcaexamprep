@@ -29,7 +29,7 @@ class Rating {
         document.querySelectorAll('.rating-container').forEach(container => {
             const contentId = container.closest('.content-card').dataset.id;
             const currentRating = parseFloat(container.dataset.rating) || 0;
-            
+            console.log("p" + {container});
             this.renderStars(container, currentRating);
             this.updateRatingDisplay(container, currentRating);
         });

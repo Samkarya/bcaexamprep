@@ -1,6 +1,6 @@
 // assets/js/components/search.js
-import firebaseData from '../utils/mockData.js';
-import { debounce } from '../utils/helpers.js';
+import firebaseData from 'https://samkarya.github.io/bcaexamprep/EduResources/assets/utils/mockData.js';
+import { debounce } from 'https://samkarya.github.io/bcaexamprep/EduResources/assets/utils/helpers.js';
 
 class Search {
     constructor() {
@@ -14,6 +14,7 @@ class Search {
     init() {
         if (!this.searchInput) {
             console.error('Search input element not found');
+            showToast('Search input element not found',info);
             return;
         }
 

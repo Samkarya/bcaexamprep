@@ -42,7 +42,12 @@ class ContentCard {
                     </div>
                     
                     <div class="rating-container">
-                        
+                        <div class="stars">
+                            ${helpers.generateStarRating(rating)}
+                        </div>
+                        <span class="rating-count">
+                            (${helpers.formatNumber(ratingCount)})
+                        </span>
                     </div>
                     
                     <div class="content-card-actions">

@@ -21,6 +21,11 @@ class Search {
         this.searchInput.addEventListener('input', 
             helpers.debounce(() => this.handleSearch(), 300)
         );
+        // Add clear search button handler
+        const clearButton = document.getElementById('clearSearch');
+        if (clearButton) {
+            clearButton.addEventListener('click', () => this.clearSearch());
+        }
     }
 
     async handleSearch() {
@@ -63,21 +68,7 @@ class Search {
 
         // Render results with highlight
         this.contentGrid.innerHTML = results
-            .map(content => {
-                const highlightedTitle = this.highlightMatch(content.title, query);
-                return `
-                    <div class="content-card">
-                        <h3>${highlightedTitle}</h3>
-                        <div class="content-meta">
-                            <span class="type">${content.type}</span>
-                            <span class="rating">★ ${content.rating.toFixed(1)}</span>
-                        </div>
-                        <div class="tags">
-                            ${content.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
-                        </div>
-                    </div>
-                `;
-            })
+            .map(content => new ContentCard(content).render())
             .join('');
     }
 
@@ -135,11 +126,6 @@ class Search {
     clearSearch() {
         this.searchInput.value = '';
         this.hideLoadingState();
-        
-        // Remove search query from URL
-        const searchParams = new URLSearchParams(window.location.search);
-        searchParams.delete('q');
-        window.history.replaceState({}, '', window.location.pathname);
         
         // Reset content to default view
         this.resetContent();

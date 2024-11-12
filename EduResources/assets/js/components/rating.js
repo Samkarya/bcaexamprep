@@ -51,11 +51,31 @@ class Rating {
         document.querySelectorAll('.rating-container').forEach(container => {
             const contentId = container.closest('.content-card').dataset.id;
             const currentRating = parseFloat(container.dataset.rating) || 0;
-            
+            this.renderStars(container, currentRating);
             this.updateRatingDisplay(container, currentRating);
         });
     }
+    renderStars(container, rating) {
+        const starsContainer = document.createElement('div');
+        starsContainer.className = 'stars-interactive';
 
+        for (let i = 1; i <= 5; i++) {
+            const star = document.createElement('span');
+            star.className = 'star-rating';
+            star.innerHTML = '★';
+            starsContainer.appendChild(star);
+        }
+
+        // Replace existing stars if any
+        const existingStars = container.querySelector('.stars-interactive');
+        if (existingStars) {
+            container.replaceChild(starsContainer, existingStars);
+        } else {
+            container.appendChild(starsContainer);
+        }
+
+        this.updateRatingDisplay(container, rating);
+    }
     updateStarsOnHover(container, starIndex, fraction) {
         container.querySelectorAll('.star-rating').forEach((star, index) => {
             if (index < starIndex) {

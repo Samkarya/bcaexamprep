@@ -29,7 +29,6 @@ class Rating {
         document.querySelectorAll('.rating-container').forEach(container => {
             const contentId = container.closest('.content-card').dataset.id;
             const currentRating = parseFloat(container.dataset.rating) || 0;
-            //this.renderStars(container, currentRating);
             this.updateRatingDisplay(container, currentRating);
         });
     }
@@ -51,26 +50,6 @@ class Rating {
         this.showThankYouMessage(container);
     }
 
-  /*  renderStars(container, rating) {
-        const starsContainer = document.createElement('div');
-        starsContainer.className = 'stars-interactive';
-        for (let i = 1; i <= 5; i++) {
-            const star = document.createElement('span');
-            star.className = 'star-rating' + (i <= rating ? ' active' : '');
-            star.dataset.rating = i;
-            star.innerHTML = '<i class="fas fa-star"></i>';
-            starsContainer.appendChild(star);
-        }
-
-        // Replace existing stars if any
-        const existingStars = container.querySelector('.stars-interactive');
-        if (existingStars) {
-            container.replaceChild(starsContainer, existingStars);
-        } else {
-            container.appendChild(starsContainer);
-        }
-    }*/
-
     updateRatingDisplay(container, rating) {
         // Update stars
         container.querySelectorAll('.star-rating').forEach((star, index) => {
@@ -84,15 +63,6 @@ class Rating {
                 star.classList.remove('active', 'half');
             }
         });
-
-        // Update rating number
-        let ratingText = container.querySelector('.rating-text');
-        if (!ratingText) {
-            ratingText = document.createElement('span');
-            ratingText.className = 'rating-text';
-            container.appendChild(ratingText);
-        }
-        ratingText.textContent = rating.toFixed(1);
     }
 
     animateRating(container) {

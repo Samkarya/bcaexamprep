@@ -112,12 +112,5 @@ stars.forEach((star, index) => {
     }
 }
 
-
-
-// Wait for the DOM to fully load before initializing the rating system
-document.addEventListener('DOMContentLoaded', async () => {
-    // Add rating styles to document
-Rating.addStyles();
-    const rating = new Rating();
-    console.log('Rating system initialized and ready for interaction.');
-});
+    export default Rating;
+   

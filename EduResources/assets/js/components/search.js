@@ -13,7 +13,7 @@ class Search {
     init() {
         if (!this.searchInput) {
             console.error('Search input element not found');
-            showToast('Search input element not found',info);
+            showToast('Search input element not found',"info");
             return;
         }
 

@@ -1,147 +1,86 @@
 // assets/js/main.js
-import firebaseData from './utils/mockData.js';
 
-document.addEventListener('DOMContentLoaded', async () => {
-    // Initialize components
+// Initialize components when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    // Initialize content cards
     ContentCard.init();
+
+    // Initialize search
     new Search();
-    await initializeApp();
+
+    // Load initial content
+    loadInitialContent();
+
+    // Initialize filters
+    initializeFilters();
 });
 
-async function initializeApp() {
-    try {
-        // Check authentication status
-        const isAuthenticated = await firebaseData.checkAuthStatus();
-        if (!isAuthenticated) {
-            // Handle unauthenticated state
-            handleUnauthenticated();
-            return;
-        }
+function loadInitialContent() {
+    // Load trending content
+    const trendingContent = document.getElementById('trendingContent');
+    trendingContent.innerHTML = mockData.getTrendingContent()
+        .map(content => new ContentCard(content).render())
+        .join('');
 
-        // Load initial data
-        await loadInitialContent();
-        
-        // Initialize filters after data is loaded
-        initializeFilters();
-        
-        // Add scroll listener for infinite loading
-        setupInfiniteScroll();
-    } catch (error) {
-        console.error('Error initializing app:', error);
-        showToast("Error initializing application", "error");
-    }
-}
-
-async function loadInitialContent() {
-    // Show loading state
-    showLoadingState();
-    
-    try {
-        // Load initial data from Firebase
-        await firebaseData.loadInitialData();
-        
-        // Update trending content
-        const trendingContent = document.getElementById('trendingContent');
-        if (trendingContent) {
-            trendingContent.innerHTML = firebaseData.getTrendingContent()
-                .map(content => new ContentCard(content).render())
-                .join('');
-        }
-
-        // Update recent content
-        const recentContent = document.getElementById('recentContent');
-        if (recentContent) {
-            recentContent.innerHTML = firebaseData.getRecentContent()
-                .map(content => new ContentCard(content).render())
-                .join('');
-        }
-
-        updateLoadingStatus();
-    } catch (error) {
-        console.error('Error loading initial content:', error);
-        showToast("Error loading content", "error");
-    } finally {
-        hideLoadingState();
-    }
+    // Load recent content
+    const recentContent = document.getElementById('recentContent');
+    recentContent.innerHTML = mockData.getRecentContent()
+        .map(content => new ContentCard(content).render())
+        .join('');
 }
 
 function initializeFilters() {
-    const filter = new Filter();
-    window.filter = filter; // Make filter globally accessible
-}
-
-function setupInfiniteScroll() {
-    const loadMoreThreshold = 800; // pixels from bottom
+    // Get all filter checkboxes
+    const typeFilters = document.querySelectorAll('.filter-group input[type="checkbox"]');
+    const ratingSlider = document.querySelector('.rating-slider');
     
-    window.addEventListener('scroll', async () => {
-        if ((window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight - loadMoreThreshold) {
-            const { isLoading, hasMoreData } = firebaseData.getLoadingStatus();
-            
-            if (!isLoading && hasMoreData) {
-                await loadMoreContent();
-            }
-        }
+    // Add event listeners to filters
+    typeFilters.forEach(filter => {
+        filter.addEventListener('change', applyFilters);
+    });
+
+    ratingSlider.addEventListener('input', (e) => {
+        // Update rating display
+        const ratingValue = document.querySelector('.rating-value');
+        ratingValue.textContent = `${e.target.value}+ Stars`;
+        
+        // Apply filters
+        applyFilters();
     });
 }
 
-async function loadMoreContent() {
-    try {
-        const newContent = await firebaseData.loadMoreData();
-        if (newContent.length > 0) {
-            appendNewContent(newContent);
-        }
-        updateLoadingStatus();
-    } catch (error) {
-        console.error('Error loading more content:', error);
-        showToast("Error loading more content", "error");
-    }
-}
+function applyFilters() {
+    // Get selected content types
+    const selectedTypes = Array.from(
+        document.querySelectorAll('.filter-group input[type="checkbox"]:checked')
+    ).map(checkbox => checkbox.value);
 
-function appendNewContent(newContent) {
+    // Get minimum rating
+    const minRating = parseFloat(
+        document.querySelector('.rating-slider').value
+    );
+
+    // Filter content
+    let filteredContent = mockData.contents;
+
+    if (selectedTypes.length > 0) {
+        filteredContent = mockData.filterByType(selectedTypes);
+    }
+
+    filteredContent = mockData.filterByRating(minRating);
+
+    // Update content grid
     const contentGrid = document.querySelector('.content-grid');
-    if (contentGrid) {
-        const newElements = newContent
-            .map(content => new ContentCard(content).render())
-            .join('');
-        contentGrid.insertAdjacentHTML('beforeend', newElements);
-    }
+    contentGrid.innerHTML = filteredContent
+        .map(content => new ContentCard(content).render())
+        .join('');
 }
 
-function updateLoadingStatus() {
-    const status = firebaseData.getLoadingStatus();
-    const statusElement = document.querySelector('.loading-status');
-    
-    if (statusElement) {
-        statusElement.textContent = `Loaded ${status.loadedDocuments} of ${status.totalDocuments} items`;
-    }
-}
+// Add authentication modal handlers
+document.getElementById('loginBtn').addEventListener('click', () => {
+    alert('Login functionality will be implemented with Firebase Auth');
+});
 
-function handleUnauthenticated() {
-    const contentAreas = document.querySelectorAll('#trendingContent, #recentContent, .content-grid');
-    contentAreas.forEach(area => {
-        area.innerHTML = `
-            <div class="auth-required">
-                <i class="fas fa-lock"></i>
-                <h3>Authentication Required</h3>
-                <p>Please log in to view content</p>
-                <button onclick="document.getElementById('loginBtn').click()">
-                    Log In
-                </button>
-            </div>
-        `;
-    });
-}
-
-function showLoadingState() {
-    const loadingIndicator = document.createElement('div');
-    loadingIndicator.className = 'loading-indicator';
-    loadingIndicator.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
-    document.body.appendChild(loadingIndicator);
-}
-
-function hideLoadingState() {
-    const loadingIndicator = document.querySelector('.loading-indicator');
-    if (loadingIndicator) {
-        loadingIndicator.remove();
-    }
-}
+document.getElementById('signupBtn').addEventListener('click', () => {
+    alert('Signup functionality will be implemented with Firebase Auth');
+});

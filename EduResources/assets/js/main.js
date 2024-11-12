@@ -102,7 +102,7 @@ function applyFilters() {
 }
 function setupLoadingIndicator() {
     // Add loading indicator to bottom of content
-    const contentContainer = document.querySelector('.content-container');
+    const contentContainer = document.querySelector('.content-section');
     const loadingIndicator = document.createElement('div');
     loadingIndicator.className = 'loading-indicator hidden';
     loadingIndicator.innerHTML = '<div class="loading-spinner">Loading more content...</div>';

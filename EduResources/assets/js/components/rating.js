@@ -22,7 +22,7 @@ class Rating {
         });
 
         document.addEventListener('click', (e) => {
-            const ratingContainer = e.target.closest('..stars-interactive');
+            const ratingContainer = e.target.closest('.stars-interactive');
             if (!ratingContainer) return;
 
             const rect = ratingContainer.getBoundingClientRect();

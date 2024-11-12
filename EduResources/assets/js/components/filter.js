@@ -1,4 +1,5 @@
 // assets/js/components/filter.js
+import firebaseData from 'https://samkarya.github.io/bcaexamprep/EduResources/assets/js/utils/mockData.js';
 class Filter {
     constructor() {
         this.filterGroups = {
@@ -106,7 +107,7 @@ class Filter {
     }
 
     applyFilters() {
-        let filteredContent = mockData.contents;
+        let filteredContent = firebaseData.contents;
         // Apply type filters
         if (this.filterGroups.type.values.size > 0) {
             filteredContent = filteredContent.filter(content =>
@@ -326,4 +327,4 @@ class Filter {
 }
 
 // Create global filter instance
-const filter = new Filter();
+export default Filter;

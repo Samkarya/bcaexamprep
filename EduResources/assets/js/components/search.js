@@ -1,6 +1,6 @@
 // assets/js/components/search.js
-import firebaseData from 'https://samkarya.github.io/bcaexamprep/EduResources/assets/utils/mockData.js';
-//import { debounce } from 'https://samkarya.github.io/bcaexamprep/EduResources/assets/utils/helpers.js';
+import firebaseData from 'https://samkarya.github.io/bcaexamprep/EduResources/assets/js/utils/mockData.js';
+//import { debounce } from 'https://samkarya.github.io/bcaexamprep/EduResources/assets/js/utils/helpers.js';
 
 class Search {
     constructor() {

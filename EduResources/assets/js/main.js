@@ -1,6 +1,7 @@
 // assets/js/main.js
 import firebaseData from 'https://samkarya.github.io/bcaexamprep/EduResources/assets/js/utils/mockData.js';
 import Search from 'https://samkarya.github.io/bcaexamprep/EduResources/assets/js/components/search.js';
+import Rating from 'https://samkarya.github.io/bcaexamprep/EduResources/assets/js/components/rating.js';
 // Initialize components when DOM is loaded
 document.addEventListener('DOMContentLoaded', async () => {
     try {
@@ -11,7 +12,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Initialize search
     new Search();
-
+    Rating.addStyles();
+    const rating = new Rating();
     // Load initial content
     loadInitialContent();
 

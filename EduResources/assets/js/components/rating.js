@@ -87,7 +87,7 @@ class Rating {
     }
 
     renderStars(container, rating) {
-        container.innerHTML = '';
+        
         const starsContainer = document.createElement('div');
         starsContainer.className = 'stars-interactive';
 

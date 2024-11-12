@@ -32,17 +32,16 @@ const helpers = {
         
         return starsHTML;
     },
-    renderStars(rating) {
-        const starsContainer = document.createElement('div');
-        starsContainer.className = 'stars-interactive';
-        for (let i = 1; i <= 5; i++) {
-            const star = document.createElement('span');
-            star.className = 'star-rating' + (i <= rating ? ' active' : '');
-            star.dataset.rating = i;
-            star.innerHTML = '<i class="fas fa-star"></i>';
-            starsContainer.appendChild(star);
-        }
-    },
+    function renderStars(rating) {
+    let starHtml = '<div class="stars-interactive">';
+    for (let i = 1; i <= 5; i++) {
+        starHtml += `<span class="star-rating${i <= rating ? ' active' : ''}" data-rating="${i}">
+                        <i class="fas fa-star"></i>
+                     </span>`;
+    }
+    starHtml += '</div>';
+    return starHtml;
+},
 
     // Format number with K/M suffix
     formatNumber(num) {

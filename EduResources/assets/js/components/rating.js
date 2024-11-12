@@ -229,6 +229,8 @@ class Rating {
 // Add rating styles to document
 Rating.addStyles();
 
-// Initialize rating system
-const rating = new Rating();
-console.log('Rating system initialized and ready for interaction.');
+// Wait for the DOM to fully load before initializing the rating system
+document.addEventListener('DOMContentLoaded', () => {
+    const rating = new Rating();
+    console.log('Rating system initialized and ready for interaction.');
+});

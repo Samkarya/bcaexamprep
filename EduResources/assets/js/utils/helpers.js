@@ -32,6 +32,17 @@ const helpers = {
         
         return starsHTML;
     },
+    renderStars(rating) {
+        const starsContainer = document.createElement('div');
+        starsContainer.className = 'stars-interactive';
+        for (let i = 1; i <= 5; i++) {
+            const star = document.createElement('span');
+            star.className = 'star-rating' + (i <= rating ? ' active' : '');
+            star.dataset.rating = i;
+            star.innerHTML = '<i class="fas fa-star"></i>';
+            starsContainer.appendChild(star);
+        }
+    }
 
     // Format number with K/M suffix
     formatNumber(num) {

@@ -1,6 +1,6 @@
 // assets/js/main.js
 import firebaseData from 'https://samkarya.github.io/bcaexamprep/EduResources/assets/js/utils/mockData.js';
-import {Search} from 'https://samkarya.github.io/bcaexamprep/EduResources/assets/js/components/search.js';
+//import {Search} from 'https://samkarya.github.io/bcaexamprep/EduResources/assets/js/components/search.js';
 // Initialize components when DOM is loaded
 document.addEventListener('DOMContentLoaded', async () => {
     try {

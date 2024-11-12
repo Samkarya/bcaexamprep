@@ -1,6 +1,5 @@
 // assets/js/components/search.js
 import firebaseData from 'https://samkarya.github.io/bcaexamprep/EduResources/assets/js/utils/mockData.js';
-//import { debounce } from 'https://samkarya.github.io/bcaexamprep/EduResources/assets/js/utils/helpers.js';
 
 class Search {
     constructor() {
@@ -22,12 +21,6 @@ class Search {
         this.searchInput.addEventListener('input', 
             helpers.debounce(() => this.handleSearch(), 300)
         );
-
-        // Add clear search button handler
-        const clearButton = document.getElementById('clearSearch');
-        if (clearButton) {
-            clearButton.addEventListener('click', () => this.clearSearch());
-        }
     }
 
     async handleSearch() {
@@ -38,7 +31,7 @@ class Search {
             return;
         }
 
-        if (query.length < 2) {
+        if (query.length < 3) {
             return; // Don't search for single characters
         }
 
@@ -47,11 +40,6 @@ class Search {
             
             // Perform search
             const results = await firebaseData.searchContent(query);
-            
-            // Update URL with search query
-            const searchParams = new URLSearchParams(window.location.search);
-            searchParams.set('q', query);
-            window.history.replaceState({}, '', `${window.location.pathname}?${searchParams}`);
             
             this.updateResults(results, query);
         } catch (error) {

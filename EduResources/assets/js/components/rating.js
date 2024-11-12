@@ -9,7 +9,7 @@ class Rating {
     init() {
         // Add event delegation for rating containers
         document.addEventListener('mousemove', (e) => {
-            const ratingContainer = e.target.closest('.rating-container');
+            const ratingContainer = e.target.closest('.star');
             if (!ratingContainer) return;
             
             const rect = ratingContainer.getBoundingClientRect();
@@ -22,7 +22,7 @@ class Rating {
         });
 
         document.addEventListener('click', (e) => {
-            const ratingContainer = e.target.closest('.rating-container');
+            const ratingContainer = e.target.closest('.star');
             if (!ratingContainer) return;
 
             const rect = ratingContainer.getBoundingClientRect();
@@ -35,7 +35,7 @@ class Rating {
         });
 
         document.addEventListener('mouseleave', (e) => {
-            const ratingContainer = e.target.closest('.rating-container');
+            const ratingContainer = e.target.closest('.star');
             if (!ratingContainer) return;
 
             const contentId = ratingContainer.closest('.content-card').dataset.id;
@@ -48,7 +48,7 @@ class Rating {
     }
 
     initializeRatingContainers() {
-        document.querySelectorAll('.rating-container').forEach(container => {
+        document.querySelectorAll('.star').forEach(container => {
             const contentId = container.closest('.content-card').dataset.id;
             const currentRating = parseFloat(container.dataset.rating) || 0;
             

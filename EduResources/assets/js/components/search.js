@@ -1,6 +1,6 @@
 // assets/js/components/search.js
 import firebaseData from 'https://samkarya.github.io/bcaexamprep/EduResources/assets/js/utils/mockData.js';
-
+import ContentCard from 'https://samkarya.github.io/bcaexamprep/EduResources/assets/js/components/ContentCard.js';
 class Search {
     constructor() {
         this.searchInput = document.getElementById('searchInput');

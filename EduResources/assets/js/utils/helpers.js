@@ -32,7 +32,7 @@ const helpers = {
         
         return starsHTML;
     },
-    function renderStars(rating) {
+    renderStars(rating) {
     let starHtml = '<div class="stars-interactive">';
     for (let i = 1; i <= 5; i++) {
         starHtml += `<span class="star-rating${i <= rating ? ' active' : ''}" data-rating="${i}">

@@ -1,5 +1,5 @@
 // assets/js/components/rating.js
-import { getFirestore, doc, setDoc, getDoc, collection, query, where, getDocs } from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js"';
+import { getFirestore, doc, setDoc, getDoc, collection, query, where, getDocs } from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js';
 import { getAuth } from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js';
 class Rating {
     constructor() {

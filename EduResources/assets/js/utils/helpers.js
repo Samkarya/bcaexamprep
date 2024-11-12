@@ -42,7 +42,7 @@ const helpers = {
             star.innerHTML = '<i class="fas fa-star"></i>';
             starsContainer.appendChild(star);
         }
-    }
+    },
 
     // Format number with K/M suffix
     formatNumber(num) {

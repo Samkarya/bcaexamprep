@@ -1,168 +1,124 @@
 class Rating {
     constructor() {
-        this.ratings = new Map();
+        this.ratings = new Map(); // Store user ratings
         this.init();
     }
 
     init() {
-        // Add event listeners for both click and mousemove
-        document.addEventListener('click', this.handleClick.bind(this));
-        document.addEventListener('mousemove', this.handleMouseMove.bind(this));
-        document.addEventListener('mouseleave', this.handleMouseLeave.bind(this), true);
-        
+        // Add event delegation for rating stars and hover effects
+        document.addEventListener('mousemove', (e) => {
+            const ratingContainer = e.target.closest('.rating-container');
+            if (!ratingContainer) return;
+
+            const starElement = e.target.closest('.star-rating');
+            if (!starElement) return;
+
+            this.handleHover(e, starElement, ratingContainer);
+        });
+
+        document.addEventListener('mouseleave', (e) => {
+            const ratingContainer = e.target.closest('.rating-container');
+            if (!ratingContainer) return;
+
+            // Reset to actual rating when mouse leaves
+            const contentId = ratingContainer.closest('.content-card')?.dataset.id;
+            const currentRating = this.ratings.get(contentId) || parseFloat(ratingContainer.dataset.rating) || 0;
+            this.updateRatingDisplay(ratingContainer, currentRating);
+        }, true);
+
+        document.addEventListener('click', (e) => {
+            const ratingContainer = e.target.closest('.rating-container');
+            if (!ratingContainer) return;
+
+            const starElement = e.target.closest('.star-rating');
+            if (!starElement) return;
+
+            const contentId = ratingContainer.closest('.content-card')?.dataset.id;
+            const rating = this.calculateRating(e, starElement);
+
+            this.handleRating(contentId, rating, ratingContainer);
+        });
+
         // Initialize all rating containers
         this.initializeRatingContainers();
     }
 
+    calculateRating(e, starElement) {
+        const rect = starElement.getBoundingClientRect();
+        const starWidth = rect.width;
+        const clickPosition = e.clientX - rect.left;
+        const baseRating = parseInt(starElement.dataset.rating);
+        
+        // If click is on the left half of the star, make it a half star
+        return clickPosition < starWidth / 2 ? baseRating - 0.5 : baseRating;
+    }
+
+    handleHover(e, starElement, container) {
+        const rating = this.calculateRating(e, starElement);
+        this.updateRatingDisplay(container, rating, true);
+    }
+
     initializeRatingContainers() {
         document.querySelectorAll('.rating-container').forEach(container => {
-            const contentId = container.closest('.content-card')?.dataset.id || 'default';
+            const contentId = container.closest('.content-card')?.dataset.id;
             const currentRating = parseFloat(container.dataset.rating) || 0;
             
-            // Clear existing content
-            container.innerHTML = '';
-            
-            // Create stars container
-            const starsContainer = document.createElement('div');
-            starsContainer.className = 'stars-interactive';
-            container.appendChild(starsContainer);
-
-            // Create rating text
-            const ratingText = document.createElement('span');
-            ratingText.className = 'rating-text';
-            container.appendChild(ratingText);
-
-            // Create rating count
-            const ratingCount = document.createElement('span');
-            ratingCount.className = 'rating-count';
-            ratingCount.textContent = `(${this.ratings.size})`;
-            container.appendChild(ratingCount);
-
             this.renderStars(container, currentRating);
             this.updateRatingDisplay(container, currentRating);
         });
-    }
-
-    handleClick(e) {
-        const ratingContainer = e.target.closest('.rating-container');
-        if (!ratingContainer) return;
-
-        const starsContainer = ratingContainer.querySelector('.stars-interactive');
-        if (!starsContainer) return;
-
-        const rect = starsContainer.getBoundingClientRect();
-        const starWidth = rect.width / 5;
-        const x = e.clientX - rect.left;
-        
-        // Calculate rating based on click position
-        let rating = Math.ceil((x / starWidth) * 2) / 2; // Rounds to nearest 0.5
-        rating = Math.max(0.5, Math.min(5, rating));
-
-        const contentId = ratingContainer.closest('.content-card')?.dataset.id || 'default';
-        this.handleRating(contentId, rating, ratingContainer);
-    }
-
-    handleMouseMove(e) {
-        const ratingContainer = e.target.closest('.rating-container');
-        if (!ratingContainer) return;
-
-        const starsContainer = ratingContainer.querySelector('.stars-interactive');
-        if (!starsContainer) return;
-
-        const rect = starsContainer.getBoundingClientRect();
-        const starWidth = rect.width / 5;
-        const x = e.clientX - rect.left;
-        
-        // Calculate hover rating
-        let hoverRating = Math.ceil((x / starWidth) * 2) / 2;
-        hoverRating = Math.max(0.5, Math.min(5, hoverRating));
-
-        this.updateRatingDisplay(ratingContainer, hoverRating, true);
-    }
-
-    handleMouseLeave(e) {
-        const ratingContainer = e.target.closest('.rating-container');
-        if (!ratingContainer) return;
-
-        const contentId = ratingContainer.closest('.content-card')?.dataset.id || 'default';
-        const currentRating = this.ratings.get(contentId) || 0;
-        
-        this.updateRatingDisplay(ratingContainer, currentRating);
     }
 
     handleRating(contentId, rating, container) {
         this.ratings.set(contentId, rating);
         this.updateRatingDisplay(container, rating);
         this.animateRating(container);
+        console.log(`Content ID: ${contentId || 'undefined'} rated ${rating} stars`);
         this.showThankYouMessage(container);
-        
-        // Update rating count
-        const ratingCount = container.querySelector('.rating-count');
-        if (ratingCount) {
-            ratingCount.textContent = `(${this.ratings.size})`;
-        }
-
-        // Log for demonstration (replace with actual API call)
-        console.log(`Content ID: ${contentId} rated ${rating} stars`);
     }
 
     renderStars(container, rating) {
-        const starsContainer = container.querySelector('.stars-interactive');
-        if (!starsContainer) return;
+        const starsContainer = document.createElement('div');
+        starsContainer.className = 'stars-interactive';
 
-        starsContainer.innerHTML = '';
-        
-        for (let i = 0; i < 5; i++) {
-            const star = document.createElement('div');
-            star.className = 'star';
-            
-            // Create left and right halves of the star
-            const leftHalf = document.createElement('span');
-            leftHalf.className = 'star-half left';
-            leftHalf.innerHTML = '<i class="fas fa-star-half"></i>';
-            
-            const rightHalf = document.createElement('span');
-            rightHalf.className = 'star-half right';
-            rightHalf.innerHTML = '<i class="fas fa-star-half"></i>';
-            
-            star.appendChild(leftHalf);
-            star.appendChild(rightHalf);
+        for (let i = 1; i <= 5; i++) {
+            const star = document.createElement('span');
+            star.className = 'star-rating';
+            star.dataset.rating = i;
+            star.innerHTML = '<i class="fas fa-star"></i>';
             starsContainer.appendChild(star);
         }
+
+        // Replace existing stars if any
+        const existingStars = container.querySelector('.stars-interactive');
+        if (existingStars) {
+            container.replaceChild(starsContainer, existingStars);
+        } else {
+            container.appendChild(starsContainer);
+        }
+
+        this.updateRatingDisplay(container, rating);
     }
 
     updateRatingDisplay(container, rating, isHover = false) {
-        const stars = container.querySelectorAll('.star');
-        const fullStars = Math.floor(rating);
-        const hasHalfStar = (rating % 1) >= 0.5;
-
-        stars.forEach((star, index) => {
-            const leftHalf = star.querySelector('.left');
-            const rightHalf = star.querySelector('.right');
+        container.querySelectorAll('.star-rating').forEach((star, index) => {
+            const starRating = index + 1;
+            star.classList.remove('active', 'half', 'hover', 'hover-half');
             
-            if (index < fullStars) {
-                leftHalf.classList.add('active');
-                rightHalf.classList.add('active');
-            } else if (index === fullStars && hasHalfStar) {
-                leftHalf.classList.add('active');
-                rightHalf.classList.remove('active');
-            } else {
-                leftHalf.classList.remove('active');
-                rightHalf.classList.remove('active');
-            }
-            
-            if (isHover) {
-                star.classList.add('hover');
-            } else {
-                star.classList.remove('hover');
+            if (starRating <= rating) {
+                star.classList.add(isHover ? 'hover' : 'active');
+            } else if (starRating - 0.5 <= rating) {
+                star.classList.add(isHover ? 'hover-half' : 'half');
             }
         });
 
-        // Update rating text
-        const ratingText = container.querySelector('.rating-text');
-        if (ratingText) {
-            ratingText.textContent = rating.toFixed(1);
+        // Update rating number
+        let ratingText = container.querySelector('.rating-text');
+        if (!ratingText) {
+            ratingText = document.createElement('span');
+            ratingText.className = 'rating-text';
+            container.appendChild(ratingText);
         }
+        ratingText.textContent = rating.toFixed(1);
     }
 
     animateRating(container) {
@@ -173,11 +129,6 @@ class Rating {
     }
 
     showThankYouMessage(container) {
-        const existingMessage = container.querySelector('.rating-thank-you');
-        if (existingMessage) {
-            existingMessage.remove();
-        }
-
         const message = document.createElement('div');
         message.className = 'rating-thank-you';
         message.textContent = 'Thanks for rating!';
@@ -189,57 +140,54 @@ class Rating {
         }, 2000);
     }
 
+    static calculateAverageRating(ratings) {
+        if (!ratings || ratings.length === 0) return 0;
+        const sum = ratings.reduce((acc, curr) => acc + curr, 0);
+        return (sum / ratings.length).toFixed(1);
+    }
+
     static addStyles() {
         const styles = `
             .rating-container {
                 position: relative;
-                display: inline-flex;
-                align-items: center;
-                gap: 10px;
-                padding: 10px;
                 transition: transform 0.2s ease;
             }
 
             .stars-interactive {
                 display: inline-flex;
-                gap: 4px;
+                gap: 2px;
+            }
+
+            .star-rating {
                 cursor: pointer;
+                transition: transform 0.1s ease, color 0.2s ease;
             }
 
-            .star {
-                position: relative;
-                display: inline-flex;
-                transition: transform 0.2s ease;
+            .star-rating:hover {
+                transform: scale(1.2);
             }
 
-            .star-half {
-                position: relative;
-                display: inline-block;
-                color: #e4e5e9;
-                transition: color 0.2s ease;
+            .star-rating i {
+                transition: color 0.2s ease, background 0.2s ease;
+                font-size: 24px;
             }
 
-            .star-half.active {
+            .star-rating.active i,
+            .star-rating.hover i {
                 color: #ffd700;
             }
 
-            .star-half.right {
-                transform: scaleX(-1);
-            }
-
-            .star:hover {
-                transform: scale(1.1);
+            .star-rating.half i,
+            .star-rating.hover-half i {
+                background: linear-gradient(90deg, #ffd700 50%, #e4e5e9 50%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
             }
 
             .rating-text {
-                min-width: 36px;
-                text-align: center;
-                font-weight: bold;
-            }
-
-            .rating-count {
+                margin-left: 8px;
+                font-size: 14px;
                 color: #666;
-                font-size: 0.9em;
             }
 
             .rating-updated {
@@ -257,12 +205,11 @@ class Rating {
                 border-radius: 4px;
                 font-size: 12px;
                 animation: fadeOut 2s ease forwards;
-                white-space: nowrap;
             }
 
             @keyframes pulse {
                 0% { transform: scale(1); }
-                50% { transform: scale(1.05); }
+                50% { transform: scale(1.1); }
                 100% { transform: scale(1); }
             }
 

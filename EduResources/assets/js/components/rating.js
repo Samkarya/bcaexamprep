@@ -17,9 +17,9 @@ class Rating {
                 return;
             }
 
-            const starElement = e.target.closest('.star-rating');
+            const starElement = e.target.closest('.star');
             if (!starElement) {
-                console.log('Click is outside a .star-rating element, ignoring.');
+                console.log('Click is outside a .star element, ignoring.');
                 return;
             }
 
@@ -68,8 +68,7 @@ class Rating {
 
     renderStars(container, rating) {
         console.log(`Rendering stars for container with rating=${rating}`);
-        const starsContainer = document.createElement('div');
-        starsContainer.className = 'stars-interactive';
+        const starsContainer = document.querySelector('.stars');
 
         for (let i = 1; i <= 5; i++) {
             const star = document.createElement('span');
@@ -81,7 +80,7 @@ class Rating {
         }
 
         // Replace existing stars if any
-        const existingStars = container.querySelector('.stars-interactive');
+        const existingStars = container.querySelector('.stars');
         if (existingStars) {
             console.log('Replacing existing stars with new stars.');
             container.replaceChild(starsContainer, existingStars);
@@ -166,7 +165,7 @@ class Rating {
                 transition: transform 0.2s ease;
             }
 
-            .stars-interactive {
+            .stars{
                 display: inline-flex;
                 gap: 2px;
             }

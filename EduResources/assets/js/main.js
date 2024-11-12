@@ -2,6 +2,7 @@
 import firebaseData from 'https://samkarya.github.io/bcaexamprep/EduResources/assets/js/utils/mockData.js';
 import Search from 'https://samkarya.github.io/bcaexamprep/EduResources/assets/js/components/search.js';
 import Rating from 'https://samkarya.github.io/bcaexamprep/EduResources/assets/js/components/rating.js';
+import Filter from 'https://samkarya.github.io/bcaexamprep/EduResources/assets/js/components/filter.js';
 // Initialize components when DOM is loaded
 document.addEventListener('DOMContentLoaded', async () => {
     try {
@@ -20,6 +21,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Initialize filters
     initializeFilters();
         setupLoadingIndicator();
+    const filter = new Filter();
     const rating = new Rating();
 } catch (error) {
         console.error('Error initializing application:', error);

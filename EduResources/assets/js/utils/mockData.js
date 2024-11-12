@@ -51,7 +51,7 @@ class FirebaseDataService {
 
     async getTotalDocuments() {
         try {
-            const contentRef = collection(this.db, 'contents');
+            const contentRef = collection(this.db, 'eduResources');
             const snapshot = await getCountFromServer(contentRef);
             this.totalDocuments = snapshot.data().count;
             return this.totalDocuments;

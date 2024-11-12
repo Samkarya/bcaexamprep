@@ -192,4 +192,5 @@ class Rating {
         document.head.appendChild(styleSheet);
     }
 }
-export defualt Rating;
+
+export default Rating;

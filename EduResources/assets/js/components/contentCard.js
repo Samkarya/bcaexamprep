@@ -50,15 +50,6 @@ class ContentCard {
                         </span>
                     </div>
                     
-                    <div class="rating-container1">
-                        <div class="stars1">
-                           
-                        </div>
-                        <span class="rating-count1">
-                            30
-                        </span>
-                    </div>
-                    
                     <div class="content-card-actions">
                         <button class="bookmark-btn" data-id="${id}">
                             <i class="fa${isBookmarked ? 's' : 'r'} fa-bookmark"></i>

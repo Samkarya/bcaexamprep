@@ -1,57 +1,127 @@
 // assets/js/components/rating.js
-
 class Rating {
     constructor() {
         this.ratings = new Map(); // Store user ratings
+        this.db = getFirestore();
+        this.auth = getAuth();
         this.init();
     }
 
     init() {
         // Add event delegation for rating stars
-        document.addEventListener('click', (e) => {
+        document.addEventListener('click', async (e) => {
             const ratingContainer = e.target.closest('.rating-container');
             if (!ratingContainer) return;
 
             const starElement = e.target.closest('.star-rating');
             if (!starElement) return;
 
+            // Check if user is authenticated
+            if (!this.auth.currentUser) {
+                this.showMessage(ratingContainer, 'Please login to rate', 'error');
+                return;
+            }
+
             const contentId = ratingContainer.closest('.content-card').dataset.id;
             const rating = parseInt(starElement.dataset.rating);
 
-            this.handleRating(contentId, rating, ratingContainer);
+            await this.handleRating(contentId, rating, ratingContainer);
         });
 
         // Initialize all rating containers
         this.initializeRatingContainers();
     }
 
-    initializeRatingContainers() {
-        document.querySelectorAll('.rating-container').forEach(container => {
+    async initializeRatingContainers() {
+        const containers = document.querySelectorAll('.rating-container');
+        
+        for (const container of containers) {
             const contentId = container.closest('.content-card').dataset.id;
-            const currentRating = parseFloat(container.dataset.rating) || 0;
-            this.updateRatingDisplay(container, currentRating);
-        });
+            
+            // Get average rating
+            const averageRating = await this.getAverageRating(contentId);
+            this.updateRatingDisplay(container, averageRating);
+
+            // If user is logged in, get their rating
+            if (this.auth.currentUser) {
+                const userRating = await this.getUserRating(contentId);
+                if (userRating) {
+                    this.ratings.set(contentId, userRating);
+                    container.dataset.userRating = userRating;
+                }
+            }
+        }
     }
 
-    handleRating(contentId, rating, container) {
-        // In a real implementation, this would make an API call to update the rating
-        this.ratings.set(contentId, rating);
-        
-        // Update visual display
-        this.updateRatingDisplay(container, rating);
-        
-        // Animate the rating change
-        this.animateRating(container);
-        
-        // Log for demonstration (replace with actual API call)
-        console.log(`Content ID: ${contentId} rated ${rating} stars`);
-        
-        // Show thank you message
-        this.showThankYouMessage(container);
+    async handleRating(contentId, rating, container) {
+        try {
+            const userId = this.auth.currentUser.uid;
+            
+            // Create rating document
+            const ratingRef = doc(this.db, 'eduResourcesRating', `${contentId}_${userId}`);
+            await setDoc(ratingRef, {
+                userId: userId,
+                resourceId: contentId,
+                rating: rating,
+                timestamp: new Date()
+            });
+
+            // Update local state
+            this.ratings.set(contentId, rating);
+            
+            // Update visual display
+            const averageRating = await this.getAverageRating(contentId);
+            this.updateRatingDisplay(container, averageRating);
+            
+            // Animate and show thank you message
+            this.animateRating(container);
+            this.showMessage(container, 'Thanks for rating!', 'success');
+            
+        } catch (error) {
+            console.error('Error saving rating:', error);
+            this.showMessage(container, 'Error saving rating', 'error');
+        }
+    }
+
+    async getUserRating(contentId) {
+        if (!this.auth.currentUser) return null;
+
+        try {
+            const ratingRef = doc(this.db, 'eduResourcesRating', `${contentId}_${this.auth.currentUser.uid}`);
+            const ratingDoc = await getDoc(ratingRef);
+            
+            if (ratingDoc.exists()) {
+                return ratingDoc.data().rating;
+            }
+            return null;
+        } catch (error) {
+            console.error('Error getting user rating:', error);
+            return null;
+        }
+    }
+
+    async getAverageRating(contentId) {
+        try {
+            const ratingsRef = collection(this.db, 'eduResourcesRating');
+            const q = query(ratingsRef, where('resourceId', '==', contentId));
+            const querySnapshot = await getDocs(q);
+            
+            let total = 0;
+            let count = 0;
+            
+            querySnapshot.forEach((doc) => {
+                total += doc.data().rating;
+                count++;
+            });
+            
+            return count > 0 ? (total / count).toFixed(1) : 0;
+        } catch (error) {
+            console.error('Error calculating average rating:', error);
+            return 0;
+        }
     }
 
     updateRatingDisplay(container, rating) {
-        // Update stars
         container.querySelectorAll('.star-rating').forEach((star, index) => {
             const starRating = index + 1;
             
@@ -72,28 +142,18 @@ class Rating {
         }, 1000);
     }
 
-    showThankYouMessage(container) {
-        const message = document.createElement('div');
-        message.className = 'rating-thank-you';
-        message.textContent = 'Thanks for rating!';
+    showMessage(container, message, type = 'success') {
+        const messageElement = document.createElement('div');
+        messageElement.className = `rating-message ${type}`;
+        messageElement.textContent = message;
         
-        container.appendChild(message);
+        container.appendChild(messageElement);
         
-        // Remove message after animation
         setTimeout(() => {
-            message.remove();
+            messageElement.remove();
         }, 2000);
     }
 
-    // Static method to calculate average rating
-    static calculateAverageRating(ratings) {
-        if (!ratings || ratings.length === 0) return 0;
-        
-        const sum = ratings.reduce((acc, curr) => acc + curr, 0);
-        return (sum / ratings.length).toFixed(1);
-    }
-
-    // Add CSS styles for rating animations
     static addStyles() {
         const styles = `
             .rating-container {
@@ -129,17 +189,25 @@ class Rating {
                 animation: pulse 1s ease;
             }
 
-            .rating-thank-you {
+            .rating-message {
                 position: absolute;
                 top: -30px;
                 left: 50%;
                 transform: translateX(-50%);
-                background: rgba(0, 0, 0, 0.8);
-                color: white;
                 padding: 5px 10px;
                 border-radius: 4px;
                 font-size: 12px;
                 animation: fadeOut 2s ease forwards;
+            }
+
+            .rating-message.success {
+                background: rgba(0, 128, 0, 0.8);
+                color: white;
+            }
+
+            .rating-message.error {
+                background: rgba(255, 0, 0, 0.8);
+                color: white;
             }
 
             @keyframes pulse {

@@ -51,7 +51,7 @@ class FirestoreService {
             
             // Update view count in the main resource document
             await updateDoc(resourceRef, {
-                viewCount: increment(1)
+                views: increment(1)
             });
 
             // Log view details
@@ -59,7 +59,7 @@ class FirestoreService {
             await setDoc(doc(this.db, 'resourceViews', `${resourceId}_${Date.now()}`), {
                 resourceId,
                 userId,
-                viewtimestamp: new Date().toISOString()
+                timestamp: new Date().toISOString()
             });
         } catch (error) {
             console.error('Error incrementing views:', error);

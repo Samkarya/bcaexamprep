@@ -1,8 +1,14 @@
 // assets/js/components/rating.js
+import { getFirestore, doc, collection, addDoc, updateDoc, query, where, getDocs, runTransaction } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
+import { showToast } from "https://samkarya.github.io/bcaexamprep/firebase/common-utils.js";
 
 class Rating {
     constructor() {
+        this.db = getFirestore();
+        this.auth = getAuth();
         this.ratings = new Map(); // Store user ratings
+        this.userRatings = new Map(); // Store user's previous ratings
         this.init();
     }
 
@@ -23,35 +29,137 @@ class Rating {
 
         // Initialize all rating containers
         this.initializeRatingContainers();
+         this.loadUserRatings();
     }
+      async loadUserRatings() {
+        if (!this.auth.currentUser) return;
 
-    initializeRatingContainers() {
-        document.querySelectorAll('.rating-container').forEach(container => {
-            const contentId = container.closest('.content-card').dataset.id;
-            const currentRating = parseFloat(container.dataset.rating) || 0;
+        try {
+            const userRatingsQuery = query(
+                collection(this.db, 'eduResources'),
+                where('userId', '==', this.auth.currentUser.uid)
+            );
             
-            this.renderStars(container, currentRating);
-            this.updateRatingDisplay(container, currentRating);
-        });
+            const snapshot = await getDocs(userRatingsQuery);
+            snapshot.forEach(doc => {
+                this.userRatings.set(doc.id, doc.data().rating);
+            });
+        } catch (error) {
+            console.error('Error loading user ratings:', error);
+            showToast('Error loading your ratings', 'error');
+        }
     }
 
-    handleRating(contentId, rating, container) {
-        // In a real implementation, this would make an API call to update the rating
-        this.ratings.set(contentId, rating);
-        
-        // Update visual display
-        this.updateRatingDisplay(container, rating);
-        
-        // Animate the rating change
-        this.animateRating(container);
-        
-        // Log for demonstration (replace with actual API call)
-        console.log(`Content ID: ${contentId} rated ${rating} stars`);
-        
-        // Show thank you message
-        this.showThankYouMessage(container);
+
+     async handleRating(contentId, rating, container) {
+        if (!this.auth.currentUser) {
+            showToast('Please login to rate content', 'warning');
+            return;
+        }
+
+        if (rating < 1 || rating > 5) {
+            showToast('Invalid rating value', 'error');
+            return;
+        }
+
+        try {
+            // Start loading state
+            container.classList.add('rating-loading');
+            
+            const resourceRef = doc(this.db, 'eduResources', contentId);
+            const ratingRef = collection(resourceRef, 'ratings');
+            
+            // Use transaction to ensure atomic updates
+            await runTransaction(this.db, async (transaction) => {
+                // Check if user has already rated
+                const userRatingQuery = query(
+                    ratingRef,
+                    where('userId', '==', this.auth.currentUser.uid)
+                );
+                const userRatingSnapshot = await getDocs(userRatingQuery);
+                
+                if (userRatingSnapshot.empty) {
+                    // Create new rating
+                    await addDoc(ratingRef, {
+                        userId: this.auth.currentUser.uid,
+                        rating: rating,
+                        timestamp: new Date().toISOString()
+                    });
+                } else {
+                    // Update existing rating
+                    const userRatingDoc = userRatingSnapshot.docs[0];
+                    await updateDoc(doc(ratingRef, userRatingDoc.id), {
+                        rating: rating,
+                        timestamp: new Date().toISOString()
+                    });
+                }
+
+                // Update average rating in resource document
+                const ratingsSnapshot = await getDocs(ratingRef);
+                const ratings = ratingsSnapshot.docs.map(doc => doc.data().rating);
+                const averageRating = Rating.calculateAverageRating(ratings);
+                
+                await updateDoc(resourceRef, {
+                    averageRating: averageRating,
+                    totalRatings: ratingsSnapshot.size
+                });
+
+                // Store in local cache
+                this.ratings.set(contentId, averageRating);
+                this.userRatings.set(contentId, rating);
+
+                // Update UI
+                this.updateRatingDisplay(container, averageRating);
+                this.animateRating(container);
+                this.showThankYouMessage(container);
+
+                // Show success message
+                showToast('Rating submitted successfully', 'success');
+            });
+
+        } catch (error) {
+            console.error('Error updating rating:', error);
+            showToast('Error submitting rating', 'error');
+        } finally {
+            // Remove loading state
+            container.classList.remove('rating-loading');
+        }
     }
 
+    
+     async initializeRatingContainers() {
+        const containers = document.querySelectorAll('.rating-container');
+        
+        for (const container of containers) {
+            const contentId = container.closest('.content-card').dataset.id;
+            
+            try {
+                const resourceRef = doc(this.db, 'eduResources', contentId);
+                const ratingRef = collection(resourceRef, 'ratings');
+                const ratingsSnapshot = await getDocs(ratingRef);
+                
+                const ratings = ratingsSnapshot.docs.map(doc => doc.data().rating);
+                const averageRating = Rating.calculateAverageRating(ratings);
+                
+                // Store average rating
+                this.ratings.set(contentId, averageRating);
+                
+                // Render initial state
+                this.renderStars(container, averageRating);
+                this.updateRatingDisplay(container, averageRating);
+                
+                // If user has rated, highlight their rating
+                const userRating = this.userRatings.get(contentId);
+                if (userRating) {
+                    this.highlightUserRating(container, userRating);
+                }
+                
+            } catch (error) {
+                console.error('Error initializing rating container:', error);
+                showToast('Error loading ratings', 'error');
+            }
+        }
+    }
     renderStars(container, rating) {
         const starsContainer = document.createElement('div');
         starsContainer.className = 'stars-interactive';
@@ -63,7 +171,7 @@ class Rating {
             star.innerHTML = '<i class="fas fa-star"></i>';
             starsContainer.appendChild(star);
         }
-
+        
         // Replace existing stars if any
         const existingStars = container.querySelector('.stars-interactive');
         if (existingStars) {
@@ -73,6 +181,13 @@ class Rating {
         }
     }
 
+      highlightUserRating(container, rating) {
+        container.querySelectorAll('.star-rating').forEach((star, index) => {
+            if (index < rating) {
+                star.classList.add('user-rated');
+            }
+        });
+    }
     updateRatingDisplay(container, rating) {
         // Update stars
         container.querySelectorAll('.star-rating').forEach((star, index) => {
@@ -128,6 +243,34 @@ class Rating {
     // Add CSS styles for rating animations
     static addStyles() {
         const styles = `
+        .rating-loading {
+                opacity: 0.6;
+                pointer-events: none;
+            }
+
+            .star-rating.user-rated i {
+                color: #ffa500;
+            }
+
+            /* Add loading spinner */
+            .rating-loading::after {
+                content: '';
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 20px;
+                height: 20px;
+                border: 2px solid #f3f3f3;
+                border-top: 2px solid #3498db;
+                border-radius: 50%;
+                animation: spin 1s linear infinite;
+            }
+
+            @keyframes spin {
+                0% { transform: translate(-50%, -50%) rotate(0deg); }
+                100% { transform: translate(-50%, -50%) rotate(360deg); }
+            }
             .rating-container {
                 position: relative;
                 transition: transform 0.2s ease;
@@ -198,3 +341,4 @@ Rating.addStyles();
 
 // Initialize rating system
 const rating = new Rating();
+export default Rating;

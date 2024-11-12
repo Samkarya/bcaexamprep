@@ -7,22 +7,23 @@ import Filter from 'https://samkarya.github.io/bcaexamprep/EduResources/assets/j
 document.addEventListener('DOMContentLoaded', async () => {
     try {
         // Load initial data from Firebase
-        await firebaseData.loadInitialData();
+    await firebaseData.loadInitialData();
     // Initialize content cards
     ContentCard.init();
 
     // Initialize search
     new Search();
-    Rating.addStyles();
+    const filter = new Filter();
     
     // Load initial content
     loadInitialContent();
 
     // Initialize filters
     initializeFilters();
-        setupLoadingIndicator();
+    setupLoadingIndicator();
+    Rating.addStyles();
     const rating = new Rating();
-        const filter = new Filter();
+        
 } catch (error) {
         console.error('Error initializing application:', error);
         showToast('Error loading content. Please try again later.', 'error');

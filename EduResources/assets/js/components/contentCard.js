@@ -87,3 +87,4 @@ class ContentCard {
         }); 
     }
 }
+export default ContentCard;

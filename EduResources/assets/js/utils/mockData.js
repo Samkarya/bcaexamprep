@@ -74,7 +74,7 @@ class FirebaseDataService {
                 return [];
             }
 
-            const contentRef = collection(this.db, 'contents');
+            const contentRef = collection(this.db, 'eduResources');
             const batchSize = Math.min(this.BATCH_SIZE, this.totalDocuments);
             const q = query(contentRef, orderBy('dateAdded', 'desc'), limit(batchSize));
             const snapshot = await getDocs(q);
@@ -112,7 +112,7 @@ class FirebaseDataService {
         
         try {
             this.isLoading = true;
-            const contentRef = collection(this.db, 'contents');
+            const contentRef = collection(this.db, 'eduResources');
             
             // Calculate remaining documents
             const remainingDocs = this.totalDocuments - this.contents.length;

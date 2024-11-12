@@ -17,7 +17,7 @@ class Rating {
 
             const contentId = ratingContainer.closest('.content-card').dataset.id;
             const rating = parseInt(starElement.dataset.rating);
-
+            console.log(rating);
             this.handleRating(contentId, rating, ratingContainer);
         });
 

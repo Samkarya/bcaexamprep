@@ -13,13 +13,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Initialize search
     new Search();
     Rating.addStyles();
-    const rating = new Rating();
+    
     // Load initial content
     loadInitialContent();
 
     // Initialize filters
     initializeFilters();
         setupLoadingIndicator();
+    const rating = new Rating();
 } catch (error) {
         console.error('Error initializing application:', error);
         showToast('Error loading content. Please try again later.', 'error');

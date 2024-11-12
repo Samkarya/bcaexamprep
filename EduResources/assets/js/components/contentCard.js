@@ -41,7 +41,7 @@ class ContentCard {
                         `).join('')}
                     </div>
                     
-                    <div class="rating-container">
+                    <div class="rating-container" data-rating="4.5">
                         <div class="stars">
                             ${helpers.generateStarRating(rating)}
                         </div>

@@ -1,6 +1,6 @@
 // assets/js/components/search.js
 import firebaseData from 'https://samkarya.github.io/bcaexamprep/EduResources/assets/js/utils/mockData.js';
-import { debounce } from 'https://samkarya.github.io/bcaexamprep/EduResources/assets/js/utils/helpers.js';
+//import { debounce } from 'https://samkarya.github.io/bcaexamprep/EduResources/assets/js/utils/helpers.js';
 
 class Search {
     constructor() {
@@ -20,7 +20,7 @@ class Search {
 
         // Add search input event listener with debounce
         this.searchInput.addEventListener('input', 
-            debounce(() => this.handleSearch(), 300)
+            helpers.debounce(() => this.handleSearch(), 300)
         );
 
         // Add clear search button handler

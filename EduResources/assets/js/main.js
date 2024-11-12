@@ -3,6 +3,7 @@ import firebaseData from 'https://samkarya.github.io/bcaexamprep/EduResources/as
 import Search from 'https://samkarya.github.io/bcaexamprep/EduResources/assets/js/components/search.js';
 import Rating from 'https://samkarya.github.io/bcaexamprep/EduResources/assets/js/components/rating.js';
 import Filter from 'https://samkarya.github.io/bcaexamprep/EduResources/assets/js/components/filter.js';
+import ContentCard from 'https://samkarya.github.io/bcaexamprep/EduResources/assets/js/components/ContentCard.js';
 import {showToast } from "https://samkarya.github.io/bcaexamprep/firebase/common-utils.js";
 // Initialize components when DOM is loaded
 document.addEventListener('DOMContentLoaded', async () => {

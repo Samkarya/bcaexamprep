@@ -7,48 +7,26 @@ class Rating {
     }
 
     init() {
-        // Add event delegation for rating containers
-        document.addEventListener('mousemove', (e) => {
-            const ratingContainer = e.target.closest('.rating-container1');
-            if (!ratingContainer) return;
-            
-            const rect = ratingContainer.getBoundingClientRect();
-            const starWidth = rect.width / 5;
-            const x = e.clientX - rect.left;
-            const starIndex = Math.floor(x / starWidth);
-            const fraction = (x % starWidth) / starWidth;
-            
-            this.updateStarsOnHover(ratingContainer, starIndex, fraction);
-        });
-
+        // Add event delegation for rating stars
         document.addEventListener('click', (e) => {
-            const ratingContainer = e.target.closest('.rating-container1');
+            const ratingContainer = e.target.closest('.rating-container');
             if (!ratingContainer) return;
 
-            const rect = ratingContainer.getBoundingClientRect();
-            const starWidth = rect.width / 5;
-            const x = e.clientX - rect.left;
-            const rating = Math.floor(x / starWidth) + (((x % starWidth) / starWidth) > 0.5 ? 1 : 0.5);
-            
+            const starElement = e.target.closest('.star-rating');
+            if (!starElement) return;
+
             const contentId = ratingContainer.closest('.content-card').dataset.id;
+            const rating = parseInt(starElement.dataset.rating);
+
             this.handleRating(contentId, rating, ratingContainer);
         });
-
-        document.addEventListener('mouseleave', (e) => {
-            const ratingContainer = e.target.closest('.rating-container1');
-            if (!ratingContainer) return;
-
-            const contentId = ratingContainer.closest('.content-card').dataset.id;
-            const currentRating = this.ratings.get(contentId) || 0;
-            this.updateRatingDisplay(ratingContainer, currentRating);
-        }, true);
 
         // Initialize all rating containers
         this.initializeRatingContainers();
     }
 
     initializeRatingContainers() {
-        document.querySelectorAll('.star').forEach(container => {
+        document.querySelectorAll('.rating-container').forEach(container => {
             const contentId = container.closest('.content-card').dataset.id;
             const currentRating = parseFloat(container.dataset.rating) || 0;
             
@@ -57,20 +35,8 @@ class Rating {
         });
     }
 
-    updateStarsOnHover(container, starIndex, fraction) {
-        container.querySelectorAll('.star-rating').forEach((star, index) => {
-            if (index < starIndex) {
-                star.className = 'star-rating active';
-            } else if (index === starIndex) {
-                star.className = `star-rating ${fraction > 0.5 ? 'active' : 'half'}`;
-            } else {
-                star.className = 'star-rating';
-            }
-        });
-    }
-
     handleRating(contentId, rating, container) {
-        // Store the rating
+        // In a real implementation, this would make an API call to update the rating
         this.ratings.set(contentId, rating);
         
         // Update visual display
@@ -87,14 +53,14 @@ class Rating {
     }
 
     renderStars(container, rating) {
-        
         const starsContainer = document.createElement('div');
         starsContainer.className = 'stars-interactive';
 
         for (let i = 1; i <= 5; i++) {
             const star = document.createElement('span');
-            star.className = 'star-rating';
-            star.innerHTML = '★';
+            star.className = 'star-rating' + (i <= rating ? ' active' : '');
+            star.dataset.rating = i;
+            star.innerHTML = '<i class="fas fa-star"></i>';
             starsContainer.appendChild(star);
         }
 
@@ -105,11 +71,10 @@ class Rating {
         } else {
             container.appendChild(starsContainer);
         }
-
-        this.updateRatingDisplay(container, rating);
     }
 
     updateRatingDisplay(container, rating) {
+        // Update stars
         container.querySelectorAll('.star-rating').forEach((star, index) => {
             const starRating = index + 1;
             
@@ -136,7 +101,7 @@ class Rating {
         container.classList.add('rating-updated');
         setTimeout(() => {
             container.classList.remove('rating-updated');
-        }, 300);
+        }, 1000);
     }
 
     showThankYouMessage(container) {
@@ -146,54 +111,54 @@ class Rating {
         
         container.appendChild(message);
         
+        // Remove message after animation
         setTimeout(() => {
             message.remove();
         }, 2000);
     }
 
+    // Static method to calculate average rating
     static calculateAverageRating(ratings) {
         if (!ratings || ratings.length === 0) return 0;
+        
         const sum = ratings.reduce((acc, curr) => acc + curr, 0);
         return (sum / ratings.length).toFixed(1);
     }
 
+    // Add CSS styles for rating animations
     static addStyles() {
         const styles = `
-            .rating-container1 {
+            .rating-container {
                 position: relative;
-                display: inline-flex;
-                gap: 5px;
-                font-size: 24px;
-                cursor: pointer;
                 transition: transform 0.2s ease;
             }
 
             .stars-interactive {
                 display: inline-flex;
-                gap: 5px;
+                gap: 2px;
             }
 
             .star-rating {
-                color: #ddd;
-                transition: color 0.2s ease, transform 0.1s ease;
+                cursor: pointer;
+                transition: transform 0.1s ease, color 0.2s ease;
             }
 
             .star-rating:hover {
                 transform: scale(1.2);
             }
 
-            .star-rating.active {
-                color: gold;
+            .star-rating.active i {
+                color: #ffd700;
             }
 
-            .star-rating.half {
-                background: linear-gradient(90deg, gold 50%, #ddd 50%);
+            .star-rating.half i {
+                background: linear-gradient(90deg, #ffd700 50%, #e4e5e9 50%);
                 -webkit-background-clip: text;
                 -webkit-text-fill-color: transparent;
             }
 
             .rating-updated {
-                animation: pulse 0.3s ease;
+                animation: pulse 1s ease;
             }
 
             .rating-thank-you {

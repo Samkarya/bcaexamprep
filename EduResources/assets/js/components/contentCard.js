@@ -48,8 +48,6 @@ class ContentCard {
                         <span class="rating-count">
                             (${helpers.formatNumber(ratingCount)})
                         </span>
-                        <div class ="stars-interactive">
-                        </div>
                     </div>
                     
                     <div class="content-card-actions">

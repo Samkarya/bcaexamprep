@@ -76,6 +76,14 @@ class ContentCard {
                 // In real implementation, this would update the database
                 console.log(`Toggled bookmark for content ID: ${id}`);
             }
-        });
+            if (e.target.closest('.view-btn')) {
+                const btn = e.target.closest('.view-btn');
+                const id = btn.dataset.id;
+                
+                
+                // In real implementation, this would update the database
+                console.log(`View content ID: ${id}`);
+            }
+        }); 
     }
 }

@@ -1,245 +1,145 @@
-class Rating {
-    constructor() {
-        this.ratings = new Map(); // Store user ratings
-        this.init();
-    }
-
-    init() {
-        // Add event delegation for rating stars and hover effects
-        document.addEventListener('mousemove', (e) => {
-            if (!e.target || !(e.target instanceof Element)) return;
-            
-            const ratingContainer = e.target.closest('.rating-container');
-            if (!ratingContainer) return;
-
-            const starElement = e.target.closest('.star-rating');
-            if (!starElement) return;
-
-            this.handleHover(e, starElement, ratingContainer);
-        });
-
-        document.addEventListener('mouseleave', (e) => {
-            if (!e.target || !(e.target instanceof Element)) return;
-            
-            const ratingContainer = e.target.closest('.rating-container');
-            if (!ratingContainer) return;
-
-            // Reset to actual rating when mouse leaves
-            const contentCard = ratingContainer.closest('.content-card');
-            const contentId = contentCard ? contentCard.dataset.id : null;
-            const currentRating = this.ratings.get(contentId) || parseFloat(ratingContainer.dataset.rating) || 0;
-            this.updateRatingDisplay(ratingContainer, currentRating);
-        }, true);
-
-        document.addEventListener('click', (e) => {
-            if (!e.target || !(e.target instanceof Element)) return;
-            
-            const ratingContainer = e.target.closest('.rating-container');
-            if (!ratingContainer) return;
-
-            const starElement = e.target.closest('.star-rating');
-            if (!starElement) return;
-
-            const contentCard = ratingContainer.closest('.content-card');
-            const contentId = contentCard ? contentCard.dataset.id : 'default';
-            const rating = this.calculateRating(e, starElement);
-
-            this.handleRating(contentId, rating, ratingContainer);
-        });
-
-        // Initialize all rating containers
-        this.initializeRatingContainers();
-    }
-
-    calculateRating(e, starElement) {
-        const rect = starElement.getBoundingClientRect();
-        const starWidth = rect.width;
-        const clickPosition = e.clientX - rect.left;
-        const baseRating = parseInt(starElement.dataset.rating);
-        
-        // If click is on the left half of the star, make it a half star
-        return clickPosition < starWidth / 2 ? baseRating - 0.5 : baseRating;
-    }
-
-    handleHover(e, starElement, container) {
-        const rating = this.calculateRating(e, starElement);
-        this.updateRatingDisplay(container, rating, true);
-    }
-
-    initializeRatingContainers() {
-        const containers = document.querySelectorAll('.rating-container');
-        containers.forEach(container => {
-            const contentCard = container.closest('.content-card');
-            const contentId = contentCard ? contentCard.dataset.id : 'default';
-            const currentRating = parseFloat(container.dataset.rating) || 0;
-            
-            this.renderStars(container, currentRating);
-            this.updateRatingDisplay(container, currentRating);
-        });
-    }
-
-    handleRating(contentId, rating, container) {
-        this.ratings.set(contentId, rating);
-        this.updateRatingDisplay(container, rating);
-        this.animateRating(container);
-        console.log(`Content ID: ${contentId} rated ${rating} stars`);
-        this.showThankYouMessage(container);
-    }
-
-    renderStars(container, rating) {
-        const starsContainer = document.createElement('div');
-        starsContainer.className = 'stars-interactive';
-
-        for (let i = 1; i <= 5; i++) {
-            const star = document.createElement('span');
-            star.className = 'star-rating';
-            star.dataset.rating = i;
-            star.innerHTML = '<i class="fas fa-star"></i>';
-            starsContainer.appendChild(star);
+// Initialize rating system when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    class StarRating {
+        constructor(container) {
+            this.container = container;
+            this.rating = 0;
+            this.init();
         }
 
-        // Replace existing stars if any
-        const existingStars = container.querySelector('.stars-interactive');
-        if (existingStars) {
-            container.replaceChild(starsContainer, existingStars);
-        } else {
-            container.appendChild(starsContainer);
-        }
-
-        this.updateRatingDisplay(container, rating);
-    }
-
-    updateRatingDisplay(container, rating, isHover = false) {
-        const stars = container.querySelectorAll('.star-rating');
-        stars.forEach((star, index) => {
-            const starRating = index + 1;
-            star.classList.remove('active', 'half', 'hover', 'hover-half');
+        init() {
+            // Create stars container
+            this.starsContainer = document.createElement('div');
+            this.starsContainer.className = 'stars-container';
             
-            if (starRating <= rating) {
-                star.classList.add(isHover ? 'hover' : 'active');
-            } else if (starRating - 0.5 <= rating) {
-                star.classList.add(isHover ? 'hover-half' : 'half');
+            // Create 5 stars
+            for (let i = 1; i <= 5; i++) {
+                const star = document.createElement('span');
+                star.className = 'star';
+                star.innerHTML = '★';
+                this.starsContainer.appendChild(star);
             }
-        });
 
-        // Update rating number
-        let ratingText = container.querySelector('.rating-text');
-        if (!ratingText) {
-            ratingText = document.createElement('span');
-            ratingText.className = 'rating-text';
-            container.appendChild(ratingText);
+            // Create rating text
+            this.ratingText = document.createElement('span');
+            this.ratingText.className = 'rating-text';
+            this.ratingText.textContent = '0.0';
+
+            // Add elements to container
+            this.container.appendChild(this.starsContainer);
+            this.container.appendChild(this.ratingText);
+
+            // Add event listeners
+            this.starsContainer.addEventListener('mousemove', (e) => this.handleHover(e));
+            this.starsContainer.addEventListener('mouseleave', () => this.handleMouseLeave());
+            this.starsContainer.addEventListener('click', (e) => this.handleClick(e));
         }
-        ratingText.textContent = rating.toFixed(1);
+
+        handleHover(e) {
+            const rect = this.starsContainer.getBoundingClientRect();
+            const starWidth = rect.width / 5;
+            const x = e.clientX - rect.left;
+            const starIndex = Math.floor(x / starWidth);
+            const fraction = (x % starWidth) / starWidth;
+            
+            let rating = starIndex + (fraction > 0.5 ? 1 : 0.5);
+            this.updateStars(rating);
+        }
+
+        handleMouseLeave() {
+            this.updateStars(this.rating);
+        }
+
+        handleClick(e) {
+            const rect = this.starsContainer.getBoundingClientRect();
+            const starWidth = rect.width / 5;
+            const x = e.clientX - rect.left;
+            const starIndex = Math.floor(x / starWidth);
+            const fraction = (x % starWidth) / starWidth;
+            
+            this.rating = starIndex + (fraction > 0.5 ? 1 : 0.5);
+            this.updateStars(this.rating);
+            
+            // Animate the container
+            this.container.classList.add('rating-selected');
+            setTimeout(() => {
+                this.container.classList.remove('rating-selected');
+            }, 300);
+
+            // Log the rating
+            console.log(`Rating selected: ${this.rating} stars`);
+        }
+
+        updateStars(rating) {
+            const stars = this.starsContainer.children;
+            this.ratingText.textContent = rating.toFixed(1);
+
+            for (let i = 0; i < stars.length; i++) {
+                if (i < Math.floor(rating)) {
+                    stars[i].className = 'star full';
+                } else if (i === Math.floor(rating) && rating % 1 !== 0) {
+                    stars[i].className = 'star half';
+                } else {
+                    stars[i].className = 'star';
+                }
+            }
+        }
     }
 
-    animateRating(container) {
-        container.classList.add('rating-updated');
-        setTimeout(() => {
-            container.classList.remove('rating-updated');
-        }, 1000);
-    }
+    // Add styles
+    const styles = `
+        .rating-container {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            transition: transform 0.3s ease;
+        }
 
-    showThankYouMessage(container) {
-        const message = document.createElement('div');
-        message.className = 'rating-thank-you';
-        message.textContent = 'Thanks for rating!';
-        
-        container.appendChild(message);
-        
-        setTimeout(() => {
-            message.remove();
-        }, 2000);
-    }
+        .stars-container {
+            display: inline-flex;
+            cursor: pointer;
+        }
 
-    static calculateAverageRating(ratings) {
-        if (!ratings || ratings.length === 0) return 0;
-        const sum = ratings.reduce((acc, curr) => acc + curr, 0);
-        return (sum / ratings.length).toFixed(1);
-    }
+        .star {
+            font-size: 24px;
+            color: #ddd;
+            transition: color 0.2s ease;
+            position: relative;
+        }
 
-    static addStyles() {
-        const styles = `
-            .rating-container {
-                position: relative;
-                transition: transform 0.2s ease;
-            }
+        .star.full {
+            color: #ffd700;
+        }
 
-            .stars-interactive {
-                display: inline-flex;
-                gap: 2px;
-            }
+        .star.half {
+            background: linear-gradient(90deg, #ffd700 50%, #ddd 50%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-            .star-rating {
-                cursor: pointer;
-                transition: transform 0.1s ease, color 0.2s ease;
-                padding: 2px;
-            }
+        .rating-text {
+            font-size: 16px;
+            min-width: 36px;
+        }
 
-            .star-rating:hover {
-                transform: scale(1.2);
-            }
+        .rating-selected {
+            animation: pulse 0.3s ease;
+        }
 
-            .star-rating i {
-                transition: color 0.2s ease, background 0.2s ease;
-                font-size: 24px;
-            }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+    `;
 
-            .star-rating.active i,
-            .star-rating.hover i {
-                color: #ffd700;
-            }
+    const styleSheet = document.createElement('style');
+    styleSheet.textContent = styles;
+    document.head.appendChild(styleSheet);
 
-            .star-rating.half i,
-            .star-rating.hover-half i {
-                background: linear-gradient(90deg, #ffd700 50%, #e4e5e9 50%);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-            }
-
-            .rating-text {
-                margin-left: 8px;
-                font-size: 14px;
-                color: #666;
-            }
-
-            .rating-updated {
-                animation: pulse 1s ease;
-            }
-
-            .rating-thank-you {
-                position: absolute;
-                top: -30px;
-                left: 50%;
-                transform: translateX(-50%);
-                background: rgba(0, 0, 0, 0.8);
-                color: white;
-                padding: 5px 10px;
-                border-radius: 4px;
-                font-size: 12px;
-                animation: fadeOut 2s ease forwards;
-            }
-
-            @keyframes pulse {
-                0% { transform: scale(1); }
-                50% { transform: scale(1.1); }
-                100% { transform: scale(1); }
-            }
-
-            @keyframes fadeOut {
-                0% { opacity: 1; transform: translate(-50%, 0); }
-                70% { opacity: 1; transform: translate(-50%, 0); }
-                100% { opacity: 0; transform: translate(-50%, -10px); }
-            }
-        `;
-
-        const styleSheet = document.createElement('style');
-        styleSheet.textContent = styles;
-        document.head.appendChild(styleSheet);
-    }
-}
-
-// Add rating styles to document
-Rating.addStyles();
-
-// Initialize rating system
-const rating = new Rating();
+    // Initialize all rating containers
+    document.querySelectorAll('.rating-container').forEach(container => {
+        new StarRating(container);
+    });
+});

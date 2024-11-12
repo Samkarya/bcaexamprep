@@ -21,8 +21,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Initialize filters
     initializeFilters();
         setupLoadingIndicator();
-    const filter = new Filter();
     const rating = new Rating();
+        const filter = new Filter();
 } catch (error) {
         console.error('Error initializing application:', error);
         showToast('Error loading content. Please try again later.', 'error');

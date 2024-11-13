@@ -70,15 +70,61 @@ static init() {
     document.addEventListener('click', async (e) => {  // Marked as async
         if (e.target.closest('.bookmark-btn')) {
             const btn = e.target.closest('.bookmark-btn');
-            const id = btn.dataset.id;
+            const contentId = btn.dataset.id;
             const icon = btn.querySelector('i');
             
-            // Toggle bookmark state
-            icon.classList.toggle('far');
-            icon.classList.toggle('fas');
-            
-            // In real implementation, this would update the database
-            console.log(`Toggled bookmark for content ID: ${id}`);
+            try {
+                const user = auth.currentUser;
+                if (!user) {
+                    console.error('User must be logged in to bookmark content');
+                    return;
+                }
+                
+                // Query existing bookmark
+                const q = query(
+                    bookmarksRef,
+                    where('userId', '==', user.uid),
+                    where('contentId', '==', contentId)
+                );
+                
+                const querySnapshot = await getDocs(q);
+                
+                if (querySnapshot.empty) {
+                    // Create new bookmark
+                    await addDoc(bookmarksRef, {
+                        userId: user.uid,
+                        contentId: contentId,
+                        isBookmarked: true,
+                        createdAt: serverTimestamp(),
+                        updatedAt: serverTimestamp()
+                    });
+                    
+                    icon.classList.remove('far');
+                    icon.classList.add('fas');
+                } else {
+                    // Toggle existing bookmark
+                    const bookmarkDoc = querySnapshot.docs[0];
+                    const currentState = bookmarkDoc.data().isBookmarked;
+                    
+                    await updateDoc(bookmarkDoc.ref, {
+                        isBookmarked: !currentState,
+                        updatedAt: serverTimestamp()
+                    });
+                    
+                    if (currentState) {
+                        icon.classList.remove('fas');
+                        icon.classList.add('far');
+                    } else {
+                        icon.classList.remove('far');
+                        icon.classList.add('fas');
+                    }
+                }
+            } catch (error) {
+                console.error('Error updating bookmark:', error);
+                // Revert UI change if operation failed
+                icon.classList.toggle('far');
+                icon.classList.toggle('fas');
+            }
         }
         if (e.target.closest('.view-btn')) {
             const btn = e.target.closest('.view-btn');

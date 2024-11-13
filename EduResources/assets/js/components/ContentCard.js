@@ -81,6 +81,7 @@ static init() {
 
     const auth = getAuth();
     const db = getFirestore();
+    const bookmarksRef = collection(db, 'bookmarks');
     // Add event listeners for bookmark buttons
     document.addEventListener('click', async (e) => {  // Marked as async
         if (e.target.closest('.bookmark-btn')) {

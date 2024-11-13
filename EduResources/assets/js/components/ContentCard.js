@@ -91,7 +91,7 @@ static init() {
             }
             // In real implementation, this would update the database
             console.log(`View content ID: ${id}`);
-        }
+        
     });
 }
 }

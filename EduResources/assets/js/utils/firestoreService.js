@@ -33,7 +33,6 @@ class FirestoreService {
                     userId,
                     resourceId,
                     isBookmarked: true,
-                    createdAt: new Date().toISOString(),
                     updatedAt: new Date().toISOString()
                 });
                 return true;

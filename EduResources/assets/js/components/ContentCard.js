@@ -4,8 +4,6 @@ import { getAuth } from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-aut
 class ContentCard {
     constructor(data) {
         this.data = data;
-        this.db = getFirestore();
-        this.auth = getAuth();
     }
 
     render() {
@@ -65,6 +63,9 @@ class ContentCard {
     }
 
 static init() {
+
+    const auth = getAuth();
+    const db = getFirestore();
     // Add event listeners for bookmark buttons
     document.addEventListener('click', async (e) => {  // Marked as async
         if (e.target.closest('.bookmark-btn')) {
@@ -83,9 +84,9 @@ static init() {
             const btn = e.target.closest('.view-btn');
             const id = btn.dataset.id;
 
-            if(this.auth.currentUser){
-            const resourceRef = this.db.collection('eduResources').doc(id);
-            const updateResult = await resourceRef.update({ views: increment(1) });
+            if(auth.currentUser){
+           const resourceRef = doc(db, 'eduResources', id);
+           await resourceRef.update({ views: increment(1) });
             }
             // In real implementation, this would update the database
             console.log(`View content ID: ${id}`);

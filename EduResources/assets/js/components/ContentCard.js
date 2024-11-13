@@ -7,8 +7,8 @@ class ContentCard {
         this.db = getFirestore();
         this.auth = getAuth();
     }
-
-    async checkBookmarkStatus(contentId) {
+    return true;
+    /*async checkBookmarkStatus(contentId) {
         if (!this.auth.currentUser) return false;
         
         try {
@@ -26,10 +26,8 @@ class ContentCard {
             this.showMessage('Please login to bookmark content', 'error');
             return false;
         }
-        console.log("Bookmark");
-        console.log(contentId);
 
-        /*try {
+        try {
             const bookmarkRef = doc(this.db, 'users', this.auth.currentUser.uid, 'bookmarks', contentId);
             const bookmarkExists = await this.checkBookmarkStatus(contentId);
 
@@ -59,18 +57,18 @@ class ContentCard {
         if (!this.auth.currentUser) return;
 
         try {
-            const viewsRef = doc(this.db, 'eduResources', contentId);
+            const viewsRef = doc(this.db, 'eduResources', contentId, 'views', 'counter');
             
             // Try to update existing counter
             try {
                 await updateDoc(viewsRef, {
-                    views: increment(1),
+                    count: increment(1),
                     lastViewed: new Date().toISOString()
                 });
             } catch (error) {
                 // If document doesn't exist, create it
                 await setDoc(viewsRef, {
-                    views: 1,
+                    count: 1,
                     lastViewed: new Date().toISOString()
                 });
             }

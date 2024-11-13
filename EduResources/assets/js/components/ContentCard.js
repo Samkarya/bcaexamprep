@@ -1,5 +1,5 @@
 // assets/js/components/contentCard.js
-import { getFirestore, doc, collection, increment } from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js';
+import { getFirestore, doc,updateDoc, increment } from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js';
 import { getAuth } from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js';
 class ContentCard {
     constructor(data) {
@@ -84,9 +84,10 @@ static init() {
             const btn = e.target.closest('.view-btn');
             const id = btn.dataset.id;
 
-            if(auth.currentUser){
-           const resourceRef = doc(db, 'eduResources', id);
-           await resourceRef.update({ views: increment(1) });
+           if (auth.currentUser) {
+  const resourceRef = doc(db, 'eduResources', id);
+  await updateDoc(resourceRef, { views: increment(1) }); 
+}
             }
             // In real implementation, this would update the database
             console.log(`View content ID: ${id}`);

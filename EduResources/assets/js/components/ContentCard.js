@@ -8,11 +8,11 @@ class ContentCard {
         this.auth = getAuth();
     }
     return true;
-    /*async checkBookmarkStatus(contentId) {
+    async checkBookmarkStatus(contentId) {
         if (!this.auth.currentUser) return false;
         
         try {
-            const bookmarkRef = doc(this.db, 'users', this.auth.currentUser.uid, 'bookmarks', contentId);
+            const bookmarkRef = doc(this.db, 'bookmarks', '${this.auth.currentUser.uid}_${contentId}');
             const bookmarkDoc = await getDoc(bookmarkRef);
             return bookmarkDoc.exists();
         } catch (error) {
@@ -28,7 +28,7 @@ class ContentCard {
         }
 
         try {
-            const bookmarkRef = doc(this.db, 'users', this.auth.currentUser.uid, 'bookmarks', contentId);
+            const bookmarkRef = doc(this.db, 'bookmarks', '${this.auth.currentUser.uid}_${contentId}');
             const bookmarkExists = await this.checkBookmarkStatus(contentId);
 
             if (bookmarkExists) {
@@ -39,9 +39,7 @@ class ContentCard {
                 await setDoc(bookmarkRef, {
                     contentId: contentId,
                     dateAdded: new Date().toISOString(),
-                    title: this.data.title,
-                    type: this.data.type,
-                    url: this.data.url
+                    bookmark: true
                 });
                 this.showMessage('Bookmark added', 'success');
                 return true;
@@ -50,26 +48,24 @@ class ContentCard {
             console.error('Error toggling bookmark:', error);
             this.showMessage('Error updating bookmark', 'error');
             return null;
-        }*/
+        }
     }
 
     async incrementViews(contentId) {
         if (!this.auth.currentUser) return;
 
         try {
-            const viewsRef = doc(this.db, 'eduResources', contentId, 'views', 'counter');
+            const viewsRef = doc(this.db, 'eduResources', contentId);
             
             // Try to update existing counter
             try {
                 await updateDoc(viewsRef, {
-                    count: increment(1),
-                    lastViewed: new Date().toISOString()
+                    views: increment(1)
                 });
             } catch (error) {
                 // If document doesn't exist, create it
                 await setDoc(viewsRef, {
-                    count: 1,
-                    lastViewed: new Date().toISOString()
+                    views: 1,
                 });
             }
         } catch (error) {

@@ -10,16 +10,14 @@ class FirestoreService {
 
     async toggleBookmark(resourceId) {
         try {
-            const userId = this.auth.currentUser?.uid;
-            if (!userId) {
-                throw new Error('User not authenticated');
-            }
+            const userId = this.auth.currentUser.uid;
 
             const bookmarkRef = doc(this.db, 'bookmarks', `${userId}_${resourceId}`);
             const bookmarkDoc = await getDoc(bookmarkRef);
-
+            console.log(bookmarkDoc);
             if (bookmarkDoc.exists()) {
                 // Remove bookmark
+                console.log("updating bookmark");
                 await setDoc(bookmarkRef, {
                     userId,
                     resourceId,
@@ -29,6 +27,7 @@ class FirestoreService {
                 return false;
             } else {
                 // Add bookmark
+                console.log("creating setting bookmark");
                 await setDoc(bookmarkRef, {
                     userId,
                     resourceId,
@@ -46,20 +45,20 @@ class FirestoreService {
     async incrementViews(resourceId) {
         try {
             const resourceRef = doc(this.db, 'eduResources', resourceId);
-            const viewsRef = doc(this.db, 'resourceViews', resourceId);
+            //const viewsRef = doc(this.db, 'resourceViews', resourceId);
             
             // Update view count in the main resource document
             await updateDoc(resourceRef, {
                 views: increment(1)
             });
 
-           /* // Log view details
-            const userId = this.auth.currentUser?.uid;
+           // Log view details
+            const userId = this.auth.currentUser.uid;
             await setDoc(doc(this.db, 'resourceViews', `${resourceId}_${Date.now()}`), {
                 resourceId,
                 userId,
                 timestamp: new Date().toISOString()
-            });*/
+            });
         } catch (error) {
             console.error('Error incrementing views:', error);
             throw error;

@@ -1,5 +1,5 @@
 // assets/js/components/contentCard.js
-
+import { getFirestore, doc, collection, FieldValue } from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js';
 class ContentCard {
     constructor(data) {
         this.data = data;
@@ -80,7 +80,8 @@ class ContentCard {
                 const btn = e.target.closest('.view-btn');
                 const id = btn.dataset.id;
                 
-                
+                const resourceRef = firestore.collection('eduResources').doc(id);
+                const updateResult = await resourceRef.update({ views: FieldValue.increment(1) });
                 // In real implementation, this would update the database
                 console.log(`View content ID: ${id}`);
             }

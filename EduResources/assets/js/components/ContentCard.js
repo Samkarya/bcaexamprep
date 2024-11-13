@@ -1,6 +1,21 @@
 // assets/js/components/contentCard.js
-import { getFirestore, doc,updateDoc, increment } from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js';
-import { getAuth } from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js';
+import { 
+    getFirestore, 
+    doc,
+    updateDoc, 
+    increment,
+    collection,
+    addDoc,
+    query,
+    where,
+    getDocs,
+    serverTimestamp,
+    orderBy
+} from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js';
+
+import { 
+    getAuth 
+} from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js';
 class ContentCard {
     constructor(data) {
         this.data = data;
@@ -138,6 +153,36 @@ static init() {
         }
         
     });
+}
+    // Helper method to check if content is bookmarked
+static async isContentBookmarked(db, userId, contentId) {
+    const bookmarksRef = collection(db, 'bookmarks');
+    const q = query(
+        bookmarksRef,
+        where('userId', '==', userId),
+        where('contentId', '==', contentId),
+        where('isBookmarked', '==', true)
+    );
+    
+    const querySnapshot = await getDocs(q);
+    return !querySnapshot.empty;
+}
+
+// Helper method to get all bookmarked content for a user
+static async getUserBookmarks(db, userId) {
+    const bookmarksRef = collection(db, 'bookmarks');
+    const q = query(
+        bookmarksRef,
+        where('userId', '==', userId),
+        where('isBookmarked', '==', true),
+        orderBy('createdAt', 'desc')
+    );
+    
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+    }));
 }
 }
 export default ContentCard;

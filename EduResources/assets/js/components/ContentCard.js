@@ -61,31 +61,31 @@ class ContentCard {
         `;
     }
 
-    static init() {
-        // Add event listeners for bookmark buttons
-        document.addEventListener('click', (e) => {
-            if (e.target.closest('.bookmark-btn')) {
-                const btn = e.target.closest('.bookmark-btn');
-                const id = btn.dataset.id;
-                const icon = btn.querySelector('i');
-                
-                // Toggle bookmark state
-                icon.classList.toggle('far');
-                icon.classList.toggle('fas');
-                
-                // In real implementation, this would update the database
-                console.log(`Toggled bookmark for content ID: ${id}`);
-            }
-            if (e.target.closest('.view-btn')) {
-                const btn = e.target.closest('.view-btn');
-                const id = btn.dataset.id;
-                
-                const resourceRef = firestore.collection('eduResources').doc(id);
-                const updateResult = await resourceRef.update({ views: FieldValue.increment(1) });
-                // In real implementation, this would update the database
-                console.log(`View content ID: ${id}`);
-            }
-        }); 
-    }
+static init() {
+    // Add event listeners for bookmark buttons
+    document.addEventListener('click', async (e) => {  // Marked as async
+        if (e.target.closest('.bookmark-btn')) {
+            const btn = e.target.closest('.bookmark-btn');
+            const id = btn.dataset.id;
+            const icon = btn.querySelector('i');
+            
+            // Toggle bookmark state
+            icon.classList.toggle('far');
+            icon.classList.toggle('fas');
+            
+            // In real implementation, this would update the database
+            console.log(`Toggled bookmark for content ID: ${id}`);
+        }
+        if (e.target.closest('.view-btn')) {
+            const btn = e.target.closest('.view-btn');
+            const id = btn.dataset.id;
+            
+            const resourceRef = firestore.collection('eduResources').doc(id);
+            const updateResult = await resourceRef.update({ views: FieldValue.increment(1) });
+            // In real implementation, this would update the database
+            console.log(`View content ID: ${id}`);
+        }
+    });
 }
+
 export default ContentCard;

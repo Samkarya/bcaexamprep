@@ -88,9 +88,8 @@ static init() {
   const resourceRef = doc(db, 'eduResources', id);
   await updateDoc(resourceRef, { views: increment(1) }); 
 }
-            }
-            // In real implementation, this would update the database
-            console.log(`View content ID: ${id}`);
+             console.log(`View content ID: ${id}`);
+        }
         
     });
 }

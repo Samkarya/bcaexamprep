@@ -53,13 +53,13 @@ class FirestoreService {
                 views: increment(1)
             });
 
-            // Log view details
-            const userId = this.auth.currentUser?.uid || 'anonymous';
+           /* // Log view details
+            const userId = this.auth.currentUser?.uid;
             await setDoc(doc(this.db, 'resourceViews', `${resourceId}_${Date.now()}`), {
                 resourceId,
                 userId,
                 timestamp: new Date().toISOString()
-            });
+            });*/
         } catch (error) {
             console.error('Error incrementing views:', error);
             throw error;

@@ -41,10 +41,13 @@ async function loadInitialContent() {
     
     try {
         // Load trending content
-        const trendingItems = firebaseData.getTrendingContent();
-        trendingContent.innerHTML = trendingItems
-            .map(content => new ContentCard(content).render())
-            .join('');
+       const trendingItems = firebaseData.getTrendingContent();
+trendingContent.innerHTML = trendingItems
+    .map(content => {
+        console.log('Processing content:', content); // Log each content item
+        return new ContentCard(content).render();
+    })
+    .join('');
 
         // Load recent content
         const recentItems = firebaseData.getRecentContent();

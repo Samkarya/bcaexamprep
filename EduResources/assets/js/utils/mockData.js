@@ -96,18 +96,26 @@ class FirebaseDataService {
             const bookmarksSnapshot = await getDocs(bookmarksQuery);
             
             // Create a map of bookmarked resource IDs
-            const bookmarkedResources = new Map();
-            bookmarksSnapshot.docs.forEach(doc => {
-                if (doc.data().isBookmarked) {
-                    bookmarkedResources.set(doc.data().resourceId, true);
-                }
-            });
-            
-            this.contents = snapshot.docs.map(doc => ({
-                id: doc.id,
-                ...doc.data(),
-                isBookmarked: bookmarkedResources.has(doc.id)
-            }));
+            // Create a map of bookmarked resource IDs
+const bookmarkedResources = new Map();
+bookmarksSnapshot.docs.forEach(doc => {
+    if (doc.data().isBookmarked) {
+        const resourceId = doc.data().resourceId;
+        bookmarkedResources.set(resourceId, true);
+        console.log(`Bookmarked resource added: ${resourceId}`); // Log each bookmarked resource ID added
+    }
+});
+
+this.contents = snapshot.docs.map(doc => {
+    const isBookmarked = bookmarkedResources.has(doc.id);
+    console.log(`Processing content: ${doc.id}, isBookmarked: ${isBookmarked}`); // Log each content ID with its bookmark status
+    return {
+        id: doc.id,
+        ...doc.data(),
+        isBookmarked: isBookmarked
+    };
+});
+
             
             this.lastDoc = snapshot.docs[snapshot.docs.length - 1];
             

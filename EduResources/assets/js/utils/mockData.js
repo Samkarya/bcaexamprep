@@ -10,7 +10,12 @@ import {
     limit, 
     startAfter,
     where,
-    getCountFromServer 
+    getCountFromServer,
+    doc,
+    getDoc,
+    setDoc,
+    updateDoc,
+    serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
 import { initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app-check.js";
 import { firebaseConfig, showToast } from "https://samkarya.github.io/bcaexamprep/firebase/common-utils.js";
@@ -84,9 +89,24 @@ class FirebaseDataService {
                 return [];
             }
 
+// Get current user's bookmarks
+            const userId = this.auth.currentUser.uid;
+            const bookmarksRef = collection(this.db, 'bookmarks');
+            const bookmarksQuery = query(bookmarksRef, where('userId', '==', userId));
+            const bookmarksSnapshot = await getDocs(bookmarksQuery);
+            
+            // Create a map of bookmarked resource IDs
+            const bookmarkedResources = new Map();
+            bookmarksSnapshot.docs.forEach(doc => {
+                if (doc.data().isBookmarked) {
+                    bookmarkedResources.set(doc.data().resourceId, true);
+                }
+            });
+            
             this.contents = snapshot.docs.map(doc => ({
                 id: doc.id,
-                ...doc.data()
+                ...doc.data(),
+                isBookmarked: bookmarkedResources.has(doc.id)
             }));
             
             this.lastDoc = snapshot.docs[snapshot.docs.length - 1];
@@ -166,6 +186,8 @@ class FirebaseDataService {
         }
     }
 
+
+
     setupAutoLoading() {
         // Clear any existing interval
         this.stopAutoLoading();
@@ -239,6 +261,134 @@ class FirebaseDataService {
             totalDocuments: this.totalDocuments,
             loadedDocuments: this.contents.length
         };
+    }
+    // New methods for rating system
+    async rateResource(resourceId, rating) {
+        try {
+            if (!this.auth.currentUser) {
+                showToast("Please login to rate", "warning");
+                return false;
+            }
+
+            const userId = this.auth.currentUser.uid;
+            const ratingRef = doc(this.db, 'eduResourcesRating', `${resourceId}_${userId}`);
+            
+            // Save the rating
+            await setDoc(ratingRef, {
+                resourceId,
+                userId,
+                rating,
+                timestamp: serverTimestamp()
+            });
+
+            // Update the average rating and rating count
+            await this.updateResourceRating(resourceId);
+            
+            showToast("Rating submitted successfully", "success");
+            return true;
+        } catch (error) {
+            console.error('Error rating resource:', error);
+            showToast("Error submitting rating", "error");
+            return false;
+        }
+    }
+
+    async updateResourceRating(resourceId) {
+        try {
+            // Get all ratings for this resource
+            const ratingsRef = collection(this.db, 'eduResourcesRating');
+            const q = query(ratingsRef, where('resourceId', '==', resourceId));
+            const snapshot = await getDocs(q);
+
+            if (snapshot.empty) {
+                // No ratings yet
+                await updateDoc(doc(this.db, 'eduResources', resourceId), {
+                    rating: 0,
+                    ratingCount: 0
+                });
+                return;
+            }
+
+            // Calculate average rating
+            let totalRating = 0;
+            snapshot.docs.forEach(doc => {
+                totalRating += doc.data().rating;
+            });
+            
+            const averageRating = totalRating / snapshot.docs.length;
+            const ratingCount = snapshot.docs.length;
+
+            // Update the resource document
+            await updateDoc(doc(this.db, 'eduResources', resourceId), {
+                rating: averageRating,
+                ratingCount: ratingCount
+            });
+
+            // Update local content if it exists
+            const contentIndex = this.contents.findIndex(content => content.id === resourceId);
+            if (contentIndex !== -1) {
+                this.contents[contentIndex].rating = averageRating;
+                this.contents[contentIndex].ratingCount = ratingCount;
+            }
+        } catch (error) {
+            console.error('Error updating resource rating:', error);
+            throw error;
+        }
+    }
+
+    // Bookmark management
+    async toggleBookmark(resourceId) {
+        try {
+            if (!this.auth.currentUser) {
+                showToast("Please login to bookmark", "warning");
+                return false;
+            }
+
+            const userId = this.auth.currentUser.uid;
+            const bookmarkRef = doc(this.db, 'bookmarks', `${resourceId}_${userId}`);
+            const bookmarkDoc = await getDoc(bookmarkRef);
+
+            const isCurrentlyBookmarked = bookmarkDoc.exists() && bookmarkDoc.data().isBookmarked;
+            
+            await setDoc(bookmarkRef, {
+                resourceId,
+                userId,
+                isBookmarked: !isCurrentlyBookmarked,
+                updatedAt: serverTimestamp(),
+                createdAt: bookmarkDoc.exists() ? bookmarkDoc.data().createdAt : serverTimestamp()
+            });
+
+            // Update local content
+            const contentIndex = this.contents.findIndex(content => content.id === resourceId);
+            if (contentIndex !== -1) {
+                this.contents[contentIndex].isBookmarked = !isCurrentlyBookmarked;
+            }
+
+            showToast(
+                !isCurrentlyBookmarked ? "Bookmark added" : "Bookmark removed",
+                "success"
+            );
+            return true;
+        } catch (error) {
+            console.error('Error toggling bookmark:', error);
+            showToast("Error updating bookmark", "error");
+            return false;
+        }
+    }
+
+    async getUserRating(resourceId) {
+        try {
+            if (!this.auth.currentUser) return null;
+
+            const userId = this.auth.currentUser.uid;
+            const ratingRef = doc(this.db, 'eduResourcesRating', `${resourceId}_${userId}`);
+            const ratingDoc = await getDoc(ratingRef);
+
+            return ratingDoc.exists() ? ratingDoc.data().rating : null;
+        } catch (error) {
+            console.error('Error getting user rating:', error);
+            return null;
+        }
     }
 }
 

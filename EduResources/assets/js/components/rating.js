@@ -27,12 +27,11 @@ class Rating {
 
             const contentId = ratingContainer.closest('.content-card').dataset.id;
             const rating = parseInt(starElement.dataset.rating);
-
             await this.handleRating(contentId, rating, ratingContainer);
         });
 
         // Initialize all rating containers
-        this.initializeRatingContainers();
+        //this.initializeRatingContainers();
     }
 
     async initializeRatingContainers() {
@@ -42,40 +41,25 @@ class Rating {
             const contentId = container.closest('.content-card').dataset.id;
             
             // Get average rating
-            const averageRating = await this.getAverageRating(contentId);
+            //const averageRating = await this.getAverageRating(contentId);
             this.updateRatingDisplay(container, averageRating);
 
-            // If user is logged in, get their rating
+            /* If user is logged in, get their rating
             if (this.auth.currentUser) {
                 const userRating = await this.getUserRating(contentId);
                 if (userRating) {
                     this.ratings.set(contentId, userRating);
                     container.dataset.userRating = userRating;
                 }
-            }
+            }*/
         }
     }
 
     async handleRating(contentId, rating, container) {
         try {
-            const userId = this.auth.currentUser.uid;
-            
-            // Create rating document
-            const ratingRef = doc(this.db, 'eduResourcesRating', `${contentId}_${userId}`);
-            await setDoc(ratingRef, {
-                userId: userId,
-                resourceId: contentId,
-                rating: rating,
-                timestamp: new Date()
-            });
-
-            // Update local state
-            this.ratings.set(contentId, rating);
-            
-            // Update visual display
-            const averageRating = await this.getAverageRating(contentId);
+            await firebaseData.rateResource(contentId, rating);
             await firebaseData.updateResourceRating(contentId);
-            this.updateRatingDisplay(container, averageRating);
+            this.updateRatingDisplay(container, rating);
             
             // Animate and show thank you message
             this.animateRating(container);

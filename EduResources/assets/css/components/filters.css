@@ -7,6 +7,202 @@
     box-shadow: var(--card-shadow);
     transition: background-color var(--transition-speed);
 }
+/* Base Filter Section Styles (keeping existing styles) */
+.filters-section {
+    background-color: var(--card-background);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: var(--card-shadow);
+    transition: all var(--transition-speed);
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+    /* Filter Toggle Button */
+    .filters-toggle {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: var(--primary-color);
+        color: white;
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        border: none;
+        z-index: 1000;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+    }
+
+    .filters-toggle:active {
+        transform: scale(0.95);
+    }
+
+    /* Filter Panel */
+    .filters-section {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 80vh;
+        margin: 0;
+        border-radius: 20px 20px 0 0;
+        z-index: 999;
+        padding: 24px;
+        transform: translateY(100%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        overflow: hidden;
+        background-color: var(--card-background);
+        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .filters-section.active {
+        transform: translateY(0);
+    }
+
+    /* Scrollable Content */
+    .filters-content {
+        height: calc(100% - 60px);
+        overflow-y: auto;
+        padding-right: 16px;
+        margin-right: -16px;
+        padding-bottom: 20px;
+        
+        /* Custom Scrollbar */
+        scrollbar-width: thin;
+        scrollbar-color: var(--primary-color) transparent;
+    }
+
+    .filters-content::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    .filters-content::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .filters-content::-webkit-scrollbar-thumb {
+        background-color: var(--primary-color);
+        border-radius: 4px;
+    }
+
+    /* Filter Header */
+    .filters-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 20px;
+        position: relative;
+    }
+
+    .filters-header::after {
+        content: '';
+        position: absolute;
+        top: -24px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 40px;
+        height: 4px;
+        background-color: var(--border-color);
+        border-radius: 2px;
+    }
+
+    /* Active Filters Pills */
+    .active-filters {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        padding: 4px 0;
+        margin: 12px -24px;
+        padding: 0 24px;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .filter-tag {
+        scroll-snap-align: start;
+        white-space: nowrap;
+        background-color: var(--primary-color);
+        color: white;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 13px;
+        border: none;
+    }
+
+    /* Checkbox Animations */
+    .checkbox-group label {
+        transform-origin: left;
+        transition: transform 0.2s ease;
+    }
+
+    .checkbox-group label:active {
+        transform: scale(0.98);
+    }
+
+    /* Bottom Action Area */
+    .filters-actions {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 16px 24px;
+        background-color: var(--card-background);
+        border-top: 1px solid var(--border-color);
+        display: flex;
+        gap: 12px;
+    }
+
+    .clear-all-filters-btn {
+        margin: 0;
+        flex: 1;
+        border-radius: 8px;
+        height: 44px;
+    }
+
+    /* Backdrop */
+    .filters-backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+        z-index: 998;
+    }
+
+    .filters-backdrop.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+}
+
+/* Animation Fallbacks */
+@media (prefers-reduced-motion: reduce) {
+    .filters-section,
+    .filters-toggle,
+    .checkbox-group label {
+        transition: none;
+    }
+}
+
+/* Dark Mode Enhancements */
+@media (prefers-color-scheme: dark) {
+    .filters-toggle {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .filters-section {
+        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.2);
+    }
+}
 
 .filters-section h2 {
     font-size: 1.2rem;

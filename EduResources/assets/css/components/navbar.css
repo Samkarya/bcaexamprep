@@ -1,15 +1,17 @@
 /* assets/css/components/navbar.css */
 
 .navbar {
-    background-color: white;
+    background-color: var(--navbar-background);
     padding: 1rem 2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--card-shadow);
     position: sticky;
     top: 0;
     z-index: 1000;
+    transition: background-color var(--transition-speed),
+                box-shadow var(--transition-speed);
 }
 
 .navbar-brand {
@@ -22,11 +24,18 @@
     color: var(--primary-color);
     font-size: 1.5rem;
     font-weight: 700;
+    transition: color var(--transition-speed);
 }
 
 .navbar-brand img {
     height: 32px;
     width: auto;
+    /* Optional: Invert logo colors for dark mode */
+    filter: var(--logo-filter, none);
+}
+
+[data-theme="dark"] .navbar-brand img {
+    --logo-filter: brightness(0.8) contrast(1.2);
 }
 
 .nav-links {
@@ -52,18 +61,17 @@
 
 #loginBtn:hover {
     background-color: var(--primary-color);
-    color: white;
+    color: var(--card-background);
 }
 
 #signupBtn {
     background-color: var(--primary-color);
     border: 1px solid var(--primary-color);
-    color: white;
+    color: var(--card-background);
 }
 
 #signupBtn:hover {
-    background-color: #3978c5;
-    border-color: #3978c5;
+    filter: brightness(110%);
 }
 
 /* Mobile Navigation */
@@ -72,13 +80,53 @@
     background: none;
     border: none;
     font-size: 24px;
-    color: var(--secondary-color);
+    color: var(--text-color);
     cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    transition: background-color var(--transition-speed),
+                color var(--transition-speed);
 }
 
+.mobile-menu-btn:hover {
+    background-color: var(--border-color);
+}
+
+/* Theme Toggle in Navbar 
+.theme-toggle {
+    padding: 8px;
+    background: transparent;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-color);
+    transition: all var(--transition-speed);
+}
+
+.theme-toggle:hover {
+    background-color: var(--border-color);
+}
+
+.theme-toggle svg {
+    width: 20px;
+    height: 20px;
+}*/
+
+/* Large Screens */
+@media (min-width: 1400px) {
+    .navbar {
+        padding: 1rem 4rem;
+    }
+}
+
+/* Tablet and Mobile Navigation */
 @media (max-width: 768px) {
     .navbar {
         flex-wrap: wrap;
+        padding: 1rem;
     }
 
     .mobile-menu-btn {
@@ -90,6 +138,8 @@
         display: none;
         flex-direction: column;
         padding-top: 15px;
+        gap: 10px;
+        animation: slideDown 0.3s ease-out;
     }
 
     .nav-links.active {
@@ -99,5 +149,47 @@
     .auth-btn {
         width: 100%;
         text-align: center;
+    }
+
+    .theme-toggle {
+        margin-left: 0;
+    }
+}
+
+/* Small Mobile Screens */
+@media (max-width: 480px) {
+    .navbar-brand h1 {
+        font-size: 1.25rem;
+    }
+
+    .navbar-brand img {
+        height: 28px;
+    }
+}
+
+/* Animation for Mobile Menu */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Print Styles */
+@media print {
+    .navbar {
+        position: static;
+        box-shadow: none;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .nav-links,
+    .mobile-menu-btn,
+    .theme-toggle {
+        display: none;
     }
 }

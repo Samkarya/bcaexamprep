@@ -139,3 +139,42 @@
     margin-bottom: 10px;
     color: var(--border-color);
 }
+/* assets/css/components/search.css */
+
+/* Existing styles */
+
+/* Media Query for Smaller Screens */
+@media (max-width: 700px) {
+    .search-container {
+        flex: 0 1 100%;
+        gap: 5px;
+    }
+
+    .search-container input {
+        font-size: 12px;
+        padding: 8px 35px 8px 10px;
+        border-radius: 6px;
+    }
+
+    .search-btn {
+        right: 5px;
+        padding: 4px;
+    }
+
+    .search-results {
+        max-height: 300px;
+        font-size: 12px;
+    }
+
+    .search-result-item {
+        padding: 10px 12px;
+    }
+    
+    .no-results {
+        padding: 15px;
+    }
+
+    .no-results i {
+        font-size: 20px;
+    }
+}

@@ -16,6 +16,8 @@ import {
 import { 
     getAuth 
 } from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js';
+
+import firebaseData from 'https://samkarya.github.io/bcaexamprep/EduResources/assets/js/utils/mockData.js';
 class ContentCard {
     constructor(data) {
         this.data = data;

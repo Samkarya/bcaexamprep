@@ -1,5 +1,4 @@
 /* assets/css/components/rating.css */
-
 .rating-container {
     display: flex;
     align-items: center;
@@ -12,8 +11,14 @@
 }
 
 .stars i {
-    color: #ffd700;
+    color: var(--star-color, #ffd700);
     font-size: 14px;
+    transition: color var(--transition-speed);
+}
+
+[data-theme="dark"] .stars i {
+    --star-color: #ffd700;
+    filter: brightness(0.9);
 }
 
 .fa-star-half-alt {
@@ -23,7 +28,8 @@
 
 .rating-count {
     font-size: 12px;
-    color: #666;
+    color: var(--text-color);
+    opacity: 0.8;
 }
 
 /* Interactive Rating Styles */
@@ -34,65 +40,99 @@
 }
 
 .rating-input input {
-    display: none;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
 }
 
 .rating-input label {
     cursor: pointer;
-    color: #ddd;
+    color: var(--star-inactive-color, #ddd);
     font-size: 20px;
-    transition: color var(--transition-speed);
+    transition: all var(--transition-speed);
+    padding: 2px;
+}
+
+[data-theme="dark"] .rating-input label {
+    --star-inactive-color: #4a4a4a;
 }
 
 .rating-input label:hover,
 .rating-input label:hover ~ label,
 .rating-input input:checked ~ label {
-    color: #ffd700;
+    color: var(--star-color, #ffd700);
+    transform: scale(1.1);
+}
+
+.rating-input label:focus-visible {
+    outline: 2px solid var(--primary-color);
+    border-radius: 4px;
 }
 
 /* Rating Slider Styles */
 .range-slider {
     width: 100%;
-    padding: 10px 0;
+    padding: 15px 0;
 }
 
 .rating-slider {
+    --thumb-size: 16px;
+    --track-height: 4px;
+    
     width: 100%;
-    height: 4px;
-    background: #ddd;
+    height: var(--track-height);
+    background: var(--border-color);
     outline: none;
     -webkit-appearance: none;
     appearance: none;
-    border-radius: 2px;
+    border-radius: calc(var(--track-height) / 2);
 }
 
 .rating-slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 16px;
-    height: 16px;
+    width: var(--thumb-size);
+    height: var(--thumb-size);
     background: var(--primary-color);
     border-radius: 50%;
     cursor: pointer;
-    transition: transform var(--transition-speed);
+    transition: all var(--transition-speed);
+    border: 2px solid var(--card-background);
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
 }
 
 .rating-slider::-moz-range-thumb {
-    width: 16px;
-    height: 16px;
+    width: var(--thumb-size);
+    height: var(--thumb-size);
     background: var(--primary-color);
     border-radius: 50%;
     cursor: pointer;
-    transition: transform var(--transition-speed);
-    border: none;
+    transition: all var(--transition-speed);
+    border: 2px solid var(--card-background);
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
 }
 
-.rating-slider::-webkit-slider-thumb:hover {
-    transform: scale(1.2);
-}
-
+.rating-slider::-webkit-slider-thumb:hover,
 .rating-slider::-moz-range-thumb:hover {
     transform: scale(1.2);
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+}
+
+.rating-slider:focus {
+    outline: none;
+}
+
+.rating-slider:focus::-webkit-slider-thumb {
+    box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb), 0.2);
+}
+
+.rating-slider:focus::-moz-range-thumb {
+    box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb), 0.2);
 }
 
 .rating-value {
@@ -100,5 +140,38 @@
     text-align: center;
     margin-top: 8px;
     font-size: 14px;
-    color: var(--secondary-color);
+    color: var(--text-color);
+    font-weight: 500;
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+    .search-container {
+        width: 100%;
+        order: 3;
+    }
+    
+    .rating-input label {
+        font-size: 24px;
+        padding: 4px;
+    }
+    
+    .rating-slider {
+        --thumb-size: 24px;
+        --track-height: 6px;
+    }
+}
+
+/* High Contrast Mode */
+@media (forced-colors: active) {
+    .search-container input,
+    .search-btn,
+    .rating-slider {
+        border: 1px solid ButtonBorder;
+    }
+    
+    .stars i,
+    .rating-input label {
+        forced-color-adjust: none;
+    }
 }

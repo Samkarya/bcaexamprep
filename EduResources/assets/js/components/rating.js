@@ -29,83 +29,20 @@ class Rating {
             const rating = parseInt(starElement.dataset.rating);
             await this.handleRating(contentId, rating, ratingContainer);
         });
-
-        // Initialize all rating containers
-        //this.initializeRatingContainers();
-    }
-
-    async initializeRatingContainers() {
-        const containers = document.querySelectorAll('.rating-container');
-        
-        for (const container of containers) {
-            const contentId = container.closest('.content-card').dataset.id;
-            
-            // Get average rating
-            //const averageRating = await this.getAverageRating(contentId);
-            this.updateRatingDisplay(container, averageRating);
-
-            /* If user is logged in, get their rating
-            if (this.auth.currentUser) {
-                const userRating = await this.getUserRating(contentId);
-                if (userRating) {
-                    this.ratings.set(contentId, userRating);
-                    container.dataset.userRating = userRating;
-                }
-            }*/
-        }
     }
 
     async handleRating(contentId, rating, container) {
         try {
             await firebaseData.rateResource(contentId, rating);
-            await firebaseData.updateResourceRating(contentId);
             this.updateRatingDisplay(container, rating);
             
-            // Animate and show thank you message
             this.animateRating(container);
             this.showMessage(container, 'Thanks for rating!', 'success');
+            await firebaseData.updateResourceRating(contentId);
             
         } catch (error) {
             console.error('Error saving rating:', error);
             this.showMessage(container, 'Error saving rating', 'error');
-        }
-    }
-
-    async getUserRating(contentId) {
-        if (!this.auth.currentUser) return null;
-
-        try {
-            const ratingRef = doc(this.db, 'eduResourcesRating', `${contentId}_${this.auth.currentUser.uid}`);
-            const ratingDoc = await getDoc(ratingRef);
-            
-            if (ratingDoc.exists()) {
-                return ratingDoc.data().rating;
-            }
-            return null;
-        } catch (error) {
-            console.error('Error getting user rating:', error);
-            return null;
-        }
-    }
-
-    async getAverageRating(contentId) {
-        try {
-            const ratingsRef = collection(this.db, 'eduResourcesRating');
-            const q = query(ratingsRef, where('resourceId', '==', contentId));
-            const querySnapshot = await getDocs(q);
-            
-            let total = 0;
-            let count = 0;
-            
-            querySnapshot.forEach((doc) => {
-                total += doc.data().rating;
-                count++;
-            });
-            
-            return count > 0 ? (total / count).toFixed(1) : 0;
-        } catch (error) {
-            console.error('Error calculating average rating:', error);
-            return 0;
         }
     }
 

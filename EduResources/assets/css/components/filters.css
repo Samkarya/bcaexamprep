@@ -215,7 +215,107 @@
         border-width: 2px;
     }
 }
+/* Clear All Filters Button */
+.clear-all-filters-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background-color: var(--card-background);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-speed);
+    width: 100%;
+    justify-content: center;
+    margin-top: 12px;
+}
 
+/* Icon styles */
+.clear-all-filters-btn i {
+    font-size: 14px;
+    transition: transform var(--transition-speed);
+}
+
+/* Hover state - Light theme */
+.clear-all-filters-btn:hover {
+    background-color: var(--background-color);
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+/* Hover state - Dark theme */
+[data-theme="dark"] .clear-all-filters-btn:hover {
+    background-color: rgba(var(--primary-color-rgb), 0.1);
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+/* Active/Pressed state */
+.clear-all-filters-btn:active {
+    transform: scale(0.98);
+}
+
+/* Focus state for accessibility */
+.clear-all-filters-btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--background-color),
+                0 0 0 4px var(--primary-color);
+}
+
+/* Disabled state */
+.clear-all-filters-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: var(--background-color);
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+
+/* Icon animation on hover */
+.clear-all-filters-btn:hover i {
+    transform: rotate(90deg);
+}
+
+/* High-contrast Mode */
+@media (prefers-contrast: high) {
+    .clear-all-filters-btn {
+        border: 2px solid var(--text-color);
+        background-color: transparent;
+    }
+
+    .clear-all-filters-btn:hover {
+        background-color: var(--text-color);
+        color: var(--background-color);
+    }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    .clear-all-filters-btn,
+    .clear-all-filters-btn i {
+        transition: none;
+    }
+
+    .clear-all-filters-btn:hover i {
+        transform: none;
+    }
+}
+
+/* Mobile Adjustments */
+@media (max-width: 768px) {
+    .clear-all-filters-btn {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+
+    .clear-all-filters-btn i {
+        font-size: 12px;
+    }
+}
 /* Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
     .filters-section,

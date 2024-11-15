@@ -100,7 +100,7 @@ static init() {
                 const q = query(
                     bookmarksRef,
                     where('userId', '==', user.uid),
-                    where('contentId', '==', contentId)
+                    where('resourceId', '==', contentId)
                 );
                 
                 const querySnapshot = await getDocs(q);
@@ -109,7 +109,7 @@ static init() {
                     // Create new bookmark
                     await addDoc(bookmarksRef, {
                         userId: user.uid,
-                        contentId: contentId,
+                        resourceId: contentId,
                         isBookmarked: true,
                         createdAt: serverTimestamp(),
                         updatedAt: serverTimestamp()
@@ -161,7 +161,7 @@ static async isContentBookmarked(db, userId, contentId) {
     const q = query(
         bookmarksRef,
         where('userId', '==', userId),
-        where('contentId', '==', contentId),
+        where('resourceId', '==', contentId),
         where('isBookmarked', '==', true)
     );
     

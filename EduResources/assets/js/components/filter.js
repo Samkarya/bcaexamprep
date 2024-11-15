@@ -269,7 +269,7 @@ class Filter {
         return `
             <span class="filter-badge" data-type="${type}" data-value="${value}">
                 ${value}
-                <button class="remove-filter" onclick="filter.removeFilter('${type}', '${value}')">
+                <button class="remove-filter" onclick="filter.clearAllFilters('${type}', '${value}')">
                     <i class="fas fa-times"></i>
                 </button>
             </span>

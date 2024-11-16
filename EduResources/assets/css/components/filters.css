@@ -7,6 +7,9 @@
     box-shadow: var(--card-shadow);
     transition: background-color var(--transition-speed);
 }
+.filter-close-btn,.filter-toggle-btn{
+     display:none;
+}
 
 /* Media query for screens under 800px */
 @media (max-width: 800px) {
@@ -58,6 +61,7 @@
 
     .filters-close-btn {
         background: none;
+        display:block;
         border: none;
         font-size: 24px;
         color: var(--text-color);
@@ -82,6 +86,7 @@
     /* Toggle button to open filters */
     .filters-toggle-btn {
         position: fixed;
+        display:block;
         bottom: 65px;
         right: 20px;
         background-color: var(--primary-color);

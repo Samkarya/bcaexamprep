@@ -176,11 +176,11 @@ function addProgressBar() {
         progressBar.style.width = `${progress}%`;
     }, 1000);
 }
-// Add authentication modal handlers
+/* Add authentication modal handlers
 document.getElementById('loginBtn').addEventListener('click', () => {
     alert('Login functionality will be implemented with Firebase Auth');
 });
 
 document.getElementById('signupBtn').addEventListener('click', () => {
     alert('Signup functionality will be implemented with Firebase Auth');
-});
+});*/

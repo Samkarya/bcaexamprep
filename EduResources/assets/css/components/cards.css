@@ -229,6 +229,12 @@
     margin-bottom: 20px;
 }
 
+@media (max-width: 768px) {
+    #trending-bar{
+        flex-direction: column;
+    }
+}
+
 .pagination-controls {
     display: flex;
     align-items: center;

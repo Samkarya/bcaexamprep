@@ -88,7 +88,7 @@
     .filters-toggle-btn {
         position: fixed;
         display:block;
-        bottom: 65px;
+        bottom: 30px;
         right: 20px;
         background-color: var(--primary-color);
         color: white;

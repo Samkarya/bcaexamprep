@@ -29,7 +29,7 @@ class JSONLDGenerator {
             },
             "provider": {
                 "@type": "Organization",
-                "name": "BCA Exam Prep",
+                "name": "BCA Exam Preparation",
                 "url": this.baseUrl
             }
         };

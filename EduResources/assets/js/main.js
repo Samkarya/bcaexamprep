@@ -176,6 +176,21 @@ function addProgressBar() {
         progressBar.style.width = `${progress}%`;
     }, 1000);
 }
+
+const filtersToggle = document.querySelector('.filters-toggle-btn');
+const filtersClose = document.querySelector('.filters-close-btn');
+const filtersSection = document.querySelector('.filters-section');
+const filtersOverlay = document.querySelector('.filters-overlay');
+
+function toggleFilters() {
+    filtersSection.classList.toggle('active');
+    filtersOverlay.classList.toggle('active');
+}
+
+filtersToggle.addEventListener('click', toggleFilters);
+filtersClose.addEventListener('click', toggleFilters);
+filtersOverlay.addEventListener('click', toggleFilters);
+
 /* Add authentication modal handlers
 document.getElementById('loginBtn').addEventListener('click', () => {
     alert('Login functionality will be implemented with Firebase Auth');

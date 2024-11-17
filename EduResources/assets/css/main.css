@@ -123,7 +123,7 @@ body {
     filter: brightness(110%);
 }
 
-/* Filters Section */
+/* Filters Section 
 .filters-section {
     background-color: var(--card-background);
     padding: 20px;
@@ -154,7 +154,7 @@ body {
     gap: 8px;
     cursor: pointer;
     color: var(--text-color);
-}
+}*/
 
 /* Content Section */
 .content-section {
@@ -176,22 +176,6 @@ body {
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 20px;
     margin-top: 20px;
-}
-
-/* Theme Toggle Button */
-.theme-toggle {
-    padding: 8px 16px;
-    background-color: var(--card-background);
-    color: var(--text-color);
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all var(--transition-speed);
-}
-
-.theme-toggle:hover {
-    background-color: var(--primary-color);
-    color: white;
 }
 
 /* Enhanced Media Queries */

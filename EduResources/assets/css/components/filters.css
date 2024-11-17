@@ -269,40 +269,7 @@
     color: white;
 }
 
-/* Mobile Styles */
-@media (max-width: 768px) {
-    .filters-section {
-        margin-bottom: 20px;
-    }
-    
-    .filters-toggle {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        width: 100%;
-        padding: 15px;
-        background-color: var(--card-background);
-        border: none;
-        border-radius: 8px;
-        box-shadow: var(--card-shadow);
-        cursor: pointer;
-        color: var(--text-color);
-        transition: background-color var(--transition-speed);
-    }
-    
-    .filters-toggle:hover {
-        background-color: var(--input-background);
-    }
-    
-    .filters-content {
-        display: none;
-        margin-top: 10px;
-    }
-    
-    .filters-content.active {
-        display: block;
-    }
-}
+
 
 /* High Contrast Mode */
 @media (prefers-contrast: high) {
@@ -432,7 +399,7 @@
 }
 
 /* Mobile Adjustments */
-@media (max-width: 768px) {
+@media (max-width: 800px) {
     .clear-all-filters-btn,
     .clear-filters-btn {
         padding: 6px 10px;

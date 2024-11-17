@@ -17,7 +17,7 @@
 }
 
 /* Dark Theme Variables */
-[data-theme="dark"] {
+[data-theme="dark-mode"] {
     --primary-color: #60a5fa;
     --secondary-color: #94a3b8;
     --background-color: #1a1a1a;
@@ -32,7 +32,7 @@
     --input-background: #333333;
 }
 
-/* System Dark Mode Preference */
+/* System Dark Mode Preference 
 @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
         --primary-color: #60a5fa;
@@ -48,8 +48,10 @@
         --navbar-background: #262626;
         --input-background: #333333;
     }
-}
-
+} */
+#shareButton,#HTML8{
+      display:none;
+    }
 * {
     margin: 0;
     padding: 0;

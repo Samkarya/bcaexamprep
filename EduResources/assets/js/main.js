@@ -1,5 +1,6 @@
 // assets/js/main.js
 import firebaseData from 'https://samkarya.github.io/bcaexamprep/EduResources/assets/js/utils/mockData.js';
+import JSONLDGenerator from 'https://samkarya.github.io/bcaexamprep/EduResources/assets/js/utils/json-ld.js';
 import Search from 'https://samkarya.github.io/bcaexamprep/EduResources/assets/js/components/search.js';
 import Rating from 'https://samkarya.github.io/bcaexamprep/EduResources/assets/js/components/rating.js';
 import Filter from 'https://samkarya.github.io/bcaexamprep/EduResources/assets/js/components/filter.js';
@@ -8,9 +9,11 @@ import {showToast } from "https://samkarya.github.io/bcaexamprep/firebase/common
 // Initialize components when DOM is loaded
 document.addEventListener('DOMContentLoaded', async () => {
     try {
+    
         // Load initial data from Firebase
     await firebaseData.loadInitialData();
     // Initialize content cards
+        
     ContentCard.init();
 
     // Initialize search
@@ -49,12 +52,14 @@ trendingContent.innerHTML = trendingItems
     })
     .join('');
 
+        
         // Load recent content
         const recentItems = firebaseData.getRecentContent();
         recentContent.innerHTML = recentItems
             .map(content => new ContentCard(content).render())
             .join('');
-            
+        const jsonLDGenerator = new JSONLDGenerator();
+        jsonLDGenerator.injectJSONLD(trendingItems);
         // Update content count
         updateContentCount();
         

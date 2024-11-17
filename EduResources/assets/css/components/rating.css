@@ -145,7 +145,7 @@
 }
 
 /* Media Queries */
-@media (max-width: 768px) {
+@media (max-width: 800px) {
     .search-container {
         width: 100%;
         order: 3;

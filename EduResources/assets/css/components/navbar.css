@@ -123,7 +123,7 @@
 }
 
 /* Tablet and Mobile Navigation */
-@media (max-width: 768px) {
+@media (max-width: 800px) {
     .navbar {
         flex-wrap: wrap;
         padding: 1rem;

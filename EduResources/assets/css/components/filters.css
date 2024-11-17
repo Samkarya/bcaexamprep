@@ -8,7 +8,7 @@
     box-shadow: var(--card-shadow);
     transition: background-color var(--transition-speed);
 }
-.filters-close-btn,.filters-toggle-btn,.filters-overlay{
+.filters-close-btn,.filters-toggle-btn,.filters-overlay,.post-header,.preview-content{
      display:none;
 }
 

@@ -32,21 +32,104 @@ class FirebaseDataService {
         this.totalDocuments = 0;
         this.hasMoreData = true;
         this.autoLoadingInterval = null;
-        
+        this.initializeOverlayObserver();
         // Initialize App Check
         this.appCheck = initializeAppCheck(this.app, {
             provider: new ReCaptchaV3Provider('6LeER1AqAAAAABaic_YKxvN30vuPQPlMJfpS9e1L'),
             isTokenAutoRefreshEnabled: true
         });
     }
+    displayOverlay() {
+        // Remove existing overlay if any
+        this.removeOverlay();
+        
+        const overlay = document.createElement('div');
+        overlay.id = 'auth-overlay';
+        overlay.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        `;
+        
+        overlay.innerHTML = `
+            <h1 style="color: white; font-size: 24px; text-align: center; margin-bottom: 20px;">
+                Content only available for registered users
+            </h1>
+            <button id="create-ac" style="background-color: #4CAF50; color: white; border: none; padding: 10px 20px; font-size: 16px; cursor: pointer; border-radius: 5px; margin: 5px;">
+                Sign Up
+            </button>
+            <button id="go-back-button" style="background-color: #f44336; color: white; border: none; padding: 10px 20px; font-size: 16px; cursor: pointer; border-radius: 5px; margin: 5px;">
+                Go Back
+            </button>
+        `;
+        
+        document.body.appendChild(overlay);
+        
+        // Add event listeners
+        document.getElementById('create-ac').addEventListener('click', () => {
+            window.location.href = 'https://bcaexamprep.blogspot.com/p/bca-exam-prep-account.html';
+        });
+        
+        document.getElementById('go-back-button').addEventListener('click', () => {
+            window.history.back();
+        });
 
-    async checkAuthStatus() {
+        // Prevent scrolling on the body
+        document.body.style.overflow = 'hidden';
+    }
+
+    removeOverlay() {
+        const overlay = document.getElementById('auth-overlay');
+        if (overlay) {
+            overlay.remove();
+            document.body.style.overflow = 'auto';
+        }
+    }
+
+    initializeOverlayObserver() {
+        // Disconnect existing observer if any
+        if (this.overlayObserver) {
+            this.overlayObserver.disconnect();
+        }
+
+        // Create new mutation observer
+        this.overlayObserver = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                // Check for removed nodes
+                mutation.removedNodes.forEach((node) => {
+                    if (node.id === 'auth-overlay' && !this.auth.currentUser) {
+                        // If overlay was removed and user is not authenticated, add it back
+                        this.displayOverlay();
+                    }
+                });
+            });
+        });
+
+        // Start observing the document body
+        this.overlayObserver.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+    }
+     async checkAuthStatus() {
         return new Promise((resolve) => {
             onAuthStateChanged(this.auth, (user) => {
                 if (user) {
+                    this.removeOverlay();
                     showToast("Authentication successful", "success");
                     resolve(true);
                 } else {
+                    this.displayOverlay();
                     showToast("Please Login To Access", "warning");
                     resolve(false);
                 }

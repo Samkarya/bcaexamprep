@@ -38,8 +38,6 @@ class FirebaseDataService {
             provider: new ReCaptchaV3Provider('6LeER1AqAAAAABaic_YKxvN30vuPQPlMJfpS9e1L'),
             isTokenAutoRefreshEnabled: true
         });
-
-        this.initializeOverlayObserver();
     }
 
     displayOverlay() {
@@ -129,11 +127,11 @@ class FirebaseDataService {
         return new Promise((resolve) => {
             onAuthStateChanged(this.auth, (user) => {
                 if (user) {
-                    this.removeOverlay();
+                    //this.removeOverlay();
                     showToast("Authentication successful", "success");
                     resolve(true);
                 } else {
-                    this.displayOverlay();
+                    //this.displayOverlay();
                     showToast("Please Login To Access", "warning");
                     resolve(false);
                 }

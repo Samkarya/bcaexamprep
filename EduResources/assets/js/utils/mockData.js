@@ -48,7 +48,7 @@ class FirebaseDataService {
                     resolve(true);
                 } else {
                     showToast("Please Login To Access", "warning");
-                     window.location.href = 'https://bcaexamprep.blogspot.com/p/bca-exam-prep-account.html';
+                     //window.location.href = 'https://bcaexamprep.blogspot.com/p/bca-exam-prep-account.html';
                     resolve(false);
                 }
             });

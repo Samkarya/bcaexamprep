@@ -32,7 +32,7 @@ class FirebaseDataService {
         this.totalDocuments = 0;
         this.hasMoreData = true;
         this.autoLoadingInterval = null;
-        this.initializeOverlayObserver();
+       
         // Initialize App Check
         this.appCheck = initializeAppCheck(this.app, {
             provider: new ReCaptchaV3Provider('6LeER1AqAAAAABaic_YKxvN30vuPQPlMJfpS9e1L'),

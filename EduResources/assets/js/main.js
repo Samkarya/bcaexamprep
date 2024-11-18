@@ -5,7 +5,7 @@ import Search from 'https://samkarya.github.io/bcaexamprep/EduResources/assets/j
 import Rating from 'https://samkarya.github.io/bcaexamprep/EduResources/assets/js/components/rating.js';
 import Filter from 'https://samkarya.github.io/bcaexamprep/EduResources/assets/js/components/filter.js';
 import ContentCard from 'https://samkarya.github.io/bcaexamprep/EduResources/assets/js/components/ContentCard.js';
-import securityManager from 'https://samkarya.github.io/bcaexamprep/EduResources/assets/js/utils/security-manager.js';
+import securityManager from 'https://samkarya.github.io/bcaexamprep/EduResources/assets/js/utils/SecurityManager.js';
 // The security manager will automatically initialize and start protecting your page
 // If you need to remove the protection later:
 // securityManager.destroy();

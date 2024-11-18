@@ -8,7 +8,7 @@ class SecurityManager {
 
     initialize() {
         // Set up dev tools detection
-        this.setupDevToolsDetection();
+        //this.setupDevToolsDetection();
         
         // Set up DOM mutation observer
         this.setupMutationObserver();

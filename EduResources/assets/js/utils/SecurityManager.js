@@ -14,7 +14,7 @@ class SecurityManager {
         this.setupMutationObserver();
         
         // Set up console protection
-        this.protectConsole();
+        //this.protectConsole();
         
         // Initial check for authentication
         this.checkAuthAndRespond();

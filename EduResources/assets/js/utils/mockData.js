@@ -40,20 +40,34 @@ class FirebaseDataService {
         });
     }
     
-     async checkAuthStatus() {
-        return new Promise((resolve) => {
-            onAuthStateChanged(this.auth, (user) => {
-                if (user) {
-                    showToast("Authentication successful", "success");
-                    resolve(true);
-                } else {
-                    showToast("Please Login To Access", "warning");
-                     //window.location.href = 'https://bcaexamprep.blogspot.com/p/bca-exam-prep-account.html';
-                    resolve(false);
+    // JavaScript/TypeScript
+async checkAuthStatus() {
+    return new Promise((resolve) => {
+        onAuthStateChanged(this.auth, (user) => {
+            if (user) {
+                showToast("Authentication successful", "success");
+                resolve(true);
+            } else {
+                showToast("Please Login To Access", "warning");
+                // Show login message in trending section
+                const trendingSection = document.querySelector('.trending-section');
+                if (trendingSection) {
+                    const loginMessage = document.createElement('div');
+                    loginMessage.className = 'login-message';
+                    loginMessage.innerHTML = `
+                        <div class="auth-warning">
+                            <p>Please login to access content</p>
+                            <a href="https://bcaexamprep.blogspot.com/p/bca-exam-prep-account.html" 
+                               class="signup-btn">Sign Up</a>
+                        </div>
+                    `;
+                    trendingSection.insertBefore(loginMessage, trendingSection.firstChild);
                 }
-            });
+                resolve(false);
+            }
         });
-    }
+    });
+}
 
     async getTotalDocuments() {
         try {

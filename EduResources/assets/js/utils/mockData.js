@@ -115,13 +115,13 @@ bookmarksSnapshot.docs.forEach(doc => {
     if (doc.data().isBookmarked) {
         const resourceId = doc.data().resourceId;
         bookmarkedResources.set(resourceId, true);
-        console.log(`Bookmarked resource added: ${resourceId}`); // Log each bookmarked resource ID added
+        //console.log(`Bookmarked resource added: ${resourceId}`); // Log each bookmarked resource ID added
     }
 });
 
 this.contents = snapshot.docs.map(doc => {
     const isBookmarked = bookmarkedResources.has(doc.id);
-    console.log(`Processing content: ${doc.id}, isBookmarked: ${isBookmarked}`); // Log each content ID with its bookmark status
+    //console.log(`Processing content: ${doc.id}, isBookmarked: ${isBookmarked}`); // Log each content ID with its bookmark status
     return {
         id: doc.id,
         ...doc.data(),

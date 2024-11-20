@@ -48,7 +48,7 @@ async function loadInitialContent() {
        const trendingItems = firebaseData.getTrendingContent();
 trendingContent.innerHTML = trendingItems
     .map(content => {
-        console.log('Processing content:', content); // Log each content item
+        //console.log('Processing content:', content); // Log each content item
         return new ContentCard(content).render();
     })
     .join('');

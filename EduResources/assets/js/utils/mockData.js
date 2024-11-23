@@ -247,14 +247,110 @@ this.contents = snapshot.docs.map(doc => {
     }
 
     async searchContent(query) {
-        if (!query) return [];
-        
-        query = query.toLowerCase();
-        return this.contents.filter(content => 
-            content.title.toLowerCase().includes(query) ||
-            content.tags.some(tag => tag.toLowerCase().includes(query))
-        );
-    }
+    if (!query) return [];
+    
+    const searchTerms = query.toLowerCase().split(/\s+/).filter(term => term.length > 0);
+    if (searchTerms.length === 0) return [];
+
+    // Helper function to calculate term frequency
+    const calculateTermFrequency = (text, term) => {
+        const regex = new RegExp(term, 'gi');
+        const matches = text.match(regex);
+        return matches ? matches.length : 0;
+    };
+
+    // Helper function to calculate word similarity
+    const calculateSimilarity = (str1, str2) => {
+        const len1 = str1.length;
+        const len2 = str2.length;
+        const matrix = Array(len1 + 1).fill().map(() => Array(len2 + 1).fill(0));
+
+        for (let i = 0; i <= len1; i++) matrix[i][0] = i;
+        for (let j = 0; j <= len2; j++) matrix[0][j] = j;
+
+        for (let i = 1; i <= len1; i++) {
+            for (let j = 1; j <= len2; j++) {
+                const cost = str1[i - 1] === str2[j - 1] ? 0 : 1;
+                matrix[i][j] = Math.min(
+                    matrix[i - 1][j] + 1,
+                    matrix[i][j - 1] + 1,
+                    matrix[i - 1][j - 1] + cost
+                );
+            }
+        }
+
+        return 1 - (matrix[len1][len2] / Math.max(len1, len2));
+    };
+
+    // Search results with scoring
+    const searchResults = this.contents.map(content => {
+        let score = 0;
+        const matchDetails = {
+            titleMatches: [],
+            tagMatches: [],
+            descriptionMatches: [],
+            partialMatches: []
+        };
+
+        // Convert content fields to searchable text
+        const contentText = {
+            title: content.title.toLowerCase(),
+            tags: content.tags.map(tag => tag.toLowerCase())
+        };
+
+        // Score exact matches in title (highest weight)
+        searchTerms.forEach(term => {
+            if (contentText.title.includes(term)) {
+                score += 10;
+                matchDetails.titleMatches.push(term);
+            }
+            
+            // Score tag matches (high weight)
+            const matchingTags = contentText.tags.filter(tag => tag.includes(term));
+            if (matchingTags.length > 0) {
+                score += 5 * matchingTags.length;
+                matchDetails.tagMatches.push(...matchingTags);
+            }
+
+            // Score partial matches using similarity (lower weight)
+            const words = [...contentText.title.split(/\s+/), ...contentText.tags];
+            words.forEach(word => {
+                const similarity = calculateSimilarity(term, word);
+                if (similarity > 0.8 && similarity < 1) {  // High similarity but not exact match
+                    score += similarity * 2;
+                    matchDetails.partialMatches.push({ term, match: word, similarity });
+                }
+            });
+
+            // Add term frequency bonus
+            score += calculateTermFrequency(contentText.title, term) * 0.5;
+            score += calculateTermFrequency(contentText.description || '', term) * 0.2;
+        });
+
+        // Boost score based on content metadata
+        if (content.rating) score *= (1 + content.rating / 10);  // Boost highly rated content
+        if (content.views) score *= (1 + Math.log10(content.views) / 10);  // Boost popular content
+
+        return {
+            content,
+            score,
+            matchDetails
+        };
+    });
+
+    // Filter out zero-score results and sort by score
+    const filteredResults = searchResults
+        .filter(result => result.score > 0)
+        .sort((a, b) => b.score - a.score);
+
+    // Return the top results with their contents
+    return filteredResults.map(result => ({
+        ...result.content,
+        searchScore: result.score,
+        matchDetails: result.matchDetails
+    }));
+}
+
 
     filterByType(types) {
         return this.contents.filter(content => 

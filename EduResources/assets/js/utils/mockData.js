@@ -57,8 +57,8 @@ async checkAuthStatus() {
                     loginMessage.innerHTML = `
                         <div class="auth-warning">
                             <p>Please login to access content</p>
-                            <a class="signup-btn" 
-   onclick="window.showAuthPopup()">Sign Up</a>
+                            <a href="https://bcaexamprep.blogspot.com/p/bca-exam-prep-account.html" 
+                               class="signup-btn">Sign Up</a>
                         </div>
                     `;
                     trendingSection.insertBefore(loginMessage, trendingSection.firstChild);

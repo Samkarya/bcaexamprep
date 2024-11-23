@@ -61,7 +61,7 @@ async checkAuthStatus() {
                                class="signup-btn">Sign Up</a>
                         </div>
                     `;
-                    trendingSection.insertAfter(loginMessage, trendingSection.firstChild);
+                    trendingSection.insertBefore(loginMessage, trendingSection.firstChild);
                 }
                 resolve(false);
             }

@@ -197,11 +197,3 @@ filtersToggle.addEventListener('click', toggleFilters);
 filtersClose.addEventListener('click', toggleFilters);
 filtersOverlay.addEventListener('click', toggleFilters);
 
-/* Add authentication modal handlers
-document.getElementById('loginBtn').addEventListener('click', () => {
-    alert('Login functionality will be implemented with Firebase Auth');
-});
-
-document.getElementById('signupBtn').addEventListener('click', () => {
-    alert('Signup functionality will be implemented with Firebase Auth');
-});*/

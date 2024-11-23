@@ -73,10 +73,6 @@ async function createUserProfile(user, username, email) {
                 email: email,
                 createdAt: serverTimestamp(),
                 lastActive: serverTimestamp(),
-                preferences: {
-                    theme: 'light',
-                },
-                achievements: [],
                 roles: ['user']
             });
             
@@ -219,6 +215,7 @@ function updateAuthMode() {
         authSwitchLink.textContent = isLoginMode ? 'Sign up here' : 'Login here';
         usernameGroup.style.display = isLoginMode ? 'none' : 'block';
         errorMessage.textContent = '';
+        passwordInput.placeholder = isLoginMode ? "Enter Password" : "Create a Password";
         successMessage.textContent = '';
         authPopup.style.opacity = '1';
     }, 300);

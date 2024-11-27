@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
     popup.appendChild(closeBtn);
 
     // The featured post link URL
-    const featuredPostLink = "https://bcaexamprep.blogspot.com/2024/10/nimcet-mock-exam-be-exam-ready.html";
+    const featuredPostLink = "https://bcaexamprep.blogspot.com/2024/11/educontent-hub-your-gateway-to-quality-learning-resources.html";
 
     // Function to determine if the popup should be shown based on probability
     function showPopupWithProbability(chance) {

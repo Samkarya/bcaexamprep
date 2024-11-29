@@ -103,6 +103,9 @@ function enableInteractiveMCQs() {
 // Function to disable interactive MCQs
 function disableInteractiveMCQs() {
     document.querySelectorAll(".question-box").forEach(questionBox => {
+        // Remove correct/incorrect answer classes
+        questionBox.className = 'question-box';
+        
         const answersList = questionBox.querySelector('ol[type="A"]');
         if (!answersList) return;
 
@@ -113,9 +116,8 @@ function disableInteractiveMCQs() {
                               listItem.textContent.trim();
             listItem.innerHTML = choiceText;
         });
-});
+    });
 }
-                                                                                       
 
 // Function to check if all MCQs are answered correctly
 function checkAllCorrect() {

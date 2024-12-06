@@ -71,7 +71,7 @@ class ContentCard {
                         <button class="bookmark-btn" data-id="${id}">
                             <i class="fa${isBookmarked ? 's' : 'r'} fa-bookmark"></i>
                         </button>
-                        <a href="${url}" class="view-btn" data-id="${id}">
+                        <a href="${url}" class="view-btn" data-id="${id}" target="_blank" rel="noopener">
                             View Content
                         </a>
                     </div>

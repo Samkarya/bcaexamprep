@@ -48,8 +48,8 @@ async checkAuthStatus() {
                 showToast("Authentication successful", "success");
                 resolve(true);
             } else {
-                /*showToast("Please Login To Access", "warning");
-                // Show login message in trending section
+                showToast("Please Login To Access", "warning");
+                /*// Show login message in trending section
                 const trendingSection = document.querySelector('.trending-section');
                 if (trendingSection) {
                     const loginMessage = document.createElement('div');
@@ -81,71 +81,78 @@ async checkAuthStatus() {
         }
     }
 
-    async loadInitialData() {
+async loadInitialData() {
+    try {
+        // Get total document count first
+        await this.getTotalDocuments();
         
-        try {
-            // Get total document count first
-            await this.getTotalDocuments();
-            
-            if (this.totalDocuments === 0) {
-                showToast("No content available", "info");
-                this.hasMoreData = false;
-                return [];
-            }
+        if (this.totalDocuments === 0) {
+            showToast("No content available", "info");
+            this.hasMoreData = false;
+            return [];
+        }
 
-            const contentRef = collection(this.db, 'eduResources');
-            const batchSize = Math.min(this.BATCH_SIZE, this.totalDocuments);
-            const q = query(contentRef, orderBy('dateAdded', 'desc'), limit(batchSize));
-            const snapshot = await getDocs(q);
-            
-            if (snapshot.empty) {
-                this.hasMoreData = false;
-                return [];
-            }
-//if (await this.checkAuthStatus()){
-// Get current user's bookmarks
+        // Load educational resources (available to all users)
+        const contentRef = collection(this.db, 'eduResources');
+        const batchSize = Math.min(this.BATCH_SIZE, this.totalDocuments);
+        const q = query(contentRef, orderBy('dateAdded', 'desc'), limit(batchSize));
+        const snapshot = await getDocs(q);
+        
+        if (snapshot.empty) {
+            this.hasMoreData = false;
+            return [];
+        }
+
+        // Initialize contents with educational resources
+        this.contents = snapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data(),
+            isBookmarked: false  // Default to false, will update if user is authenticated
+        }));
+
+        // Check if user is authenticated before fetching bookmarks
+        const isAuthenticated = await this.checkAuthStatus();
+        
+        if (isAuthenticated && this.auth.currentUser) {
+            // Get current user's bookmarks
             const userId = this.auth.currentUser.uid;
             const bookmarksRef = collection(this.db, 'bookmarks');
             const bookmarksQuery = query(bookmarksRef, where('userId', '==', userId));
             const bookmarksSnapshot = await getDocs(bookmarksQuery);
+            
             // Create a map of bookmarked resource IDs
-const bookmarkedResources = new Map();
-bookmarksSnapshot.docs.forEach(doc => {
-    if (doc.data().isBookmarked) {
-        const resourceId = doc.data().resourceId;
-        bookmarkedResources.set(resourceId, true);
-        //console.log(`Bookmarked resource added: ${resourceId}`); // Log each bookmarked resource ID added
-    }
-});
+            const bookmarkedResources = new Map();
+            bookmarksSnapshot.docs.forEach(doc => {
+                if (doc.data().isBookmarked) {
+                    const resourceId = doc.data().resourceId;
+                    bookmarkedResources.set(resourceId, true);
+                }
+            });
 
-this.contents = snapshot.docs.map(doc => {
-    const isBookmarked = bookmarkedResources.has(doc.id);
-    //console.log(`Processing content: ${doc.id}, isBookmarked: ${isBookmarked}`); // Log each content ID with its bookmark status
-    return {
-        id: doc.id,
-        ...doc.data(),
-        isBookmarked: isBookmarked
-    };
-});
-//}
-            
-            this.lastDoc = snapshot.docs[snapshot.docs.length - 1];
-            
-            // Check if we have more data to load
-            this.hasMoreData = this.contents.length < this.totalDocuments;
-
-            // Start auto-loading if we have more data
-            if (this.hasMoreData) {
-                this.setupAutoLoading();
-            }
-
-            return this.contents;
-        } catch (error) {
-            console.error('Error loading initial data:', error);
-            showToast("Error loading data", "error");
-            return [];
+            // Update contents with bookmark information
+            this.contents = this.contents.map(content => ({
+                ...content,
+                isBookmarked: bookmarkedResources.has(content.id)
+            }));
         }
+        
+        this.lastDoc = snapshot.docs[snapshot.docs.length - 1];
+        
+        // Check if we have more data to load
+        this.hasMoreData = this.contents.length < this.totalDocuments;
+
+        // Start auto-loading if we have more data
+        if (this.hasMoreData) {
+            this.setupAutoLoading();
+        }
+
+        return this.contents;
+    } catch (error) {
+        console.error('Error loading initial data:', error);
+        showToast("Error loading data", "error");
+        return [];
     }
+}
 
     async loadMoreData() {
         if (this.isLoading || !this.hasMoreData || !this.lastDoc) return;

@@ -48,8 +48,8 @@ async checkAuthStatus() {
                 showToast("Authentication successful", "success");
                 resolve(true);
             } else {
-                showToast("Please Login To Access", "warning");
-                /*// Show login message in trending section
+                /*showToast("Please Login To Access", "warning");
+                // Show login message in trending section
                 const trendingSection = document.querySelector('.trending-section');
                 if (trendingSection) {
                     const loginMessage = document.createElement('div');

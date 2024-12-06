@@ -48,7 +48,7 @@ async checkAuthStatus() {
                 showToast("Authentication successful", "success");
                 resolve(true);
             } else {
-                showToast("Please Login To Access", "warning");
+                /*showToast("Please Login To Access", "warning");
                 // Show login message in trending section
                 const trendingSection = document.querySelector('.trending-section');
                 if (trendingSection) {
@@ -62,7 +62,7 @@ async checkAuthStatus() {
                         </div>
                     `;
                     trendingSection.insertBefore(loginMessage, trendingSection.firstChild);
-                }
+                }*/
                 resolve(false);
             }
         });
@@ -82,8 +82,7 @@ async checkAuthStatus() {
     }
 
     async loadInitialData() {
-        if (!(await this.checkAuthStatus())) return;
-
+        
         try {
             // Get total document count first
             await this.getTotalDocuments();
@@ -103,7 +102,7 @@ async checkAuthStatus() {
                 this.hasMoreData = false;
                 return [];
             }
-
+if (await this.checkAuthStatus()){
 // Get current user's bookmarks
             const userId = this.auth.currentUser.uid;
             const bookmarksRef = collection(this.db, 'bookmarks');
@@ -128,7 +127,7 @@ this.contents = snapshot.docs.map(doc => {
         isBookmarked: isBookmarked
     };
 });
-
+}
             
             this.lastDoc = snapshot.docs[snapshot.docs.length - 1];
             

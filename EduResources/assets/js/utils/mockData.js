@@ -102,7 +102,7 @@ async checkAuthStatus() {
                 this.hasMoreData = false;
                 return [];
             }
-if (await this.checkAuthStatus()){
+//if (await this.checkAuthStatus()){
 // Get current user's bookmarks
             const userId = this.auth.currentUser.uid;
             const bookmarksRef = collection(this.db, 'bookmarks');
@@ -127,7 +127,7 @@ this.contents = snapshot.docs.map(doc => {
         isBookmarked: isBookmarked
     };
 });
-}
+//}
             
             this.lastDoc = snapshot.docs[snapshot.docs.length - 1];
             

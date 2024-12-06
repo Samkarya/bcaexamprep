@@ -18,6 +18,7 @@ import {
 } from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js';
 
 import firebaseData from 'https://samkarya.github.io/bcaexamprep/EduResources/assets/js/utils/mockData.js';
+import {showToast } from "https://samkarya.github.io/bcaexamprep/firebase/common-utils.js";
 class ContentCard {
     constructor(data) {
         this.data = data;
@@ -94,7 +95,8 @@ static init() {
             try {
                 const user = auth.currentUser;
                 if (!user) {
-                    console.error('User must be logged in to bookmark content');
+                    //console.error('User must be logged in to bookmark content');
+                    showToast("User must be logged in to bookmark content", "info");
                     return;
                 }
                 
@@ -144,16 +146,21 @@ static init() {
                 icon.classList.toggle('fas');
             }
         }
-        if (e.target.closest('.view-btn')) {
-            const btn = e.target.closest('.view-btn');
-            const id = btn.dataset.id;
-
-           if (auth.currentUser) {
-  const resourceRef = doc(db, 'eduResources', id);
-  await updateDoc(resourceRef, { views: increment(1) }); 
+       if (e.target.closest('.view-btn')) {
+    const btn = e.target.closest('.view-btn');
+    const id = btn.dataset.id;
+    
+    // No need to check for auth.currentUser anymore
+    const resourceRef = doc(db, 'eduResources', id);
+    
+    try {
+        await updateDoc(resourceRef, {
+            views: increment(1)
+        });
+    } catch (error) {
+        console.error('Error updating view count:', error);
+    }
 }
-             console.log(`View content ID: ${id}`);
-        }
         
     });
 }

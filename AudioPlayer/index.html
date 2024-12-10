@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Player with Transcription</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="player-wrapper">
+            <!-- Audio Player Section -->
+            <div class="audio-player">
+                <audio id="audio-element"></audio>
+                <div class="controls">
+                    <button id="play-pause" aria-label="Play">▶</button>
+                    <button id="stop" aria-label="Stop">■</button>
+                    <div class="progress-container">
+                        <div id="progress-bar" class="progress-bar">
+                            <div id="progress" class="progress"></div>
+                        </div>
+                        <span id="time-display">00:00 / 00:00</span>
+                    </div>
+                    <div class="volume-container">
+                        <button id="mute" aria-label="Mute">🔊</button>
+                        <input type="range" id="volume" min="0" max="100" value="100">
+                    </div>
+                    <select id="playback-speed">
+                        <option value="0.5">0.5x</option>
+                        <option value="1" selected>1x</option>
+                        <option value="1.5">1.5x</option>
+                        <option value="2">2x</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Transcription Display -->
+            <div class="transcription-container">
+                <div class="view-controls">
+                    <button id="toggle-view">Toggle View</button>
+                    <button id="toggle-theme">Toggle Theme</button>
+                </div>
+                
+                <!-- Single Line View -->
+                <div id="single-line-view" class="transcription-view active">
+                    <div id="current-line"></div>
+                </div>
+
+                <!-- Full Article View -->
+                <div id="full-article-view" class="transcription-view">
+                    <div id="search-container">
+                        <input type="text" id="search-input" placeholder="Search in transcription...">
+                        <button id="search-button">Search</button>
+                    </div>
+                    <div id="full-transcription"></div>
+                </div>
+            </div>
+
+            <!-- File Upload Section -->
+            <div class="file-upload">
+                <div class="upload-container">
+                    <label for="audio-upload">Audio File:</label>
+                    <input type="file" id="audio-upload" accept="audio/*">
+                    
+                    <label for="transcription-upload">Transcription File:</label>
+                    <input type="file" id="transcription-upload" accept=".vtt,.srt,.json">
+                </div>
+                <button id="download-transcription">Download Transcription</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Modules -->
+    <script type="module"  src="js/audioPlayer.js"></script>
+    <script type="module" src="js/transcriptionManager.js"></script>
+    <script type="module" src="js/viewManager.js"></script>
+    <script type="module" src="js/fileHandler.js"></script>
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>

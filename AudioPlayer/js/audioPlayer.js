@@ -6,7 +6,8 @@ class AudioPlayer {
         //this.stopBtn = document.getElementById('stop');
         this.progressBar = document.getElementById('progress-bar');
         this.progress = document.getElementById('progress');
-        this.timeDisplay = document.getElementById('time-display');
+        this.currentTimeDisplay = document.getElementById('current-time');
+        this.totalTimeDisplay = document.getElementById('duration');
         this.volumeSlider = document.getElementById('volume');
         this.muteBtn = document.getElementById('mute');
         this.speedSelect = document.getElementById('playback-speed');
@@ -49,24 +50,25 @@ class AudioPlayer {
         }
     }
 
-    play() {
-        this.audio.play();
-        this.playPauseBtn.textContent = '⏸';
-        this.playPauseBtn.setAttribute('aria-label', 'Pause');
-    }
+   play() {
+    this.audio.play();
+    this.playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+    this.playPauseBtn.setAttribute('aria-label', 'Pause');
+}
 
-    pause() {
-        this.audio.pause();
-        this.playPauseBtn.textContent = '▶';
-        this.playPauseBtn.setAttribute('aria-label', 'Play');
-    }
+pause() {
+    this.audio.pause();
+    this.playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+    this.playPauseBtn.setAttribute('aria-label', 'Play');
+}
 
-    stop() {
+
+    /*stop() {
         this.audio.pause();
         this.audio.currentTime = 0;
         this.playPauseBtn.textContent = '▶';
         this.playPauseBtn.setAttribute('aria-label', 'Play');
-    }
+    }*/
 
     seek(e) {
         const rect = this.progressBar.getBoundingClientRect();
@@ -84,7 +86,8 @@ class AudioPlayer {
     updateTimeDisplay() {
         const current = this.formatTime(this.audio.currentTime);
         const duration = this.formatTime(this.audio.duration);
-        this.timeDisplay.textContent = `${current} / ${duration}`;
+        this.currentTimeDisplay.textContent = `${current}`;
+        this.durationTimeDisplay.textContent = `${duration}`;
     }
 
     formatTime(seconds) {

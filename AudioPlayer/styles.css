@@ -68,6 +68,23 @@
             margin-bottom: 5rem;
         }
 
+        .highlighted-word {
+    background-color: #ffff99; 
+    color: #333; 
+    font-weight: bold; 
+    border-radius: 3px; /* Smooth edges */
+    padding: 2px 4px; /* Add a bit of spacing around the text */
+    text-decoration: underline; /* Underline for further emphasis */
+    cursor: pointer; 
+    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition for hover effects */
+}
+
+.highlighted-word:hover {
+    background-color: #ffeb3b; /* Brighter yellow on hover */
+    color: #000; /* Black text on hover for clarity */
+}
+
+
         .view-controls {
             display: flex;
             gap: 1rem;

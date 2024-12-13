@@ -3,7 +3,7 @@ class AudioPlayer {
     constructor() {
         this.audio = document.getElementById('audio-element');
         this.playPauseBtn = document.getElementById('play-pause');
-        this.stopBtn = document.getElementById('stop');
+        //this.stopBtn = document.getElementById('stop');
         this.progressBar = document.getElementById('progress-bar');
         this.progress = document.getElementById('progress');
         this.timeDisplay = document.getElementById('time-display');
@@ -19,7 +19,7 @@ class AudioPlayer {
         this.playPauseBtn.addEventListener('click', () => this.togglePlayPause());
         
         // Stop button
-        this.stopBtn.addEventListener('click', () => this.stop());
+        //this.stopBtn.addEventListener('click', () => this.stop());
         
         // Progress bar
         this.progressBar.addEventListener('click', (e) => this.seek(e));

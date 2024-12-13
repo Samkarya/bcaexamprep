@@ -108,16 +108,18 @@ pause() {
     }
 
     updateVolumeIcon() {
-        const icon = this.audio.muted || this.audio.volume === 0 ? '🔇' : '🔊';
-        this.muteBtn.textContent = icon;
-    }
+    const icon = this.audio.muted || this.audio.volume === 0
+        ? '<i class="fas fa-volume-off"></i>'
+        : '<i class="fas fa-volume-up"></i>';
+    this.muteBtn.innerHTML = icon;
+}
 
     setPlaybackSpeed(speed) {
         this.audio.playbackRate = parseFloat(speed);
     }
 
     onEnded() {
-        this.playPauseBtn.textContent = '▶';
+        this.playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
         this.playPauseBtn.setAttribute('aria-label', 'Play');
     }
 

@@ -87,7 +87,7 @@ pause() {
         const current = this.formatTime(this.audio.currentTime);
         const duration = this.formatTime(this.audio.duration);
         this.currentTimeDisplay.textContent = `${current}`;
-        this.durationTimeDisplay.textContent = `${duration}`;
+        this.totalTimeDisplay.textContent = `${duration}`;
     }
 
     formatTime(seconds) {

@@ -1,58 +1,123 @@
-class IntroductionPractice {
-    constructor() {
-        this.state = {
-            isRecording: false,
-            isPlaying: false,
-            recordedChunks: [],
-            stream: null,
-            audioContext: null,
-            analyser: null,
-            mediaRecorder: null,
-            scrollInterval: null,
-            recordingStartTime:null,
-            deviceStatus:{
-                hasCamera:false,
-                hasMicrophone: false,
-                hasAudioOutput: false
-            }
-        };
+// Constants for configuration
+const CONFIG = {
+    VIDEO: {
+        mimeType: 'video/webm;codecs=vp9,opus',
+        videoBitsPerSecond: 2500000,
+        audioBitsPerSecond: 128000
+    },
+    AUDIO: {
+        fftSize: 256,
+        barCount: 50
+    },
+    SCROLL: {
+        minSpeed: 50,
+        maxSpeed: 150
+    }
+};
 
-        this.elements = this.initializeElements();
-        this.setupEventListeners();
-        this.setupDragAndDrop();
-        this.checkDeviceAvailability().then(() => this.requestMediaPermissions())
-            .catch(error => this.handleDeviceError(error));
+// Utility functions
+const Utils = {
+    formatTimestamp() {
+        return new Date().toISOString().replace(/[:.]/g, '-');
+    },
+
+    createDownloadLink(blob, filename) {
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = filename;
+        link.click();
+        URL.revokeObjectURL(url);
+    },
+
+    async sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+};
+
+// MediaManager handles all media-related operations
+class MediaManager {
+    constructor() {
+        this.stream = null;
+        this.audioContext = null;
+        this.analyser = null;
     }
 
-async checkDeviceAvailability() {
+    async checkDeviceAvailability() {
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        const deviceStatus = {
+            hasCamera: devices.some(device => device.kind === 'videoinput'),
+            hasMicrophone: devices.some(device => device.kind === 'audioinput'),
+            hasAudioOutput: devices.some(device => device.kind === 'audiooutput')
+        };
+
+        const missingDevices = Object.entries(deviceStatus)
+            .filter(([_, has]) => !has)
+            .map(([device]) => device.replace('has', '').toLowerCase());
+
+        if (missingDevices.length > 0) {
+            throw new Error(`Missing required devices: ${missingDevices.join(', ')}`);
+        }
+
+        return deviceStatus;
+    }
+
+    async requestMediaAccess() {
         try {
-            const devices = await navigator.mediaDevices.enumerateDevices();
-            
-            this.state.deviceStatus = {
-                hasCamera: devices.some(device => device.kind === 'videoinput'),
-                hasMicrophone: devices.some(device => device.kind === 'audioinput'),
-                hasAudioOutput: devices.some(device => device.kind === 'audiooutput')
-            };
+            this.stream = await navigator.mediaDevices.getUserMedia({
+                video: true,
+                audio: true
+            });
 
-            // Create custom error if required devices are missing
-            const missingDevices = [];
-            if (!this.state.deviceStatus.hasCamera) missingDevices.push('camera');
-            if (!this.state.deviceStatus.hasMicrophone) missingDevices.push('microphone');
-            
-            if (missingDevices.length > 0) {
-                throw new Error(`Missing required devices: ${missingDevices.join(', ')}`);
-            }
-
+            await this.initializeAudioContext();
+            return this.stream;
         } catch (error) {
-            if (error.name === 'NotAllowedError') {
-                throw new Error('Permission to access devices was denied. Please allow access in your browser settings.');
-            }
-            throw error;
+            throw new Error(`Failed to access media devices: ${error.message}`);
         }
     }
 
+    async initializeAudioContext() {
+        this.audioContext = new AudioContext();
+        this.analyser = this.audioContext.createAnalyser();
+        this.analyser.fftSize = CONFIG.AUDIO.fftSize;
+        
+        const source = this.audioContext.createMediaStreamSource(this.stream);
+        source.connect(this.analyser);
+    }
+
+    createAudioVisualization(audioWaveElement, isActive) {
+        if (!this.analyser) return;
+
+        const bufferLength = this.analyser.frequencyBinCount;
+        const dataArray = new Uint8Array(bufferLength);
+
+        const updateVisualization = () => {
+            if (!isActive()) return;
+
+            this.analyser.getByteFrequencyData(dataArray);
+            const bars = audioWaveElement.children;
+            
+            for (let i = 0; i < bars.length; i++) {
+                const value = dataArray[i] || 0;
+                bars[i].style.height = `${value * 0.3}px`;
+            }
+
+            requestAnimationFrame(updateVisualization);
+        };
+
+        updateVisualization();
+    }
+}
+
+// UI Manager handles all DOM-related operations
+class UIManager {
+    constructor() {
+        this.elements = this.initializeElements();
+        this.setupDragAndDrop();
+    }
+
     initializeElements() {
-        return {
+        const elements = {
             preview: document.getElementById('preview'),
             startButton: document.getElementById('startRecord'),
             stopButton: document.getElementById('stopRecord'),
@@ -69,426 +134,350 @@ async checkDeviceAvailability() {
             loadingElement: document.getElementById('loadingOverlay'),
             audioWave: document.getElementById('audioWave')
         };
+
+        // Validate all elements exist
+        Object.entries(elements).forEach(([key, element]) => {
+            if (!element) throw new Error(`Required element not found: ${key}`);
+        });
+
+        return elements;
     }
 
-    async requestMediaPermissions() {
-        try {
-            this.elements.loadingElement.style.display = 'flex';
+    setupDragAndDrop() {
+        let dragState = null;
 
-            const constraints = {
-                video: this.state.deviceStatus.hasCamera,
-                audio: this.state.deviceStatus.hasMicrophone
+        const handleMouseMove = (e) => {
+            if (!dragState) return;
+
+            const dx = e.clientX - dragState.startX;
+            const dy = e.clientY - dragState.startY;
+            
+            this.elements.scriptContainer.style.top = `${dragState.startTop + dy}px`;
+            this.elements.scriptContainer.style.left = `${dragState.startLeft + dx}px`;
+        };
+
+        const handleMouseUp = () => {
+            dragState = null;
+            document.removeEventListener('mousemove', handleMouseMove);
+            document.removeEventListener('mouseup', handleMouseUp);
+        };
+
+        this.elements.scriptContainer.addEventListener('mousedown', (e) => {
+            dragState = {
+                startX: e.clientX,
+                startY: e.clientY,
+                startLeft: this.elements.scriptContainer.offsetLeft,
+                startTop: this.elements.scriptContainer.offsetTop
             };
             
-            this.state.stream = await navigator.mediaDevices.getUserMedia(constraints);
-            
-            // Verify stream has both audio and video tracks
-            const hasVideoTrack = this.state.stream.getVideoTracks().length > 0;
-            const hasAudioTrack = this.state.stream.getAudioTracks().length > 0;
-
-            if (!hasVideoTrack || !hasAudioTrack) {
-                throw new Error('Failed to get both audio and video tracks');
-            }
-
-            await this.setupPreview();
-            await this.initializeAudioContext();
-            
-            this.elements.startButton.disabled = false;
-            this.updateUIState('ready');
-            
-        } catch (error) {
-            this.handleMediaError(error);
-        } finally {
-            this.elements.loadingElement.style.display = 'none';
-        }
+            document.addEventListener('mousemove', handleMouseMove);
+            document.addEventListener('mouseup', handleMouseUp);
+        });
     }
 
-    async setupPreview() {
-        this.elements.preview.srcObject = this.state.stream;
-        try {
-            await this.elements.preview.play();
-        } catch (error) {
-            throw new Error('Failed to start video preview: ' + error.message);
-        }
-    }
-
-
-    async initializeAudioContext() {
-        try {
-            this.state.audioContext = new AudioContext();
-            this.state.analyser = this.state.audioContext.createAnalyser();
-            this.state.analyser.fftSize = 256;
-            
-            const source = this.state.audioContext.createMediaStreamSource(this.state.stream);
-            source.connect(this.state.analyser);
-            
-            this.createAudioBars();
-        } catch (error) {
-            throw new Error('Failed to initialize audio context: ' + error.message);
-        }
-    }
-
-handleDeviceError(error) {
-        console.error('Device error:', error);
-        
-        const errorMessages = {
-            NotFoundError: 'Required devices not found. Please connect a camera and microphone.',
-            NotAllowedError: 'Permission denied. Please allow access to camera and microphone.',
-            NotReadableError: 'Could not access your devices. Please ensure they are not being used by another application.',
-            OverconstrainedError: 'Your devices do not meet the required constraints.',
-            default: 'An error occurred while accessing your devices.'
+    updateUIState(state) {
+        const states = {
+            ready: { start: false, stop: true, play: true, save: true, discard: true },
+            recording: { start: true, stop: false, play: true, save: true, discard: true },
+            recorded: { start: false, stop: true, play: false, save: false, discard: false },
+            error: { start: true, stop: true, play: true, save: true, discard: true }
         };
 
-        const message = errorMessages[error.name] || errorMessages.default;
-        this.showError(message);
-        this.updateUIState('error');
-    }
+        const buttons = states[state];
+        if (!buttons) return;
 
-    handleMediaError(error) {
-        console.error('Media error:', error);
-        
-        const errorMessages = {
-            AbortError: 'The operation was aborted.',
-            NotSupportedError: 'Your browser does not support the required media features.',
-            default: 'An error occurred while setting up media devices.'
-        };
-
-        const message = errorMessages[error.name] || errorMessages.default;
-        this.showError(message);
-        this.updateUIState('error');
+        Object.entries(buttons).forEach(([action, disabled]) => {
+            const button = this.elements[`${action}Button`];
+            if (button) button.disabled = disabled;
+        });
     }
 
     showError(message) {
-        // Create or update error display element
+        console.error(message);
         let errorDisplay = document.getElementById('errorDisplay');
+        
         if (!errorDisplay) {
             errorDisplay = document.createElement('div');
             errorDisplay.id = 'errorDisplay';
             errorDisplay.className = 'error-message';
             this.elements.preview.parentNode.insertBefore(errorDisplay, this.elements.preview);
         }
+        
         errorDisplay.textContent = message;
-    }
-
-    updateUIState(state) {
-        switch (state) {
-            case 'ready':
-                this.elements.startButton.disabled = false;
-                this.elements.stopButton.disabled = true;
-                this.elements.playButton.disabled = true;
-                this.elements.saveButton.disabled = true;
-                this.elements.discardButton.disabled = true;
-                break;
-            case 'recording':
-                this.elements.startButton.disabled = true;
-                this.elements.stopButton.disabled = false;
-                this.elements.playButton.disabled = true;
-                this.elements.saveButton.disabled = true;
-                this.elements.discardButton.disabled = true;
-                break;
-            case 'error':
-                this.elements.startButton.disabled = true;
-                this.elements.stopButton.disabled = true;
-                this.elements.playButton.disabled = true;
-                this.elements.saveButton.disabled = true;
-                this.elements.discardButton.disabled = true;
-                break;
-            // Add more states as needed
-        }
-    }
-
-    setupEventListeners() {
-        this.elements.startButton.addEventListener('click', () => this.startRecording());
-        this.elements.stopButton.addEventListener('click', () => this.stopRecording());
-        this.elements.playButton.addEventListener('click', () => this.playRecording());
-        this.elements.saveButton.addEventListener('click', () => this.saveRecording());
-        this.elements.discardButton.addEventListener('click', () => this.discardRecording());
-        this.elements.toggleScriptButton.addEventListener('click', () => this.toggleScript());
-        this.elements.scriptInput.addEventListener('input', () => this.updateScriptDisplay());
-        this.elements.scrollSpeed.addEventListener('input', () => this.updateScrollSpeed());
-    }
-
-    handleMediaError(err) {
-        console.error('Error accessing media devices:', err);
-        const errorMessages = {
-            NotAllowedError: 'Permission denied. Please allow access to camera and microphone in your browser settings.',
-            NotFoundError: 'No camera or microphone found. Please connect a device and try again.',
-            default: `Error accessing camera and microphone: ${err.message}`
-        };
-        alert(errorMessages[err.name] || errorMessages.default);
-        this.elements.loadingElement.style.display = 'none';
-    }
-
-    setupAudioVisualization() {
-        if (!this.state.analyser) return;
-
-        const source = this.state.audioContext.createMediaStreamSource(this.state.stream);
-        source.connect(this.state.analyser);
-        
-        const bufferLength = this.state.analyser.frequencyBinCount;
-        const dataArray = new Uint8Array(bufferLength);
-        
-        const updateWave = () => {
-            if (!this.state.isRecording && !this.state.isPlaying) return;
-            
-            this.state.analyser.getByteFrequencyData(dataArray);
-            const bars = this.elements.audioWave.children;
-            
-            for (let i = 0; i < bars.length; i++) {
-                const value = dataArray[i] || 0;
-                bars[i].style.height = `${value * 0.3}px`;
-            }
-            
-            if (this.state.isRecording || this.state.isPlaying) {
-                requestAnimationFrame(updateWave);
-            }
-        };
-        
-        updateWave();
     }
 
     createAudioBars() {
         this.elements.audioWave.innerHTML = '';
-        for (let i = 0; i < 50; i++) {
+        for (let i = 0; i < CONFIG.AUDIO.barCount; i++) {
             const bar = document.createElement('div');
             bar.className = 'wave-bar';
             this.elements.audioWave.appendChild(bar);
         }
     }
 
-    setupDragAndDrop() {
-        let pos = { top: 0, left: 0, x: 0, y: 0 };
+    async startCountdown() {
+        let time = parseInt(this.elements.countdownSelect.value);
+        this.elements.countdownElement.style.display = 'block';
         
-        const mouseMoveHandler = (e) => {
-            const dx = e.clientX - pos.x;
-            const dy = e.clientY - pos.y;
-            this.elements.scriptContainer.style.top = `${pos.top + dy}px`;
-            this.elements.scriptContainer.style.left = `${pos.left + dx}px`;
-        };
-
-        const mouseUpHandler = () => {
-            document.removeEventListener('mousemove', mouseMoveHandler);
-            document.removeEventListener('mouseup', mouseUpHandler);
-        };
-
-        this.elements.scriptContainer.addEventListener('mousedown', (e) => {
-            pos = {
-                left: this.elements.scriptContainer.offsetLeft,
-                top: this.elements.scriptContainer.offsetTop,
-                x: e.clientX,
-                y: e.clientY,
-            };
-            document.addEventListener('mousemove', mouseMoveHandler);
-            document.addEventListener('mouseup', mouseUpHandler);
-        });
-    }
-
-    startCountdown() {
-        return new Promise((resolve) => {
-            let time = parseInt(this.elements.countdownSelect.value);
-            this.elements.countdownElement.style.display = 'block';
-            
-            const countdown = setInterval(() => {
-                this.elements.countdownElement.textContent = time;
-                if (time <= 0) {
-                    clearInterval(countdown);
-                    this.elements.countdownElement.style.display = 'none';
-                    resolve();
-                }
-                time--;
-            }, 1000);
-        });
-    }
-
-    async startRecording() {
-        await this.startCountdown();
-
-        const options = {
-            mimeType: 'video/webm;codecs=vp9,opus',
-            videoBitsPerSecond: 2500000, //2.5 Mbps
-            audioBitsPerSecond: 128000 //128kbps
-        };
+        while (time >= 0) {
+            this.elements.countdownElement.textContent = time;
+            await Utils.sleep(1000);
+            time--;
+        }
         
-        this.state.mediaRecorder = new MediaRecorder(this.state.stream, options);
-        this.state.recordedChunks = [];
-        this.state.isRecording = true;
-        this.state.recordingStartTime = new Date();
-        
-        this.state.mediaRecorder.ondataavailable = (e) => {
-            if (e.data.size > 0) {
-                this.state.recordedChunks.push(e.data);
-            }
-        };
-        
-        this.state.mediaRecorder.start();
-        this.elements.startButton.disabled = true;
-        this.elements.stopButton.disabled = false;
-        this.setupAudioVisualization();
-        this.startScriptScroll();
-    }
-
-    stopRecording() {
-        this.state.mediaRecorder.stop();
-        this.state.isRecording = false;
-        this.elements.stopButton.disabled = true;
-        this.elements.playButton.disabled = false;
-        this.elements.saveButton.disabled = false;
-        this.elements.discardButton.disabled = false;
-        this.stopScriptScroll();
-    }
-
-    async playRecording() {
-    if (this.state.recordedChunks.length === 0) {
-        alert('No recording available to play.');
-        return;
-    }
-
-    const blob = new Blob(this.state.recordedChunks, { type: 'video/webm;codecs=vp9,opus' });
-    const videoUrl = URL.createObjectURL(blob);
-    this.elements.preview.srcObject = null;
-    this.elements.preview.src = videoUrl;
-    this.elements.preview.muted = false;
-    this.elements.preview.volume = 1.0;
-
-    try {
-        await this.elements.preview.play();
-        this.state.isPlaying = true;
-
-        // Create and connect AudioContext
-        const audioContext = new AudioContext();
-        const source = audioContext.createMediaElementSource(this.elements.preview);
-        const analyser = audioContext.createAnalyser();
-        analyser.fftSize = 256;
-        source.connect(analyser);
-        analyser.connect(audioContext.destination);
-
-        // Visualization
-        this.state.analyser = analyser;
-        this.setupAudioVisualization();
-
-        this.elements.preview.onended = () => {
-            this.state.isPlaying = false;
-            source.disconnect();
-            analyser.disconnect();
-            audioContext.close(); // Ensure cleanup
-
-            // Reset preview to live stream
-            this.elements.preview.srcObject = this.state.stream;
-            this.elements.preview.muted = true;
-        };
-    } catch (error) {
-        console.error('Error playing recording:', error);
+        this.elements.countdownElement.style.display = 'none';
     }
 }
 
+// RecordingManager handles recording-related operations
+class RecordingManager {
+    constructor(stream, uiManager) {
+        this.stream = stream;
+        this.ui = uiManager;
+        this.recordedChunks = [];
+        this.mediaRecorder = null;
+        this.isRecording = false;
+        this.isPlaying = false;
+        this.recordingStartTime = null;
+    }
 
-     saveRecording() {
-        const blob = new Blob(this.state.recordedChunks, { 
-            type: 'video/webm;codecs=vp9,opus'
-        });
+    async startRecording() {
+        await this.ui.startCountdown();
 
-        // Create metadata
-        const metadata = {
-            title: 'Introduction Practice Recording',
-            recordingDate: this.state.recordingStartTime.toISOString(),
-            duration: (new Date() - this.state.recordingStartTime) / 1000, // in seconds
-            format: 'WebM (VP9/Opus)',
-            resolution: `${this.elements.preview.videoWidth}x${this.elements.preview.videoHeight}`,
-            scriptContent: this.elements.scriptInput.value
+        this.mediaRecorder = new MediaRecorder(this.stream, CONFIG.VIDEO);
+        this.recordedChunks = [];
+        this.isRecording = true;
+        this.recordingStartTime = new Date();
+
+        this.mediaRecorder.ondataavailable = (e) => {
+            if (e.data.size > 0) {
+                this.recordedChunks.push(e.data);
+            }
         };
 
-        // Create a text file with metadata
-        const metadataBlob = new Blob([JSON.stringify(metadata, null, 2)], { type: 'application/json' });
-        
-        // Save video with metadata
-        const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-        
-        // Save video
-        const videoUrl = URL.createObjectURL(blob);
-        const videoLink = document.createElement('a');
-        videoLink.href = videoUrl;
-        videoLink.download = `introduction-practice-${timestamp}.webm`;
-        videoLink.click();
-        URL.revokeObjectURL(videoUrl);
+        this.mediaRecorder.start();
+        this.ui.updateUIState('recording');
+    }
 
-        // Save metadata
-        const metadataUrl = URL.createObjectURL(metadataBlob);
-        const metadataLink = document.createElement('a');
-        metadataLink.href = metadataUrl;
-        metadataLink.download = `introduction-practice-${timestamp}-metadata.json`;
-        metadataLink.click();
-        URL.revokeObjectURL(metadataUrl);
+    stopRecording() {
+        this.mediaRecorder.stop();
+        this.isRecording = false;
+        this.ui.updateUIState('recorded');
+    }
+
+    async playRecording() {
+        if (this.recordedChunks.length === 0) {
+            this.ui.showError('No recording available to play.');
+            return;
+        }
+
+        const blob = new Blob(this.recordedChunks, { type: CONFIG.VIDEO.mimeType });
+        const videoUrl = URL.createObjectURL(blob);
+        
+        this.ui.elements.preview.srcObject = null;
+        this.ui.elements.preview.src = videoUrl;
+        this.ui.elements.preview.muted = false;
+        
+        try {
+            await this.ui.elements.preview.play();
+            this.isPlaying = true;
+
+            this.ui.elements.preview.onended = () => {
+                this.isPlaying = false;
+                this.ui.elements.preview.srcObject = this.stream;
+                this.ui.elements.preview.muted = true;
+            };
+        } catch (error) {
+            this.ui.showError(`Error playing recording: ${error.message}`);
+        }
+    }
+
+    saveRecording() {
+        const blob = new Blob(this.recordedChunks, { type: CONFIG.VIDEO.mimeType });
+        const timestamp = Utils.formatTimestamp();
+
+        const metadata = {
+            title: 'Introduction Practice Recording',
+            recordingDate: this.recordingStartTime.toISOString(),
+            duration: (new Date() - this.recordingStartTime) / 1000,
+            format: 'WebM (VP9/Opus)',
+            resolution: `${this.ui.elements.preview.videoWidth}x${this.ui.elements.preview.videoHeight}`,
+            scriptContent: this.ui.elements.scriptInput.value
+        };
+
+        const metadataBlob = new Blob([JSON.stringify(metadata, null, 2)], { 
+            type: 'application/json' 
+        });
+
+        Utils.createDownloadLink(blob, `introduction-practice-${timestamp}.webm`);
+        Utils.createDownloadLink(metadataBlob, `introduction-practice-${timestamp}-metadata.json`);
     }
 
     discardRecording() {
-        this.state.isPlaying = false;
-        this.elements.preview.srcObject = this.state.stream;
-        this.elements.startButton.disabled = false;
-        this.elements.playButton.disabled = true;
-        this.elements.saveButton.disabled = true;
-        this.elements.discardButton.disabled = true;
-        this.state.recordedChunks = [];
+        this.isPlaying = false;
+        this.ui.elements.preview.srcObject = this.stream;
+        this.recordedChunks = [];
+        this.ui.updateUIState('ready');
+    }
+}
+
+// ScriptManager handles script-related operations
+class ScriptManager {
+    constructor(uiManager) {
+        this.ui = uiManager;
+        this.scrollInterval = null;
     }
 
     toggleScript() {
-        const isHidden = this.elements.scriptContainer.style.display === 'none';
-        this.elements.scriptContainer.style.display = isHidden ? 'block' : 'none';
-        this.elements.toggleScriptButton.textContent = isHidden ? 'Hide Script' : 'Show Script';
+        const isHidden = this.ui.elements.scriptContainer.style.display === 'none';
+        this.ui.elements.scriptContainer.style.display = isHidden ? 'block' : 'none';
+        this.ui.elements.toggleScriptButton.textContent = isHidden ? 'Hide Script' : 'Show Script';
     }
 
-    startScriptScroll() {
-        this.resetScriptScroll();
-        const speed = this.getScrollSpeed();
+    startScroll() {
+        this.resetScroll();
+        const speed = this.calculateScrollSpeed();
         
-        if (this.state.scrollInterval) {
-            clearInterval(this.state.scrollInterval);
-        }
+        this.stopScroll();
         
-        this.state.scrollInterval = setInterval(() => {
-            if (this.elements.scriptDisplay.scrollHeight > this.elements.scriptDisplay.clientHeight) {
-                this.elements.scriptDisplay.scrollTop += 1;
+        this.scrollInterval = setInterval(() => {
+            const { scriptDisplay } = this.ui.elements;
+            if (scriptDisplay.scrollHeight > scriptDisplay.clientHeight) {
+                scriptDisplay.scrollTop += 1;
                 
-                if (this.elements.scriptDisplay.scrollTop >= 
-                    (this.elements.scriptDisplay.scrollHeight - this.elements.scriptDisplay.clientHeight)) {
-                    this.resetScriptScroll();
+                if (scriptDisplay.scrollTop >= 
+                    (scriptDisplay.scrollHeight - scriptDisplay.clientHeight)) {
+                    this.resetScroll();
                 }
             }
         }, speed);
     }
 
-    getScrollSpeed() {
-        const minSpeed = 50;
-        const maxSpeed = 150;
+    calculateScrollSpeed() {
+        const { minSpeed, maxSpeed } = CONFIG.SCROLL;
         const range = maxSpeed - minSpeed;
-        return maxSpeed - ((this.elements.scrollSpeed.value / 10) * range);
+        return maxSpeed - ((this.ui.elements.scrollSpeed.value / 10) * range);
+    }
+
+    stopScroll() {
+        if (this.scrollInterval) {
+            clearInterval(this.scrollInterval);
+            this.scrollInterval = null;
+        }
+    }
+
+    resetScroll() {
+        this.ui.elements.scriptDisplay.scrollTop = 0;
     }
 
     updateScriptDisplay() {
-        this.elements.scriptDisplay.textContent = this.elements.scriptInput.value;
-        this.elements.scriptDisplay.style.whiteSpace = 'pre-wrap';
-        this.resetScriptScroll();
-    }
-
-    stopScriptScroll() {
-        if (this.state.scrollInterval) {
-            clearInterval(this.state.scrollInterval);
-            this.state.scrollInterval = null;
-        }
-    }
-
-    resetScriptScroll() {
-        this.elements.scriptDisplay.scrollTop = 0;
-    }
-
-    updateScrollSpeed() {
-        if (this.state.scrollInterval) {
-            this.stopScriptScroll();
-            this.startScriptScroll();
-        }
+        this.ui.elements.scriptDisplay.textContent = this.ui.elements.scriptInput.value;
+        this.ui.elements.scriptDisplay.style.whiteSpace = 'pre-wrap';
+        this.resetScroll();
     }
 }
 
-// Initialize the application
+// Main application class
+class IntroductionPractice {
+    constructor() {
+        this.ui = new UIManager();
+        this.mediaManager = new MediaManager();
+        this.scriptManager = new ScriptManager(this.ui);
+        this.recordingManager = null;
+
+        this.initialize();
+    }
+
+    async initialize() {
+        try {
+            this.ui.elements.loadingElement.style.display = 'flex';
+            
+            await this.mediaManager.checkDeviceAvailability();
+            const stream = await this.mediaManager.requestMediaAccess();
+            
+            this.recordingManager = new RecordingManager(stream, this.ui);
+            
+            await this.setupPreview(stream);
+            this.ui.createAudioBars();
+            this.setupEventListeners();
+            
+            this.ui.updateUIState('ready');
+        } catch (error) {
+            this.ui.showError(error.message);
+            this.ui.updateUIState('error');
+        } finally {
+            this.ui.elements.loadingElement.style.display = 'none';
+        }
+    }
+
+    async setupPreview(stream) {
+        this.ui.elements.preview.srcObject = stream;
+        try {
+            await this.ui.elements.preview.play();
+        } catch (error) {
+            throw new Error(`Failed to start video preview: ${error.message}`);
+        }
+    }
+
+    setupEventListeners() {
+        const { elements } = this.ui;
+        
+        elements.startButton.addEventListener('click', () => {
+            this.recordingManager.startRecording();
+            this.scriptManager.startScroll();
+            this.mediaManager.createAudioVisualization(
+                elements.audioWave,
+                () => this.recordingManager.isRecording || this.recordingManager.isPlaying
+            );
+        });
+
+        elements.stopButton.addEventListener('click', () => {
+            this.recordingManager.stopRecording();
+            this.scriptManager.stopScroll();
+        });
+
+        elements.playButton.addEventListener('click', () => this.recordingManager.playRecording());
+        elements.saveButton.addEventListener('click', () => this.recordingManager.saveRecording());
+        elements.discardButton.addEventListener('click', () => this.recordingManager.discardRecording());
+        elements.toggleScriptButton.addEventListener('click', () => this.scriptManager.toggleScript());
+        elements.scriptInput.addEventListener('input', () => this.scriptManager.updateScriptDisplay());
+        elements.scrollSpeed.addEventListener('input', () => {
+            if (this.recordingManager.isRecording) {
+                this.scriptManager.stopScroll();
+                this.scriptManager.startScroll();
+            }
+        });
+
+        // Handle visibility change to properly manage resources
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden && this.recordingManager.isRecording) {
+                this.recordingManager.stopRecording();
+                this.scriptManager.stopScroll();
+                this.ui.showError('Recording stopped due to page visibility change');
+            }
+        });
+
+        // Handle before unload to warn user if recording is in progress
+        window.addEventListener('beforeunload', (event) => {
+            if (this.recordingManager.isRecording) {
+                event.preventDefault();
+                event.returnValue = 'Recording is still in progress. Are you sure you want to leave?';
+                return event.returnValue;
+            }
+        });
+    }
+}
+
+// Initialize the application when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-    new IntroductionPractice();
+    try {
+        new IntroductionPractice();
+    } catch (error) {
+        console.error('Failed to initialize Introduction Practice:', error);
+        // Show error in UI if possible
+        const errorDisplay = document.createElement('div');
+        errorDisplay.className = 'error-message';
+        errorDisplay.textContent = `Failed to initialize: ${error.message}`;
+        document.body.prepend(errorDisplay);
+    }
 });

@@ -8,7 +8,8 @@ class IntroductionPractice {
             audioContext: null,
             analyser: null,
             mediaRecorder: null,
-            scrollInterval: null
+            scrollInterval: null,
+            recordingStartTime:null
         };
 
         this.elements = this.initializeElements();
@@ -171,10 +172,16 @@ class IntroductionPractice {
 
     async startRecording() {
         await this.startCountdown();
+
+        const options = {
+            mimeType: 'video/webm;codecs=vp9,opus',
+            videoBitsPerSecond: 2500000, //2.5 Mbps
+            audioBitsPerSecond: 128000 //128kbps
         
-        this.state.mediaRecorder = new MediaRecorder(this.state.stream);
+        this.state.mediaRecorder = new MediaRecorder(this.state.stream, options);
         this.state.recordedChunks = [];
         this.state.isRecording = true;
+        this.state.recordingStartTime = new Date();
         
         this.state.mediaRecorder.ondataavailable = (e) => {
             if (e.data.size > 0) {
@@ -200,42 +207,79 @@ class IntroductionPractice {
     }
 
     async playRecording() {
-        const blob = new Blob(this.state.recordedChunks, { type: 'video/webm' });
+        const blob = new Blob(this.state.recordedChunks, { type: 'video/webm;codecs=vp9,opus' });
         const videoUrl = URL.createObjectURL(blob);
         
         this.elements.preview.srcObject = null;
         this.elements.preview.src = videoUrl;
         
         try {
+
+            this.element.preview.muted = false;
+            this.element.preview.volume = 1.0; 
             await this.elements.preview.play();
             this.state.isPlaying = true;
             
             // Create a new audio context for playback
             const audioContext = new AudioContext();
             const source = audioContext.createMediaElementSource(this.elements.preview);
-            source.connect(this.state.analyser);
-            this.state.analyser.connect(audioContext.destination);
+            const analyser = audioContext.createAnalyser();
             
+            source.connect(analyser);
+            analyser.connect(audioContext.destination);
+            
+            this.state.analyser = analyser;
             this.setupAudioVisualization();
             
             this.elements.preview.onended = () => {
                 this.state.isPlaying = false;
                 source.disconnect();
-                this.state.analyser.disconnect();
+                analyser.disconnect();
+                // Reset preview to camera feed
+                this.elements.preview.srcObject = this.state.stream;
             };
         } catch (error) {
             console.error('Error playing recording:', error);
+            alert('Error playing recording. Please check console for details.');
         }
     }
 
-    saveRecording() {
-        const blob = new Blob(this.state.recordedChunks, { type: 'video/webm' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'introduction-practice.webm';
-        a.click();
-        URL.revokeObjectURL(url);
+     saveRecording() {
+        const blob = new Blob(this.state.recordedChunks, { 
+            type: 'video/webm;codecs=vp9,opus'
+        });
+
+        // Create metadata
+        const metadata = {
+            title: 'Introduction Practice Recording',
+            recordingDate: this.state.recordingStartTime.toISOString(),
+            duration: (new Date() - this.state.recordingStartTime) / 1000, // in seconds
+            format: 'WebM (VP9/Opus)',
+            resolution: `${this.elements.preview.videoWidth}x${this.elements.preview.videoHeight}`,
+            scriptContent: this.elements.scriptInput.value
+        };
+
+        // Create a text file with metadata
+        const metadataBlob = new Blob([JSON.stringify(metadata, null, 2)], { type: 'application/json' });
+        
+        // Save video with metadata
+        const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+        
+        // Save video
+        const videoUrl = URL.createObjectURL(blob);
+        const videoLink = document.createElement('a');
+        videoLink.href = videoUrl;
+        videoLink.download = `introduction-practice-${timestamp}.webm`;
+        videoLink.click();
+        URL.revokeObjectURL(videoUrl);
+
+        // Save metadata
+        const metadataUrl = URL.createObjectURL(metadataBlob);
+        const metadataLink = document.createElement('a');
+        metadataLink.href = metadataUrl;
+        metadataLink.download = `introduction-practice-${timestamp}-metadata.json`;
+        metadataLink.click();
+        URL.revokeObjectURL(metadataUrl);
     }
 
     discardRecording() {

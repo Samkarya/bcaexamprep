@@ -208,41 +208,49 @@ class IntroductionPractice {
     }
 
     async playRecording() {
-        const blob = new Blob(this.state.recordedChunks, { type: 'video/webm;codecs=vp9,opus' });
-        const videoUrl = URL.createObjectURL(blob);
-        
-        this.elements.preview.srcObject = null;
-        this.elements.preview.src = videoUrl;
-        
-        try {
-
-            this.element.preview.muted = false;
-            this.element.preview.volume = 1.0; 
-            await this.elements.preview.play();
-            this.state.isPlaying = true;
-            
-            // Create a new audio context for playback
-            const audioContext = new AudioContext();
-            const source = audioContext.createMediaElementSource(this.elements.preview);
-            const analyser = audioContext.createAnalyser();
-            
-            source.connect(analyser);
-            analyser.connect(audioContext.destination);
-            
-            this.state.analyser = analyser;
-            this.setupAudioVisualization();
-            
-            this.elements.preview.onended = () => {
-                this.state.isPlaying = false;
-                source.disconnect();
-                analyser.disconnect();
-                // Reset preview to camera feed
-                this.elements.preview.srcObject = this.state.stream;
-            };
-        } catch (error) {
-            console.error('Error playing recording:', error);
-        }
+    if (this.state.recordedChunks.length === 0) {
+        alert('No recording available to play.');
+        return;
     }
+
+    const blob = new Blob(this.state.recordedChunks, { type: 'video/webm;codecs=vp9,opus' });
+    const videoUrl = URL.createObjectURL(blob);
+    this.elements.preview.srcObject = null;
+    this.elements.preview.src = videoUrl;
+    this.elements.preview.muted = false;
+    this.elements.preview.volume = 1.0;
+
+    try {
+        await this.elements.preview.play();
+        this.state.isPlaying = true;
+
+        // Create and connect AudioContext
+        const audioContext = new AudioContext();
+        const source = audioContext.createMediaElementSource(this.elements.preview);
+        const analyser = audioContext.createAnalyser();
+        analyser.fftSize = 256;
+        source.connect(analyser);
+        analyser.connect(audioContext.destination);
+
+        // Visualization
+        this.state.analyser = analyser;
+        this.setupAudioVisualization();
+
+        this.elements.preview.onended = () => {
+            this.state.isPlaying = false;
+            source.disconnect();
+            analyser.disconnect();
+            audioContext.close(); // Ensure cleanup
+
+            // Reset preview to live stream
+            this.elements.preview.srcObject = this.state.stream;
+            this.elements.preview.muted = true;
+        };
+    } catch (error) {
+        console.error('Error playing recording:', error);
+    }
+}
+
 
      saveRecording() {
         const blob = new Blob(this.state.recordedChunks, { 

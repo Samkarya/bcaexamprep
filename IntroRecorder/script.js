@@ -10,12 +10,45 @@ class IntroductionPractice {
             mediaRecorder: null,
             scrollInterval: null,
             recordingStartTime:null
+            deviceStatus:{
+                hasCamera:false,
+                hasMicrophone: false,
+                hasAudioOutput: false
+            }
         };
 
         this.elements = this.initializeElements();
         this.setupEventListeners();
         this.setupDragAndDrop();
-        this.requestMediaPermissions();
+        this.checkDeviceAvailability().then(() => this.requestMediaPermissions())
+            .catch(error => this.handleDeviceError(error));
+    }
+
+async checkDeviceAvailability() {
+        try {
+            const devices = await navigator.mediaDevices.enumerateDevices();
+            
+            this.state.deviceStatus = {
+                hasCamera: devices.some(device => device.kind === 'videoinput'),
+                hasMicrophone: devices.some(device => device.kind === 'audioinput'),
+                hasAudioOutput: devices.some(device => device.kind === 'audiooutput')
+            };
+
+            // Create custom error if required devices are missing
+            const missingDevices = [];
+            if (!this.state.deviceStatus.hasCamera) missingDevices.push('camera');
+            if (!this.state.deviceStatus.hasMicrophone) missingDevices.push('microphone');
+            
+            if (missingDevices.length > 0) {
+                throw new Error(`Missing required devices: ${missingDevices.join(', ')}`);
+            }
+
+        } catch (error) {
+            if (error.name === 'NotAllowedError') {
+                throw new Error('Permission to access devices was denied. Please allow access in your browser settings.');
+            }
+            throw error;
+        }
     }
 
     initializeElements() {
@@ -41,30 +74,127 @@ class IntroductionPractice {
     async requestMediaPermissions() {
         try {
             this.elements.loadingElement.style.display = 'flex';
+
+            const constraints = {
+                video: this.state.deviceStatus.hasCamera,
+                audio: this.state.deviceStatus.hasMicrophone
+            };
             
-            this.state.stream = await navigator.mediaDevices.getUserMedia({
-                video: true,
-                audio: true
-            });
+            this.state.stream = await navigator.mediaDevices.getUserMedia(constraints);
             
-            this.elements.preview.srcObject = this.state.stream;
-            await this.elements.preview.play();
+            // Verify stream has both audio and video tracks
+            const hasVideoTrack = this.state.stream.getVideoTracks().length > 0;
+            const hasAudioTrack = this.state.stream.getAudioTracks().length > 0;
+
+            if (!hasVideoTrack || !hasAudioTrack) {
+                throw new Error('Failed to get both audio and video tracks');
+            }
+
+            await this.setupPreview();
+            await this.initializeAudioContext();
             
             this.elements.startButton.disabled = false;
+            this.updateUIState('ready');
+            
+        } catch (error) {
+            this.handleMediaError(error);
+        } finally {
             this.elements.loadingElement.style.display = 'none';
-
-            // Initialize audio context after getting permissions
-            await this.initializeAudioContext();
-        } catch (err) {
-            this.handleMediaError(err);
         }
     }
 
+    async setupPreview() {
+        this.elements.preview.srcObject = this.state.stream;
+        try {
+            await this.elements.preview.play();
+        } catch (error) {
+            throw new Error('Failed to start video preview: ' + error.message);
+        }
+    }
+
+
     async initializeAudioContext() {
-        this.state.audioContext = new AudioContext();
-        this.state.analyser = this.state.audioContext.createAnalyser();
-        this.state.analyser.fftSize = 256;
-        this.createAudioBars();
+        try {
+            this.state.audioContext = new AudioContext();
+            this.state.analyser = this.state.audioContext.createAnalyser();
+            this.state.analyser.fftSize = 256;
+            
+            const source = this.state.audioContext.createMediaStreamSource(this.state.stream);
+            source.connect(this.state.analyser);
+            
+            this.createAudioBars();
+        } catch (error) {
+            throw new Error('Failed to initialize audio context: ' + error.message);
+        }
+    }
+
+handleDeviceError(error) {
+        console.error('Device error:', error);
+        
+        const errorMessages = {
+            NotFoundError: 'Required devices not found. Please connect a camera and microphone.',
+            NotAllowedError: 'Permission denied. Please allow access to camera and microphone.',
+            NotReadableError: 'Could not access your devices. Please ensure they are not being used by another application.',
+            OverconstrainedError: 'Your devices do not meet the required constraints.',
+            default: 'An error occurred while accessing your devices.'
+        };
+
+        const message = errorMessages[error.name] || errorMessages.default;
+        this.showError(message);
+        this.updateUIState('error');
+    }
+
+    handleMediaError(error) {
+        console.error('Media error:', error);
+        
+        const errorMessages = {
+            AbortError: 'The operation was aborted.',
+            NotSupportedError: 'Your browser does not support the required media features.',
+            default: 'An error occurred while setting up media devices.'
+        };
+
+        const message = errorMessages[error.name] || errorMessages.default;
+        this.showError(message);
+        this.updateUIState('error');
+    }
+
+    showError(message) {
+        // Create or update error display element
+        let errorDisplay = document.getElementById('errorDisplay');
+        if (!errorDisplay) {
+            errorDisplay = document.createElement('div');
+            errorDisplay.id = 'errorDisplay';
+            errorDisplay.className = 'error-message';
+            this.elements.preview.parentNode.insertBefore(errorDisplay, this.elements.preview);
+        }
+        errorDisplay.textContent = message;
+    }
+
+    updateUIState(state) {
+        switch (state) {
+            case 'ready':
+                this.elements.startButton.disabled = false;
+                this.elements.stopButton.disabled = true;
+                this.elements.playButton.disabled = true;
+                this.elements.saveButton.disabled = true;
+                this.elements.discardButton.disabled = true;
+                break;
+            case 'recording':
+                this.elements.startButton.disabled = true;
+                this.elements.stopButton.disabled = false;
+                this.elements.playButton.disabled = true;
+                this.elements.saveButton.disabled = true;
+                this.elements.discardButton.disabled = true;
+                break;
+            case 'error':
+                this.elements.startButton.disabled = true;
+                this.elements.stopButton.disabled = true;
+                this.elements.playButton.disabled = true;
+                this.elements.saveButton.disabled = true;
+                this.elements.discardButton.disabled = true;
+                break;
+            // Add more states as needed
+        }
     }
 
     setupEventListeners() {

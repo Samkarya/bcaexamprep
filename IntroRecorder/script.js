@@ -241,7 +241,6 @@ class IntroductionPractice {
             };
         } catch (error) {
             console.error('Error playing recording:', error);
-            alert('Error playing recording. Please check console for details.');
         }
     }
 

@@ -279,6 +279,7 @@ class IntroductionPractice {
         const blob = new Blob(this.recordedChunks, { type: 'video/webm' });
         this.preview.srcObject = null;
         this.preview.src = URL.createObjectURL(blob);
+        this.preview.load();
         this.preview.play();
     }
 

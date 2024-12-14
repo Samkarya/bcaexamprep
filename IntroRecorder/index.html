@@ -1,1 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Introduction Practice</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="welcome-message">
+            <h1>Practice Your Introduction</h1>
+            <p>Break free from nervousness and perfect your introduction!</p>
+        </div>
 
+        <div id="scriptContainer" class="script-container" draggable="true">
+            <div class="script-header">
+                <button id="toggleScript" class="btn">Hide Script</button>
+                <div class="speed-control">
+                    <label for="scrollSpeed">Scroll Speed:</label>
+                    <input type="range" id="scrollSpeed" min="1" max="10" value="5">
+                </div>
+            </div>
+            <div id="scriptContent" class="script-content">
+                <textarea id="scriptInput" placeholder="Paste your script here..."></textarea>
+                <div id="scriptDisplay" class="script-display"></div>
+            </div>
+        </div>
+
+        <div class="recording-container">
+            <div class="video-wrapper">
+                <video id="preview" playsinline autoplay muted></video>
+                <div id="audioWave" class="audio-wave"></div>
+                <div id="countdown" class="countdown"></div>
+            </div>
+
+            <div class="controls">
+                <div class="countdown-setting">
+                    <label for="countdownTime">Countdown (seconds):</label>
+                    <select id="countdownTime">
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                    </select>
+                </div>
+                
+                <div class="recording-buttons">
+                    <button id="startRecord" class="btn primary">Start Recording</button>
+                    <button id="stopRecord" class="btn" disabled>Stop</button>
+                    <button id="playBack" class="btn" disabled>Play</button>
+                    <button id="saveVideo" class="btn success" disabled>Save</button>
+                    <button id="discardVideo" class="btn danger" disabled>Discard</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Setting up camera and microphone...</div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

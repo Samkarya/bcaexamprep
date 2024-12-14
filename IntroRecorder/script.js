@@ -1,168 +1,138 @@
 class IntroductionPractice {
     constructor() {
-        this.initializeElements();
+        this.state = {
+            isRecording: false,
+            isPlaying: false,
+            recordedChunks: [],
+            stream: null,
+            audioContext: null,
+            analyser: null,
+            mediaRecorder: null,
+            scrollInterval: null
+        };
+
+        this.elements = this.initializeElements();
         this.setupEventListeners();
         this.setupDragAndDrop();
-        this.audioContext = null;
-        this.analyser = null;
         this.requestMediaPermissions();
     }
 
     initializeElements() {
-        // Video elements
-        this.preview = document.getElementById('preview');
-        this.mediaRecorder = null;
-        this.recordedChunks = [];
-        this.stream = null;
-
-        // Buttons
-        this.startButton = document.getElementById('startRecord');
-        this.stopButton = document.getElementById('stopRecord');
-        this.playButton = document.getElementById('playBack');
-        this.saveButton = document.getElementById('saveVideo');
-        this.discardButton = document.getElementById('discardVideo');
-        this.toggleScriptButton = document.getElementById('toggleScript');
-
-        // Script elements
-        this.scriptContainer = document.getElementById('scriptContainer');
-        this.scriptInput = document.getElementById('scriptInput');
-        this.scriptDisplay = document.getElementById('scriptDisplay');
-        this.scrollSpeed = document.getElementById('scrollSpeed');
-        this.scrollInterval = null;
-
-        // Countdown elements
-        this.countdownElement = document.getElementById('countdown');
-        this.countdownSelect = document.getElementById('countdownTime');
-
-        //loading
-        this.loadingElement = document.getElementById('loadingOverlay');
-
-        // Audio visualization
-        this.audioWave = document.getElementById('audioWave');
-        
-        this.createAudioBars();
-
-        this.startButton.disabled = true;
-
+        return {
+            preview: document.getElementById('preview'),
+            startButton: document.getElementById('startRecord'),
+            stopButton: document.getElementById('stopRecord'),
+            playButton: document.getElementById('playBack'),
+            saveButton: document.getElementById('saveVideo'),
+            discardButton: document.getElementById('discardVideo'),
+            toggleScriptButton: document.getElementById('toggleScript'),
+            scriptContainer: document.getElementById('scriptContainer'),
+            scriptInput: document.getElementById('scriptInput'),
+            scriptDisplay: document.getElementById('scriptDisplay'),
+            scrollSpeed: document.getElementById('scrollSpeed'),
+            countdownElement: document.getElementById('countdown'),
+            countdownSelect: document.getElementById('countdownTime'),
+            loadingElement: document.getElementById('loadingOverlay'),
+            audioWave: document.getElementById('audioWave')
+        };
     }
 
     async requestMediaPermissions() {
         try {
-            this.loadingElement.style.display = 'flex'; // Changed from loadingOverlay to loadingElement
+            this.elements.loadingElement.style.display = 'flex';
             
-            // Request both video and audio permissions
-            this.stream = await navigator.mediaDevices.getUserMedia({
+            this.state.stream = await navigator.mediaDevices.getUserMedia({
                 video: true,
                 audio: true
             });
             
-            // Set the stream to video preview
-            this.preview.srcObject = this.stream;
-            await this.preview.play(); // Add this to ensure video plays
+            this.elements.preview.srcObject = this.state.stream;
+            await this.elements.preview.play();
             
-            // Enable start button once we have permissions
-            this.startButton.disabled = false;
-            this.loadingElement.style.display = 'none';
+            this.elements.startButton.disabled = false;
+            this.elements.loadingElement.style.display = 'none';
+
+            // Initialize audio context after getting permissions
+            await this.initializeAudioContext();
         } catch (err) {
-            console.error('Error accessing media devices:', err);
-            // More specific error messages
-            if (err.name === 'NotAllowedError') {
-                alert('Permission denied. Please allow access to camera and microphone in your browser settings.');
-            } else if (err.name === 'NotFoundError') {
-                alert('No camera or microphone found. Please connect a device and try again.');
-            } else {
-                alert('Error accessing camera and microphone: ' + err.message);
-            }
-            this.loadingElement.style.display = 'none';
+            this.handleMediaError(err);
         }
+    }
+
+    async initializeAudioContext() {
+        this.state.audioContext = new AudioContext();
+        this.state.analyser = this.state.audioContext.createAnalyser();
+        this.state.analyser.fftSize = 256;
+        this.createAudioBars();
     }
 
     setupEventListeners() {
-        this.startButton.addEventListener('click', async () => {
-            if (this.stream) {
-                await this.setupAudioContext();
-                this.startRecording();
-            } else {
-                // If somehow we don't have stream, try requesting permissions again
-                await this.requestMediaPermissions();
-                if (this.stream) {
-                    await this.setupAudioContext();
-                    this.startRecording();
-                }
-            }
-        });
+        this.elements.startButton.addEventListener('click', () => this.startRecording());
+        this.elements.stopButton.addEventListener('click', () => this.stopRecording());
+        this.elements.playButton.addEventListener('click', () => this.playRecording());
+        this.elements.saveButton.addEventListener('click', () => this.saveRecording());
+        this.elements.discardButton.addEventListener('click', () => this.discardRecording());
+        this.elements.toggleScriptButton.addEventListener('click', () => this.toggleScript());
+        this.elements.scriptInput.addEventListener('input', () => this.updateScriptDisplay());
+        this.elements.scrollSpeed.addEventListener('input', () => this.updateScrollSpeed());
+    }
+
+    handleMediaError(err) {
+        console.error('Error accessing media devices:', err);
+        const errorMessages = {
+            NotAllowedError: 'Permission denied. Please allow access to camera and microphone in your browser settings.',
+            NotFoundError: 'No camera or microphone found. Please connect a device and try again.',
+            default: `Error accessing camera and microphone: ${err.message}`
+        };
+        alert(errorMessages[err.name] || errorMessages.default);
+        this.elements.loadingElement.style.display = 'none';
+    }
+
+    setupAudioVisualization() {
+        if (!this.state.analyser) return;
+
+        const source = this.state.audioContext.createMediaStreamSource(this.state.stream);
+        source.connect(this.state.analyser);
         
-        this.stopButton.addEventListener('click', () => this.stopRecording());
-        this.playButton.addEventListener('click', () => this.playRecording());
-        this.saveButton.addEventListener('click', () => this.saveRecording());
-        this.discardButton.addEventListener('click', () => this.discardRecording());
-        this.toggleScriptButton.addEventListener('click', () => this.toggleScript());
-        this.scriptInput.addEventListener('input', () => this.updateScriptDisplay());
-        this.scrollSpeed.addEventListener('input', () => this.updateScrollSpeed());
-    }
-
-    async initializeMediaStream() {
-        try {
-            this.loadingOverlay.style.display = 'flex';
-            this.stream = await navigator.mediaDevices.getUserMedia({
-                video: true,
-                audio: true
-            });
-            this.preview.srcObject = this.stream;
-            await this.setupAudioContext();
-            this.loadingOverlay.style.display = 'none';
-        } catch (err) {
-            console.error('Error accessing media devices:', err);
-            alert('Unable to access camera and microphone. Please ensure you have granted the necessary permissions.');
-            this.loadingOverlay.style.display = 'none';
-            throw err;
-        }
-    }
-    async setupAudioContext() {
-        if (!this.audioContext) {
-            this.audioContext = new AudioContext();
-            
-            if (this.audioContext.state === 'suspended') {
-                await this.audioContext.resume();
-            }
-
-            this.analyser = this.audioContext.createAnalyser();
-            const source = this.audioContext.createMediaStreamSource(this.stream);
-            source.connect(this.analyser);
-            this.analyser.fftSize = 256;
-
-            this.startAudioVisualization();
-        }
-    }
-    startAudioVisualization() {
-        const bufferLength = this.analyser.frequencyBinCount;
+        const bufferLength = this.state.analyser.frequencyBinCount;
         const dataArray = new Uint8Array(bufferLength);
         
         const updateWave = () => {
-            if (!this.analyser) return; // Stop if analyser is removed
-
-            this.analyser.getByteFrequencyData(dataArray);
-            const bars = this.audioWave.children;
+            if (!this.state.isRecording && !this.state.isPlaying) return;
+            
+            this.state.analyser.getByteFrequencyData(dataArray);
+            const bars = this.elements.audioWave.children;
             
             for (let i = 0; i < bars.length; i++) {
                 const value = dataArray[i] || 0;
                 bars[i].style.height = `${value * 0.3}px`;
             }
             
-            requestAnimationFrame(updateWave);
+            if (this.state.isRecording || this.state.isPlaying) {
+                requestAnimationFrame(updateWave);
+            }
         };
         
         updateWave();
     }
 
+    createAudioBars() {
+        this.elements.audioWave.innerHTML = '';
+        for (let i = 0; i < 50; i++) {
+            const bar = document.createElement('div');
+            bar.className = 'wave-bar';
+            this.elements.audioWave.appendChild(bar);
+        }
+    }
+
     setupDragAndDrop() {
         let pos = { top: 0, left: 0, x: 0, y: 0 };
-
+        
         const mouseMoveHandler = (e) => {
             const dx = e.clientX - pos.x;
             const dy = e.clientY - pos.y;
-            this.scriptContainer.style.top = `${pos.top + dy}px`;
-            this.scriptContainer.style.left = `${pos.left + dx}px`;
+            this.elements.scriptContainer.style.top = `${pos.top + dy}px`;
+            this.elements.scriptContainer.style.left = `${pos.left + dx}px`;
         };
 
         const mouseUpHandler = () => {
@@ -170,76 +140,28 @@ class IntroductionPractice {
             document.removeEventListener('mouseup', mouseUpHandler);
         };
 
-        this.scriptContainer.addEventListener('mousedown', (e) => {
+        this.elements.scriptContainer.addEventListener('mousedown', (e) => {
             pos = {
-                left: this.scriptContainer.offsetLeft,
-                top: this.scriptContainer.offsetTop,
+                left: this.elements.scriptContainer.offsetLeft,
+                top: this.elements.scriptContainer.offsetTop,
                 x: e.clientX,
                 y: e.clientY,
             };
-
             document.addEventListener('mousemove', mouseMoveHandler);
             document.addEventListener('mouseup', mouseUpHandler);
         });
     }
 
-    async setupMediaDevices() {
-        try {
-            this.stream = await navigator.mediaDevices.getUserMedia({
-                video: true,
-                audio: true
-            });
-            this.preview.srcObject = this.stream;
-        } catch (err) {
-            console.error('Error accessing media devices:', err);
-            alert('Unable to access camera and microphone. Please ensure you have granted the necessary permissions.');
-        }
-    }
-
-    setupAudioVisualization() {
-        const audioContext = new AudioContext();
-        const analyser = audioContext.createAnalyser();
-        const source = audioContext.createMediaStreamSource(this.stream);
-        
-        source.connect(analyser);
-        analyser.fftSize = 256;
-        
-        const bufferLength = analyser.frequencyBinCount;
-        const dataArray = new Uint8Array(bufferLength);
-        
-        const updateWave = () => {
-            analyser.getByteFrequencyData(dataArray);
-            const bars = this.audioWave.children;
-            
-            for (let i = 0; i < bars.length; i++) {
-                const value = dataArray[i] || 0;
-                bars[i].style.height = `${value * 0.3}px`;
-            }
-            
-            requestAnimationFrame(updateWave);
-        };
-        
-        updateWave();
-    }
-
-    createAudioBars() {
-        for (let i = 0; i < 50; i++) {
-            const bar = document.createElement('div');
-            bar.className = 'wave-bar';
-            this.audioWave.appendChild(bar);
-        }
-    }
-
     startCountdown() {
         return new Promise((resolve) => {
-            let time = parseInt(this.countdownSelect.value);
-            this.countdownElement.style.display = 'block';
+            let time = parseInt(this.elements.countdownSelect.value);
+            this.elements.countdownElement.style.display = 'block';
             
             const countdown = setInterval(() => {
-                this.countdownElement.textContent = time;
+                this.elements.countdownElement.textContent = time;
                 if (time <= 0) {
                     clearInterval(countdown);
-                    this.countdownElement.style.display = 'none';
+                    this.elements.countdownElement.style.display = 'none';
                     resolve();
                 }
                 time--;
@@ -250,128 +172,141 @@ class IntroductionPractice {
     async startRecording() {
         await this.startCountdown();
         
-        this.mediaRecorder = new MediaRecorder(this.stream);
-        this.recordedChunks = [];
+        this.state.mediaRecorder = new MediaRecorder(this.state.stream);
+        this.state.recordedChunks = [];
+        this.state.isRecording = true;
         
-        this.mediaRecorder.ondataavailable = (e) => {
+        this.state.mediaRecorder.ondataavailable = (e) => {
             if (e.data.size > 0) {
-                this.recordedChunks.push(e.data);
+                this.state.recordedChunks.push(e.data);
             }
         };
         
-        this.mediaRecorder.start();
-        this.startButton.disabled = true;
-        this.stopButton.disabled = false;
+        this.state.mediaRecorder.start();
+        this.elements.startButton.disabled = true;
+        this.elements.stopButton.disabled = false;
+        this.setupAudioVisualization();
         this.startScriptScroll();
     }
 
     stopRecording() {
-        this.mediaRecorder.stop();
-        this.stopButton.disabled = true;
-        this.playButton.disabled = false;
-        this.saveButton.disabled = false;
-        this.discardButton.disabled = false;
+        this.state.mediaRecorder.stop();
+        this.state.isRecording = false;
+        this.elements.stopButton.disabled = true;
+        this.elements.playButton.disabled = false;
+        this.elements.saveButton.disabled = false;
+        this.elements.discardButton.disabled = false;
         this.stopScriptScroll();
     }
 
-    playRecording() {
-        const blob = new Blob(this.recordedChunks, { type: 'video/webm' });
-        this.preview.srcObject = null;
-        this.preview.src = URL.createObjectURL(blob);
-        this.preview.load();
-        this.preview.play();
-
-        this.preview.onplay= () =>{
-            this.audioContext.resume();
-        };
+    async playRecording() {
+        const blob = new Blob(this.state.recordedChunks, { type: 'video/webm' });
+        const videoUrl = URL.createObjectURL(blob);
+        
+        this.elements.preview.srcObject = null;
+        this.elements.preview.src = videoUrl;
+        
+        try {
+            await this.elements.preview.play();
+            this.state.isPlaying = true;
+            
+            // Create a new audio context for playback
+            const audioContext = new AudioContext();
+            const source = audioContext.createMediaElementSource(this.elements.preview);
+            source.connect(this.state.analyser);
+            this.state.analyser.connect(audioContext.destination);
+            
+            this.setupAudioVisualization();
+            
+            this.elements.preview.onended = () => {
+                this.state.isPlaying = false;
+                source.disconnect();
+                this.state.analyser.disconnect();
+            };
+        } catch (error) {
+            console.error('Error playing recording:', error);
+        }
     }
 
     saveRecording() {
-        const blob = new Blob(this.recordedChunks, { type: 'video/webm' });
+        const blob = new Blob(this.state.recordedChunks, { type: 'video/webm' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
         a.download = 'introduction-practice.webm';
         a.click();
+        URL.revokeObjectURL(url);
     }
 
     discardRecording() {
-        this.preview.srcObject = this.stream;
-        this.startButton.disabled = false;
-        this.playButton.disabled = true;
-        this.saveButton.disabled = true;
-        this.discardButton.disabled = true;
-        this.recordedChunks = [];
+        this.state.isPlaying = false;
+        this.elements.preview.srcObject = this.state.stream;
+        this.elements.startButton.disabled = false;
+        this.elements.playButton.disabled = true;
+        this.elements.saveButton.disabled = true;
+        this.elements.discardButton.disabled = true;
+        this.state.recordedChunks = [];
     }
 
     toggleScript() {
-        const isHidden = this.scriptContainer.style.display === 'none';
-        this.scriptContainer.style.display = isHidden ? 'block' : 'none';
-        this.toggleScriptButton.textContent = isHidden ? 'Hide Script' : 'Show Script';
+        const isHidden = this.elements.scriptContainer.style.display === 'none';
+        this.elements.scriptContainer.style.display = isHidden ? 'block' : 'none';
+        this.elements.toggleScriptButton.textContent = isHidden ? 'Hide Script' : 'Show Script';
     }
 
+    startScriptScroll() {
+        this.resetScriptScroll();
+        const speed = this.getScrollSpeed();
         
-    
-        startScriptScroll() {
-            this.resetScriptScroll();
-            const speed = this.getScrollSpeed();
-            
-            // Clear any existing interval first
-            if (this.scrollInterval) {
-                clearInterval(this.scrollInterval);
-            }
-            
-            this.scrollInterval = setInterval(() => {
-                // Check if scriptDisplay exists and has content
-                if (this.scriptDisplay && this.scriptDisplay.scrollHeight > this.scriptDisplay.clientHeight) {
-                    // Increase scroll increment for smoother scrolling
-                    this.scriptDisplay.scrollTop += 1;
-                    
-                    // Reset when reaching the bottom
-                    if (this.scriptDisplay.scrollTop >= (this.scriptDisplay.scrollHeight - this.scriptDisplay.clientHeight)) {
-                        this.resetScriptScroll();
-                    }
+        if (this.state.scrollInterval) {
+            clearInterval(this.state.scrollInterval);
+        }
+        
+        this.state.scrollInterval = setInterval(() => {
+            if (this.elements.scriptDisplay.scrollHeight > this.elements.scriptDisplay.clientHeight) {
+                this.elements.scriptDisplay.scrollTop += 1;
+                
+                if (this.elements.scriptDisplay.scrollTop >= 
+                    (this.elements.scriptDisplay.scrollHeight - this.elements.scriptDisplay.clientHeight)) {
+                    this.resetScriptScroll();
                 }
-            }, speed);
-        }
-        
-        getScrollSpeed() {
-            // Adjust speed range for smoother scrolling
-            const minSpeed = 50;  // Fastest
-            const maxSpeed = 150; // Slowest
-            const range = maxSpeed - minSpeed;
-            return maxSpeed - ((this.scrollSpeed.value / 10) * range);
-        }
-        
-        updateScriptDisplay() {
-            // Ensure content is updated and visible
-            this.scriptDisplay.textContent = this.scriptInput.value;
-            this.scriptDisplay.style.whiteSpace = 'pre-wrap'; // Preserve line breaks
-            this.resetScriptScroll();
-        }
-    
-        stopScriptScroll() {
-            if (this.scrollInterval) {
-                clearInterval(this.scrollInterval);
-                this.scrollInterval = null;
             }
-        }
-    
-        resetScriptScroll() {
-            this.scriptDisplay.scrollTop = 0;
-        }
-    
-        
-        updateScrollSpeed() {
-            if (this.scrollInterval) {
-                this.stopScriptScroll();
-                this.startScriptScroll();
-            }
+        }, speed);
+    }
+
+    getScrollSpeed() {
+        const minSpeed = 50;
+        const maxSpeed = 150;
+        const range = maxSpeed - minSpeed;
+        return maxSpeed - ((this.elements.scrollSpeed.value / 10) * range);
+    }
+
+    updateScriptDisplay() {
+        this.elements.scriptDisplay.textContent = this.elements.scriptInput.value;
+        this.elements.scriptDisplay.style.whiteSpace = 'pre-wrap';
+        this.resetScriptScroll();
+    }
+
+    stopScriptScroll() {
+        if (this.state.scrollInterval) {
+            clearInterval(this.state.scrollInterval);
+            this.state.scrollInterval = null;
         }
     }
 
-    
-    // Initialize the application
-    document.addEventListener('DOMContentLoaded', () => {
-        new IntroductionPractice();
-    });
+    resetScriptScroll() {
+        this.elements.scriptDisplay.scrollTop = 0;
+    }
+
+    updateScrollSpeed() {
+        if (this.state.scrollInterval) {
+            this.stopScriptScroll();
+            this.startScriptScroll();
+        }
+    }
+}
+
+// Initialize the application
+document.addEventListener('DOMContentLoaded', () => {
+    new IntroductionPractice();
+});

@@ -6,7 +6,6 @@ class IntroductionPractice {
         this.audioContext = null;
         this.analyser = null;
         this.requestMediaPermissions();
-        
     }
 
     initializeElements() {
@@ -281,6 +280,10 @@ class IntroductionPractice {
         this.preview.src = URL.createObjectURL(blob);
         this.preview.load();
         this.preview.play();
+
+        this.preview.onplay= () =>{
+            this.audioContext.resume();
+        };
     }
 
     saveRecording() {

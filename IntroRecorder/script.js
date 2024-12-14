@@ -9,7 +9,7 @@ class IntroductionPractice {
             analyser: null,
             mediaRecorder: null,
             scrollInterval: null,
-            recordingStartTime:null
+            recordingStartTime:null,
             deviceStatus:{
                 hasCamera:false,
                 hasMicrophone: false,

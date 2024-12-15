@@ -106,32 +106,20 @@
         "@context": "https://schema.org",
         "@type": "ItemList",
         "itemListElement": universities.map((uni, index) => ({
-            "@type": "Course",
+            "@type": "ListItem",
             "position": index + 1,
-            "name": `Bachelor of Computer Applications - ${uni.name}`,
-            "description": `BCA program syllabus from ${uni.name}`,
-            "provider": {
-                "@type": "CollegeOrUniversity",
-                "name": uni.name,
-                "url": uni.url // Assuming you have a URL for the university
-            },
-            "offers": {
-                "@type": "Offer",
-                "url": uni.links[0]?.url || "", // Use the first syllabus link or fallback to empty
-                "availability": "https://schema.org/InStock"
-            },
-            "hasCourseInstance": uni.links.map(link => ({
-                "@type": "CourseInstance",
-                "name": link.title,
-                "url": link.url,
-                "instructor": {
-                    "@type": "Person",
-                    "name": "University Faculty" // Update with real instructor info if available
+            "item": {
+                "@type": "CreativeWork",
+                "name": `Bachelor of Computer Applications - ${uni.name}`,
+                "description": `Links to the BCA program syllabus from ${uni.name}`,
+                "url": uni.links[0]?.url || "", // Assuming the first link represents the syllabus
+                "provider": {
+                    "@type": "CollegeOrUniversity",
+                    "name": uni.name
                 }
-            }))
+            }
         }))
     };
-
     document.getElementById('schemaData').textContent = JSON.stringify(schemaData, null, 2);
 }
 

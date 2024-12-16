@@ -1,127 +1,112 @@
-// loadingIndicator.js
-
-export class LoadingIndicator {
+// assets/js/utils/loadingScreen.js
+export class LoadingScreen {
     constructor() {
-        this.loadingIndicator = null;
-        this.observer = null;
+        this.overlay = null;
+        this.progress = 0;
+        this.loadingTexts = [
+            "Preparing your resources...",
+            "Loading content...",
+            "Almost there...",
+            "Setting things up...",
+            "Just a moment..."
+        ];
+        this.init();
     }
 
-    createLoadingIndicator(container) {
-        this.loadingIndicator = document.createElement('div');
-        this.loadingIndicator.className = 'loading-indicator hidden';
-        this.loadingIndicator.innerHTML = `
-            <div class="loading-skeleton">
-                <div class="skeleton-card">
-                    <div class="skeleton-image"></div>
-                    <div class="skeleton-content">
-                        <div class="skeleton-title"></div>
-                        <div class="skeleton-tags">
-                            <div class="skeleton-tag"></div>
-                            <div class="skeleton-tag"></div>
-                        </div>
-                        <div class="skeleton-rating"></div>
-                        <div class="skeleton-actions"></div>
-                    </div>
+    init() {
+        // Create overlay container
+        this.overlay = document.createElement('div');
+        this.overlay.className = 'loading-screen-overlay';
+        
+        // Create loading content
+        const content = `
+            <div class="loading-content">
+                <div class="loading-spinner"></div>
+                <div class="loading-progress-bar">
+                    <div class="progress-fill"></div>
                 </div>
-                <div class="skeleton-card">
-                    <div class="skeleton-image"></div>
-                    <div class="skeleton-content">
-                        <div class="skeleton-title"></div>
-                        <div class="skeleton-tags">
-                            <div class="skeleton-tag"></div>
-                            <div class="skeleton-tag"></div>
-                        </div>
-                        <div class="skeleton-rating"></div>
-                        <div class="skeleton-actions"></div>
-                    </div>
-                </div>
+                <div class="loading-text">Loading resources...</div>
+                <div class="loading-tips">Did you know? You can filter resources by rating!</div>
             </div>
-            <div class="loading-spinner">Loading more content...</div>
         `;
         
-        container.appendChild(this.loadingIndicator);
+        this.overlay.innerHTML = content;
+        document.body.appendChild(this.overlay);
+        
+        // Add styles
         this.addStyles();
     }
 
     addStyles() {
         const styles = `
-            .loading-skeleton {
-                display: grid;
-                gap: 1rem;
-                padding: 1rem;
-            }
-
-            .skeleton-card {
+            .loading-screen-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(15, 23, 42, 0.98);
                 display: flex;
-                gap: 1rem;
-                background: #fff;
-                padding: 1rem;
-                border-radius: 8px;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                justify-content: center;
+                align-items: center;
+                z-index: 9999;
+                opacity: 0;
+                transition: opacity 0.3s ease;
             }
 
-            .skeleton-image {
-                width: 120px;
-                height: 120px;
-                background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-                background-size: 200% 100%;
-                animation: shimmer 1.5s infinite;
-                border-radius: 4px;
+            .loading-content {
+                text-align: center;
+                color: white;
+                padding: 2rem;
             }
 
-            .skeleton-content {
-                flex: 1;
-                display: flex;
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-
-            .skeleton-title {
-                height: 24px;
-                background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-                background-size: 200% 100%;
-                animation: shimmer 1.5s infinite;
-                border-radius: 4px;
-            }
-
-            .skeleton-tags {
-                display: flex;
-                gap: 0.5rem;
-            }
-
-            .skeleton-tag {
+            .loading-spinner {
                 width: 60px;
-                height: 20px;
-                background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-                background-size: 200% 100%;
-                animation: shimmer 1.5s infinite;
+                height: 60px;
+                border: 5px solid #ffffff33;
+                border-top: 5px solid #fff;
+                border-radius: 50%;
+                margin: 0 auto 2rem;
+                animation: spin 1s linear infinite;
+            }
+
+            .loading-progress-bar {
+                width: 300px;
+                height: 4px;
+                background: #ffffff33;
                 border-radius: 4px;
+                margin: 1rem auto;
+                overflow: hidden;
             }
 
-            .skeleton-rating {
-                height: 20px;
-                width: 120px;
-                background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-                background-size: 200% 100%;
-                animation: shimmer 1.5s infinite;
+            .progress-fill {
+                width: 0%;
+                height: 100%;
+                background: #fff;
                 border-radius: 4px;
+                transition: width 0.3s ease;
             }
 
-            .skeleton-actions {
-                height: 36px;
-                background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-                background-size: 200% 100%;
-                animation: shimmer 1.5s infinite;
-                border-radius: 4px;
+            .loading-text {
+                font-size: 1.25rem;
+                margin-bottom: 1rem;
+                min-height: 2rem;
             }
 
-            @keyframes shimmer {
-                0% { background-position: 200% 0; }
-                100% { background-position: -200% 0; }
+            .loading-tips {
+                font-size: 0.875rem;
+                opacity: 0.7;
+                max-width: 300px;
+                margin: 0 auto;
             }
 
-            .loading-indicator.hidden {
-                display: none;
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+
+            .fade-out {
+                opacity: 0;
             }
         `;
 
@@ -130,30 +115,43 @@ export class LoadingIndicator {
         document.head.appendChild(styleSheet);
     }
 
-    setupInfiniteScroll(callback) {
-        this.observer = new IntersectionObserver(async (entries) => {
-            if (entries[0].isIntersecting) {
-                this.show();
-                await callback();
-                this.hide();
-            }
-        }, { threshold: 0.5 });
-
-        this.observer.observe(this.loadingIndicator);
-    }
-
     show() {
-        this.loadingIndicator?.classList.remove('hidden');
+        this.overlay.style.opacity = '1';
+        this.startLoadingAnimation();
     }
 
     hide() {
-        this.loadingIndicator?.classList.add('hidden');
+        this.overlay.classList.add('fade-out');
+        setTimeout(() => {
+            this.overlay.remove();
+        }, 300);
     }
 
-    destroy() {
-        if (this.observer) {
-            this.observer.disconnect();
-        }
-        this.loadingIndicator?.remove();
+    updateProgress(progress) {
+        this.progress = Math.min(Math.max(progress, 0), 100);
+        const progressBar = this.overlay.querySelector('.progress-fill');
+        progressBar.style.width = `${this.progress}%`;
+        
+        // Update loading text based on progress
+        const loadingText = this.overlay.querySelector('.loading-text');
+        const textIndex = Math.floor((this.progress / 100) * this.loadingTexts.length);
+        loadingText.textContent = this.loadingTexts[Math.min(textIndex, this.loadingTexts.length - 1)];
+    }
+
+    startLoadingAnimation() {
+        let progress = 0;
+        const animate = () => {
+            if (progress < 90) {
+                progress += Math.random() * 15;
+                this.updateProgress(progress);
+                this.animationFrame = requestAnimationFrame(animate);
+            }
+        };
+        animate();
+    }
+
+    completeLoading() {
+        this.updateProgress(100);
+        setTimeout(() => this.hide(), 500);
     }
 }

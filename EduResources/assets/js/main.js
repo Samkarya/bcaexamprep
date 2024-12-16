@@ -126,17 +126,14 @@ function applyFilters() {
     // Update filtered content count
     updateContentCount(filteredContent.length);
 }
-function setupLoadingIndicator() {
-    
-        const status = firebaseData.getLoadingStatus();
-        
-        if (status.hasMoreData && !status.isLoading) {
-            
-            await loadMoreContent(); 
-        }
-    });
+async function setupLoadingIndicator() {
+    const status = firebaseData.getLoadingStatus();
+
+    if (status.hasMoreData && !status.isLoading) {
+        await loadMoreContent();
+    }
 }
-   
+
 async function loadMoreContent() {
     try {
         const newContent = await firebaseData.loadMoreData();

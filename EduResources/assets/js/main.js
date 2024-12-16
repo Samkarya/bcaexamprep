@@ -10,7 +10,7 @@ import {showToast } from "https://samkarya.github.io/bcaexamprep/firebase/common
 // Initialize components when DOM is loaded
 document.addEventListener('DOMContentLoaded', async () => {
     try {
-    
+    setupLoadingIndicator();
         // Load initial data from Firebase
     await firebaseData.loadInitialData();
     // Initialize content cards
@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Initialize filters
     initializeFilters();
-    setupLoadingIndicator();
+    
     Rating.addStyles();
     const rating = new Rating();
         

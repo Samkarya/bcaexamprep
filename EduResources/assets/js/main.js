@@ -5,7 +5,7 @@ import Search from 'https://samkarya.github.io/bcaexamprep/EduResources/assets/j
 import Rating from 'https://samkarya.github.io/bcaexamprep/EduResources/assets/js/components/rating.js';
 import Filter from 'https://samkarya.github.io/bcaexamprep/EduResources/assets/js/components/filter.js';
 import ContentCard from 'https://samkarya.github.io/bcaexamprep/EduResources/assets/js/components/ContentCard.js';
-
+import { LoadingIndicator } from 'https://samkarya.github.io/bcaexamprep/EduResources/assets/js/utils/loadingIndicator.js';
 import {showToast } from "https://samkarya.github.io/bcaexamprep/firebase/common-utils.js";
 // Initialize components when DOM is loaded
 document.addEventListener('DOMContentLoaded', async () => {
@@ -35,24 +35,29 @@ document.addEventListener('DOMContentLoaded', async () => {
         showToast('Error loading content. Please try again later.', 'error');
     }
 });
+
+
 async function loadInitialContent() {
  // Show loading states
     const trendingContent = document.getElementById('trendingContent');
     const recentContent = document.getElementById('recentContent');
     
-    trendingContent.innerHTML = '<div class="loading-spinner">Loading trending content...</div>';
-    recentContent.innerHTML = '<div class="loading-spinner">Loading recent content...</div>';
+    // Create loading indicators for both sections
+    const trendingLoader = new LoadingIndicator();
+    const recentLoader = new LoadingIndicator();
+    
+    trendingLoader.createLoadingIndicator(trendingContent);
+    recentLoader.createLoadingIndicator(recentContent);
+    
+    trendingLoader.show();
+    recentLoader.show();
     
     try {
         // Load trending content
        const trendingItems = firebaseData.getTrendingContent();
-trendingContent.innerHTML = trendingItems
-    .map(content => {
-        //console.log('Processing content:', content); // Log each content item
-        return new ContentCard(content).render();
-    })
-    .join('');
-
+        trendingContent.innerHTML = trendingItems
+            .map(content => new ContentCard(content).render())
+            .join('');
         
         // Load recent content
         const recentItems = firebaseData.getRecentContent();
@@ -67,6 +72,9 @@ trendingContent.innerHTML = trendingItems
     } catch (error) {
         console.error('Error loading initial content:', error);
         showToast('Error loading content. Please try again later.', 'error');
+    } finally {
+        trendingLoader.destroy();
+        recentLoader.destroy();
     }
 }
 
@@ -118,26 +126,22 @@ function applyFilters() {
     updateContentCount(filteredContent.length);
 }
 function setupLoadingIndicator() {
-    // Add loading indicator to bottom of content
     const contentContainer = document.querySelector('.content-section');
-    const loadingIndicator = document.createElement('div');
-    loadingIndicator.className = 'loading-indicator hidden';
-    loadingIndicator.innerHTML = '<div class="loading-spinner">Loading more content...</div>';
-    contentContainer.appendChild(loadingIndicator);
+    const loadingIndicator = new LoadingIndicator();
     
-    // Setup intersection observer for infinite scroll
-    const observer = new IntersectionObserver(async (entries) => {
+    // Create and add the loading indicator to the container
+    loadingIndicator.createLoadingIndicator(contentContainer);
+    
+    // Setup infinite scroll with callback
+    loadingIndicator.setupInfiniteScroll(async () => {
         const status = firebaseData.getLoadingStatus();
         
-        if (entries[0].isIntersecting && status.hasMoreData && !status.isLoading) {
-            loadingIndicator.classList.remove('hidden');
+        if (status.hasMoreData && !status.isLoading) {
             await loadMoreContent();
-            loadingIndicator.classList.add('hidden');
         }
-    }, { threshold: 0.5 });
-    
-    observer.observe(loadingIndicator);
+    });
 }
+   
 async function loadMoreContent() {
     try {
         const newContent = await firebaseData.loadMoreData();

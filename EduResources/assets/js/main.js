@@ -8,9 +8,17 @@ import ContentCard from 'https://samkarya.github.io/bcaexamprep/EduResources/ass
 import { LoadingIndicator } from 'https://samkarya.github.io/bcaexamprep/EduResources/assets/js/utils/loadingIndicator.js';
 import {showToast } from "https://samkarya.github.io/bcaexamprep/firebase/common-utils.js";
 // Initialize components when DOM is loaded
+
+let globalLoadingIndicator;
+
 document.addEventListener('DOMContentLoaded', async () => {
     try {
-    setupLoadingIndicator();
+    // Initialize global loading indicator first
+        globalLoadingIndicator = new LoadingIndicator();
+        setupLoadingIndicator();
+
+        // Show loading indicator before loading initial data
+        globalLoadingIndicator.show();
         // Load initial data from Firebase
     await firebaseData.loadInitialData();
     // Initialize content cards
@@ -33,6 +41,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 } catch (error) {
         console.error('Error initializing application:', error);
         showToast('Error loading content. Please try again later.', 'error');
+    } finally {
+        // Hide global loading indicator after everything is loaded
+        if (globalLoadingIndicator) {
+            globalLoadingIndicator.destroy();
+        }
     }
 });
 
@@ -127,17 +140,17 @@ function applyFilters() {
 }
 function setupLoadingIndicator() {
     const contentContainer = document.querySelector('.content-section');
-    const loadingIndicator = new LoadingIndicator();
+     // Create and add the loading indicator to the container
+    globalLoadingIndicator.createLoadingIndicator(contentContainer);
     
-    // Create and add the loading indicator to the container
-    loadingIndicator.createLoadingIndicator(contentContainer);
-    
-    // Setup infinite scroll with callback
-    loadingIndicator.setupInfiniteScroll(async () => {
+    // Setup infinite scroll with loading indicator
+    globalLoadingIndicator.setupInfiniteScroll(async () => {
         const status = firebaseData.getLoadingStatus();
         
         if (status.hasMoreData && !status.isLoading) {
+            globalLoadingIndicator.show();
             await loadMoreContent();
+            globalLoadingIndicator.hide();
         }
     });
 }

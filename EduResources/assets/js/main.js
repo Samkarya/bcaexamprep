@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Initialize and show loading screen
         loadingScreen = new LoadingScreen();
         loadingScreen.show();
-        setupLoadingIndicator();
+        
 
         // Load initial data from Firebase
     await firebaseData.loadInitialData();
@@ -37,6 +37,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     Rating.addStyles();
     const rating = new Rating();
          // Complete loading and hide screen
+    setupLoadingIndicator();
     loadingScreen.completeLoading();
         
 } catch (error) {

@@ -5,20 +5,19 @@ import Search from 'https://samkarya.github.io/bcaexamprep/EduResources/assets/j
 import Rating from 'https://samkarya.github.io/bcaexamprep/EduResources/assets/js/components/rating.js';
 import Filter from 'https://samkarya.github.io/bcaexamprep/EduResources/assets/js/components/filter.js';
 import ContentCard from 'https://samkarya.github.io/bcaexamprep/EduResources/assets/js/components/ContentCard.js';
-import { LoadingIndicator } from 'https://samkarya.github.io/bcaexamprep/EduResources/assets/js/utils/loadingIndicator.js';
+import { LoadingScreen } from 'https://samkarya.github.io/bcaexamprep/EduResources/assets/js/utils/loadingIndicator.js';
 import {showToast } from "https://samkarya.github.io/bcaexamprep/firebase/common-utils.js";
 // Initialize components when DOM is loaded
 
-let globalLoadingIndicator;
+let loadingScreen;
 
 document.addEventListener('DOMContentLoaded', async () => {
     try {
-    // Initialize global loading indicator first
-        globalLoadingIndicator = new LoadingIndicator();
+    // Initialize and show loading screen
+        loadingScreen = new LoadingScreen();
+        loadingScreen.show();
         setupLoadingIndicator();
 
-        // Show loading indicator before loading initial data
-        globalLoadingIndicator.show();
         // Load initial data from Firebase
     await firebaseData.loadInitialData();
     // Initialize content cards
@@ -37,15 +36,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     Rating.addStyles();
     const rating = new Rating();
+         // Complete loading and hide screen
+    loadingScreen.completeLoading();
         
 } catch (error) {
         console.error('Error initializing application:', error);
         showToast('Error loading content. Please try again later.', 'error');
-    } finally {
-        // Hide global loading indicator after everything is loaded
-        if (globalLoadingIndicator) {
-            globalLoadingIndicator.destroy();
-        }
+        loadingScreen.hide();
     }
 });
 
@@ -55,28 +52,22 @@ async function loadInitialContent() {
     const trendingContent = document.getElementById('trendingContent');
     const recentContent = document.getElementById('recentContent');
     
-    /* Create loading indicators for both sections
-    const trendingLoader = new LoadingIndicator();
-    const recentLoader = new LoadingIndicator();
-    
-    trendingLoader.createLoadingIndicator(trendingContent);
-    recentLoader.createLoadingIndicator(recentContent);
-    
-    trendingLoader.show();
-    recentLoader.show();*/
-    
     try {
         // Load trending content
        const trendingItems = firebaseData.getTrendingContent();
         trendingContent.innerHTML = trendingItems
             .map(content => new ContentCard(content).render())
             .join('');
-        
+        // Update loading progress
+        loadingScreen.updateProgress(60);
         // Load recent content
         const recentItems = firebaseData.getRecentContent();
         recentContent.innerHTML = recentItems
             .map(content => new ContentCard(content).render())
             .join('');
+        // Update loading progress
+        loadingScreen.updateProgress(80);
+        
         const jsonLDGenerator = new JSONLDGenerator();
         jsonLDGenerator.injectJSONLD(trendingItems);
         // Update content count
@@ -85,10 +76,7 @@ async function loadInitialContent() {
     } catch (error) {
         console.error('Error loading initial content:', error);
         showToast('Error loading content. Please try again later.', 'error');
-    } finally {
-        //trendingLoader.destroy();
-        //recentLoader.destroy();
-    }
+    } 
 }
 
 function initializeFilters() {
@@ -139,18 +127,12 @@ function applyFilters() {
     updateContentCount(filteredContent.length);
 }
 function setupLoadingIndicator() {
-    const contentContainer = document.querySelector('.content-section');
-     // Create and add the loading indicator to the container
-    globalLoadingIndicator.createLoadingIndicator(contentContainer);
     
-    // Setup infinite scroll with loading indicator
-    globalLoadingIndicator.setupInfiniteScroll(async () => {
         const status = firebaseData.getLoadingStatus();
         
         if (status.hasMoreData && !status.isLoading) {
-            globalLoadingIndicator.show();
-            await loadMoreContent();
-            globalLoadingIndicator.hide();
+            
+            await loadMoreContent(); 
         }
     });
 }

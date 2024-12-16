@@ -55,7 +55,7 @@ async function loadInitialContent() {
     const trendingContent = document.getElementById('trendingContent');
     const recentContent = document.getElementById('recentContent');
     
-    // Create loading indicators for both sections
+    /* Create loading indicators for both sections
     const trendingLoader = new LoadingIndicator();
     const recentLoader = new LoadingIndicator();
     
@@ -63,7 +63,7 @@ async function loadInitialContent() {
     recentLoader.createLoadingIndicator(recentContent);
     
     trendingLoader.show();
-    recentLoader.show();
+    recentLoader.show();*/
     
     try {
         // Load trending content
@@ -86,8 +86,8 @@ async function loadInitialContent() {
         console.error('Error loading initial content:', error);
         showToast('Error loading content. Please try again later.', 'error');
     } finally {
-        trendingLoader.destroy();
-        recentLoader.destroy();
+        //trendingLoader.destroy();
+        //recentLoader.destroy();
     }
 }
 

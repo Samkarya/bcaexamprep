@@ -66,5 +66,13 @@
       { "title": "BCA Specialization - Cyber Security", "url": "https://jaipur.manipal.edu/fos/img/program-format/Bachelor%20of%20Computer%20Applications%20(BCA)%20-%20Cyber%20Security%20Structure%20-2023-2024.pdf" },
       { "title": "BCA Online-Program", "url": "https://www.onlinemanipal.com/wp-content/uploads/2021/06/BCA-Online-Program-details-with-Syllabus.pdf" }
     ]
+  },
+  {
+    "id": 10,
+    "name": "MAULANA ABUL KALAM AZAD UNIVERSITY OF TECHNOLOGY, WEST BENGAL",
+    "links": [
+      { "title": "BCA Course Structure", "url": "https://makautexam.net/aicte_details/CourseStructure4/BCA23.pdf" },
+      { "title": "BCA Syllabus", "url": "https://makautexam.net/aicte_details/CourseStructure4/CURRICULUM_BCA.pdf" }
+    ]
   }
 ]

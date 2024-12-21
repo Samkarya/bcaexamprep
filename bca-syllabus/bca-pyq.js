@@ -1,11 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
     const fetchUniversities = async () => {
         try {
-            const response = await fetch('https://samkarya.github.io/bcaexamprep/bca-syllabus/pyq-links.json'); // Updated path for PYQs JSON file
+            console.log('Fetching PYQ data...');
+            const response = await fetch('https://samkarya.github.io/bcaexamprep/bca-pyqs/pyq-link.json'); // Updated path for PYQs JSON file
             if (!response.ok) {
+                console.error('Failed to fetch PYQ data:', response.status);
                 throw new Error('Failed to fetch PYQ data');
             }
             const data = await response.json();
+            console.log('PYQ data fetched successfully:', data);
             return data;
         } catch (error) {
             console.error('Error:', error);
@@ -18,6 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let filteredUniversities = [];
 
     fetchUniversities().then(universities => {
+        console.log('Universities loaded:', universities);
         filteredUniversities = [...universities];
 
         const universityCards = document.getElementById('universityCards');
@@ -30,6 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const requestButton = document.getElementById('requestButton');
 
         function createUniversityCard(university) {
+            console.log('Creating card for university:', university.name);
             const article = document.createElement('article');
             article.className = 'bg-card rounded-lg shadow-md overflow-hidden';
             article.innerHTML = `
@@ -54,6 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         function renderUniversities() {
+            console.log('Rendering universities for page:', currentPage);
             const start = (currentPage - 1) * itemsPerPage;
             const end = start + itemsPerPage;
             const paginatedUniversities = filteredUniversities.slice(start, end);
@@ -68,6 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         function updatePagination() {
+            console.log('Updating pagination...');
             const totalPages = Math.ceil(filteredUniversities.length / itemsPerPage);
             pagination.classList.toggle('hidden', totalPages <= 1);
 
@@ -88,11 +95,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         function updateNoResultsMessage() {
+            console.log('Checking for no results...');
             noResults.classList.toggle('hidden', filteredUniversities.length > 0);
         }
 
         function filterUniversities() {
             const searchTerm = searchInput.value.toLowerCase();
+            console.log('Filtering universities with term:', searchTerm);
             filteredUniversities = universities.filter(uni => 
                 uni.name.toLowerCase().includes(searchTerm)
             );
@@ -101,6 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         function updateSchema() {
+            console.log('Updating schema.org data...');
             const schemaData = {
                 "@context": "https://schema.org",
                 "@type": "ItemList",

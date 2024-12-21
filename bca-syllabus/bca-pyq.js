@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const fetchUniversities = async () => {
         try {
-            const response = await fetch('https://samkarya.github.io/bcaexamprep/bca-pyqs/pyq-links.json'); // Updated path for PYQs JSON file
+            const response = await fetch('https://samkarya.github.io/bcaexamprep/bca-syllabus/pyq-links.json'); // Updated path for PYQs JSON file
             if (!response.ok) {
                 throw new Error('Failed to fetch PYQ data');
             }

@@ -316,6 +316,7 @@ footer .footer-middle {
 
 footer .quick-links {
   display: flex;
+  flex-wrap: wrap;
   gap: var(--space-4);
 }
 

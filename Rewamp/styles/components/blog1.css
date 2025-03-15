@@ -168,7 +168,7 @@ font-family: "Font Awesome 6 Free";
 /* Blog Pagination Styling */
 .blog-pager {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
   align-items: center;
   margin-top: var(--space-8);
   padding: var(--space-4) 0;

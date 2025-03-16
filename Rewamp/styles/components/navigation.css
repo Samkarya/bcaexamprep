@@ -165,7 +165,7 @@ input:checked + .slider:before {
 }
 
 .search-section.active {
-  max-height: 100px;
+  max-height: fit-content;
   padding: var(--space-4);
   border-top: 1px solid var(--color-border);
 }

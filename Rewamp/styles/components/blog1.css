@@ -1,3 +1,6 @@
+.blog-feed{
+  display: none;
+}
 /* Blog Post Cards Styling */
 .blog-posts{
 	margin-top: 10px;

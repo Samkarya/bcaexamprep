@@ -14,7 +14,7 @@ import {
   serverTimestamp 
 } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
 
-import { auth, db } from 'https://samkarya.github.io/bcaexamprep/Rewamp/scripts/firebase.js';
+import { auth, db } from 'https://samkarya.github.io/bcaexamprep/Rewamp/scripts/firebase/firebase.js';
 
 // Authentication functions
 export const loginUser = async (email, password) => {

@@ -18,7 +18,6 @@ document.addEventListener('DOMContentLoaded', () => {
   onAuthStateChanged(auth, user => {
     if (user) {
       // User is signed in
-      console.log("User signed in:", user.uid);
       initializeAccountDashboard(user);
     } else {
       // User is not signed in, redirect to login
@@ -81,7 +80,6 @@ async function loadUserData(user) {
       }
     }
   } catch (error) {
-    console.error("Error loading user data:", error);
     showNotification("Error loading user data", "error");
   }
 }
@@ -134,7 +132,6 @@ function setupProfileManagement(user) {
         window.location.href = 'login.html';
       })
       .catch(error => {
-        console.error("Sign out error:", error);
         showNotification("Error signing out. Please try again.", "error");
       });
   });
@@ -153,7 +150,6 @@ function setupProfileManagement(user) {
         }, 5000);
       }
     } catch (error) {
-      console.error("Error sending verification email:", error);
       showNotification("Error sending verification email", "error");
     }
   });
@@ -188,7 +184,6 @@ function setupProfileManagement(user) {
         editProfileForm.style.display = 'none';
       }
     } catch (error) {
-      console.error("Error updating profile:", error);
       showNotification("Error updating profile", "error");
     }
   });
@@ -326,7 +321,6 @@ function setupPreferences(user) {
         showNotification("Settings saved successfully!", "success");
       }
     } catch (error) {
-      console.error("Error saving settings:", error);
       showNotification("Error saving settings", "error");
     }
   });

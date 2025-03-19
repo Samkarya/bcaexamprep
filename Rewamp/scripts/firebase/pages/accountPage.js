@@ -50,7 +50,6 @@ export const getUserData = async (userId) => {
       return { success: true, data: defaultUserData };
     }
   } catch (error) {
-    console.error("Error getting user data:", error);
     return { success: false, error: error.message };
   }
 };
@@ -73,7 +72,6 @@ export const updateUserProfile = async (userId, profileData) => {
     
     return { success: true };
   } catch (error) {
-    console.error("Error updating profile:", error);
     return { success: false, error: error.message };
   }
 };
@@ -90,7 +88,6 @@ export const sendVerificationEmail = async () => {
     await sendEmailVerification(auth.currentUser);
     return { success: true };
   } catch (error) {
-    console.error("Error sending verification email:", error);
     return { success: false, error: error.message };
   }
 };
@@ -115,7 +112,6 @@ export const changeUserPassword = async (currentPassword, newPassword) => {
     
     return { success: true };
   } catch (error) {
-    console.error("Error updating password:", error);
     
     if (error.code === 'auth/wrong-password') {
       return { success: false, error: "Current password is incorrect" };
@@ -140,7 +136,6 @@ export const updateUserPreferences = async (userId, preferences) => {
     
     return { success: true };
   } catch (error) {
-    console.error("Error updating preferences:", error);
     return { success: false, error: error.message };
   }
 };
@@ -177,9 +172,8 @@ export const deleteUserAccount = async (password) => {
     // Delete user progress data
     try {
       await deleteDoc(doc(db, 'userProgress', uid));
-      console.log("User progress deleted");
     } catch (err) {
-      console.warn("No user progress to delete or error:", err);
+      ;
     }
     
     // Delete quiz attempts by this user
@@ -205,9 +199,8 @@ export const deleteUserAccount = async (password) => {
     if (username) {
       try {
         await deleteDoc(doc(db, 'usernames', username));
-        console.log("Username entry deleted");
       } catch (err) {
-        console.warn("Error deleting username entry:", err);
+        ;
       }
     }
     
@@ -216,7 +209,6 @@ export const deleteUserAccount = async (password) => {
     
     return { success: true, message: "Account successfully deleted" };
   } catch (error) {
-    console.error("Error deleting account:", error);
     
     if (error.code === 'auth/wrong-password') {
       return { success: false, error: "Password is incorrect" };

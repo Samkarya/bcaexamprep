@@ -1,0 +1,101 @@
+/* Popular Posts Styling */
+.popular-posts {
+  background-color: var(--color-background-card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  margin-top: var(--space-2);
+  margin: var(--space-6);
+}
+
+.popular-posts h2 {
+  font-size: var(--font-size-xl);
+  padding: var(--space-4);
+  margin-bottom: 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.popular-posts ul {
+  padding: 0;
+}
+
+.popular-posts li {
+  padding: var(--space-4);
+  border-bottom: 1px solid var(--color-border-light);
+  transition: background-color var(--transition-fast);
+}
+
+.popular-posts li:last-child {
+  border-bottom: none;
+}
+
+.popular-posts li:hover {
+  background-color: var(--color-background-alt);
+}
+
+.popular-posts .item-title {
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-md);
+  margin-bottom: var(--space-2);
+}
+
+.popular-posts .item-title a {
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.popular-posts .item-title a:hover {
+  color: var(--color-primary);
+}
+
+.popular-posts .item-snippet {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-snug);
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.popular-posts .item-thumbnail {
+  float: left;
+  margin-right: var(--space-3);
+  margin-bottom: var(--space-2);
+}
+
+.popular-posts .item-thumbnail img {
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+}
+
+.popular-posts .item-content {
+  overflow: hidden;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .popular-posts .item-thumbnail img {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .popular-posts .item-title {
+    font-size: var(--font-size-sm);
+  }
+  
+  .popular-posts .item-snippet {
+    font-size: var(--font-size-xs);
+  }
+}
+
+/* Dark mode support */
+.dark-mode .popular-posts {
+  background-color: var(--color-background-card);
+}
+
+.dark-mode .popular-posts li:hover {
+  background-color: var(--color-background-alt);
+}

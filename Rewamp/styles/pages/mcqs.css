@@ -1,0 +1,302 @@
+/* ========== MCQs INDEX PAGE STYLES ========== */
+.post-title.entry-title{
+  display:none;
+  }
+.mcqs-index-container {
+  padding: var(--space-6) var(--space-4);
+  width: 100%;
+}
+
+.mcqs-header {
+  margin-bottom: var(--space-8);
+  text-align: center;
+}
+
+.mcqs-title {
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text);
+  margin-bottom: var(--space-2);
+}
+
+.mcqs-subtitle {
+  font-size: var(--font-size-lg);
+  color: var(--color-text-secondary);
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* Search bar styling */
+.mcqs-search-wrapper {
+  max-width: 700px;
+  margin: 0 auto var(--space-8);
+}
+
+.mcqs-search-container {
+  display: flex;
+  position: relative;
+  width: 100%;
+}
+
+#mcqs-search-input {
+  width: 100%;
+  padding: var(--space-4);
+  padding-right: var(--space-12);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  font-size: var(--font-size-md);
+  transition: all var(--transition-fast);
+  background-color: var(--color-background);
+  color: var(--color-text);
+}
+
+#mcqs-search-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
+}
+
+.mcqs-search-button {
+  position: absolute;
+  right: var(--space-3);
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-2);
+}
+
+.mcqs-search-icon {
+  font-size: var(--font-size-xl);
+  color: var(--color-primary);
+}
+
+/* Filters styling */
+.mcqs-filters {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-6);
+  padding: var(--space-3) var(--space-4);
+  background-color: var(--color-background-alt);
+  border-radius: var(--radius-lg);
+}
+
+.mcqs-filter-by,
+.mcqs-sort-by {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: var(--space-1) 0;
+}
+
+.mcqs-filter-label,
+.mcqs-sort-label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+}
+
+.mcqs-filter-select,
+.mcqs-sort-select {
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-background);
+  color: var(--color-text);
+  font-size: var(--font-size-sm);
+  transition: all var(--transition-fast);
+  cursor: pointer;
+}
+
+.mcqs-filter-select:focus,
+.mcqs-sort-select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.1);
+}
+
+/* Results container styling */
+.mcqs-results-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+.mcqs-no-results {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: var(--space-8);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-lg);
+}
+
+/* Card styling */
+.mcqs-card {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-background-card);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.mcqs-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+.mcqs-card-content {
+  flex: 1;
+  padding: var(--space-4);
+}
+
+.mcqs-card-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  margin-bottom: var(--space-2);
+  color: var(--color-text);
+}
+
+.mcqs-card-description {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-3);
+  line-height: var(--line-height-relaxed);
+}
+
+.mcqs-card-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+}
+
+.mcqs-card-subject {
+  font-size: var(--font-size-xs);
+  color: var(--color-primary);
+  font-weight: var(--font-weight-medium);
+  padding: var(--space-1) var(--space-2);
+  background-color: rgba(67, 97, 238, 0.1);
+  border-radius: var(--radius-full);
+}
+
+.mcqs-card-count {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+}
+
+.mcqs-card-link {
+  display: block;
+  text-align: center;
+  padding: var(--space-3);
+  background-color: var(--color-primary);
+  color: white;
+  font-weight: var(--font-weight-medium);
+  transition: background-color var(--transition-fast);
+}
+
+.mcqs-card-link:hover {
+  background-color: var(--color-primary-dark);
+  text-decoration: none;
+}
+
+/* Pagination styling */
+.mcqs-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-4);
+  margin-top: var(--space-8);
+}
+
+.mcqs-page-btn {
+  padding: var(--space-2) var(--space-4);
+  background-color: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text);
+  font-weight: var(--font-weight-medium);
+  transition: all var(--transition-fast);
+  cursor: pointer;
+}
+
+.mcqs-page-btn:hover:not(:disabled) {
+  background-color: var(--color-primary);
+  color: white;
+  border-color: var(--color-primary);
+}
+
+.mcqs-page-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.mcqs-page-numbers {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.mcqs-current-page {
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text);
+}
+
+/* Responsive layout */
+@media (max-width: 1024px) {
+  .mcqs-results-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .mcqs-results-container {
+    grid-template-columns: 1fr;
+  }
+  
+  .mcqs-filters {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2);
+  }
+  
+  .mcqs-filter-by,
+  .mcqs-sort-by {
+    width: 100%;
+  }
+  
+  .mcqs-filter-select,
+  .mcqs-sort-select {
+    flex: 1;
+  }
+  
+  .mcqs-pagination {
+    flex-wrap: wrap;
+  }
+}
+
+/* Dark mode compatibility */
+.dark-mode .mcqs-card {
+  background-color: var(--color-background-card);
+}
+
+.dark-mode .mcqs-card-link {
+  background-color: var(--color-primary);
+}
+
+.dark-mode .mcqs-card-link:hover {
+  background-color: var(--color-primary-dark);
+}
+
+.dark-mode .mcqs-filter-select,
+.dark-mode .mcqs-sort-select,
+.dark-mode #mcqs-search-input {
+  background-color: var(--color-background-alt);
+}

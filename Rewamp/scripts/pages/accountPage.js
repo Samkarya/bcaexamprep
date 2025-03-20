@@ -306,14 +306,13 @@ function setupPreferences(user) {
       shareProgress: document.getElementById('share-progress-toggle').checked,
       publicProfile: document.getElementById('public-profile-toggle').checked
     };
-    
     // Apply dark mode toggle immediately
     if (preferences.darkMode) {
-      document.querySelector('.edu-account-dashboard').classList.add('dark-mode');
+      document.body.classList.add('dark-mode');
     } else {
-      document.querySelector('.edu-account-dashboard').classList.remove('dark-mode');
+      document.body.classList.remove('dark-mode');
     }
-    
+        
     try {
       const { success } = await updateUserPreferences(user.uid, preferences);
       

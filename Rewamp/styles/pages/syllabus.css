@@ -8,7 +8,6 @@
 
 /* ========== SYLLABUS HUB LAYOUT ========== */
 .sh-container {
-      background: var(--color-primary-light);
   width: 100%;
   max-width: 1280px;
   margin-left: auto;

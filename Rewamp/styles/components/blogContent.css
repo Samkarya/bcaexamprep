@@ -387,3 +387,24 @@
     max-height: 400px;
   }
 }
+pre {
+  font-family: var(--font-family-code);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-relaxed);
+  color: var(--color-text);
+  background-color: var(--color-background-alt);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  margin: var(--space-4) 0;
+  overflow-x: auto;
+  white-space: pre;
+  word-wrap: normal;
+  box-shadow: var(--shadow-sm);
+}
+
+.dark-mode pre {
+  background-color: var(--color-background-alt);
+  color: var(--color-text-secondary);
+  border-color: var(--color-border-light);
+}

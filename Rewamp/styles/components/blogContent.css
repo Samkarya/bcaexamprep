@@ -2,7 +2,7 @@
 /* Building on the design system foundation */
 
 /* Blog Layout Components */
-.post-body.entry-content {
+.post-container {
   max-width: 800px;
   margin: 0 auto;
   padding: var(--space-4);

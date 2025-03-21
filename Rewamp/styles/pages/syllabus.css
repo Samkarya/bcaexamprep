@@ -1,7 +1,9 @@
     .post-title.entry-title{
   display:none;
   }
-      
+  .post-container header{
+    background: var(--color-primary-light);
+  }
       
    /* SyllabusHub Specific Styles */
 /* Building on the design system defined in main.css */

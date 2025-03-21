@@ -152,7 +152,7 @@ function getCurrentPostLabels() {
               name: cat.term,
               url: `https://bcaexamprep.blogspot.com/search/label/${encodeURIComponent(cat.term)}`
             })),
-            thumbnailUrl: 'https://picsum.photos/id/300/200'
+            thumbnailUrl: 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj136IFa2gX3JX6cA0ijcmNnwdj8oFkr8f6q5OvlTdyo_2bXRDTZRAws9S_8_tej96VC7eSoPyIk7aiIhEy044IgkPcbUJxp6-OEblINbs9KdlRGcVq8kywuYDYlc1R9eAPiX_b2ayK-YJaN9ucbI71FxiEk-ozF-t1MdtqmDxLnwCaaOo9pjQLJZtRKmIv/s320/macintosh.jfif'
           };
           
           // Try to find a thumbnail

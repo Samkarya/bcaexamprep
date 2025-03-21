@@ -189,7 +189,7 @@ function handleImageErrors() {
   
   images.forEach(img => {
     img.addEventListener('error', function() {
-      this.src = 'https://via.placeholder.com/800x450?text=Image+Not+Found';
+      this.src = '';
       this.alt = 'Image could not be loaded';
     });
   });

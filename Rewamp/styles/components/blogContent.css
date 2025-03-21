@@ -180,7 +180,7 @@
 }
 
 /* Reading Progress Bar */
-.reading-progress-container {
+.blog-post-meta-item.reading-time {
   position: fixed;
   top: 0;
   left: 0;
@@ -370,7 +370,7 @@
 
 /* Print Styles */
 @media print {
-  .reading-progress-container,
+  .blog-post-meta-item.reading-time,
   .blog-nav,
   .blog-social-share,
   .blog-related-posts {

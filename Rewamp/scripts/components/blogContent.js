@@ -129,7 +129,7 @@ function initScrollReveal() {
  */
 function generateAISummary() {
   const container = document.querySelector('.blog-ai-summary-content');
-  const title = document.querySelector('.blog-post-title');
+  const title = document.querySelector('.post-title.entry-title');
   const content = document.querySelector('.blog-post-content');
   
   if (!container || !title || !content) return;

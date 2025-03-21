@@ -20,21 +20,45 @@ document.addEventListener('DOMContentLoaded', function() {
  */
 function initReadingTime() {
   const content = document.querySelector('.blog-post-content');
-  const readingTimeElement = document.querySelector('.reading-time');
-  
-  if (!content || !readingTimeElement) return;
-  
+  const postMeta = document.querySelector('.post-meta');
+
+  if (!content || !postMeta) return;
+
   // Count words in the content
   const text = content.textContent || content.innerText;
   const wordCount = text.split(/\s+/).filter(Boolean).length;
-  
-  // Average reading speed: 200-250 words per minute
-  const readingSpeed = 225;
+
+  // Average reading speed: 220 words per minute
+  const readingSpeed = 220;
   const readingTimeMinutes = Math.ceil(wordCount / readingSpeed);
-  
-  // Update the reading time element
-  readingTimeElement.innerHTML = `<i class="far fa-clock"></i> ${readingTimeMinutes} min read`;
+
+  // Check if reading time element already exists
+  let readingTimeElement = postMeta.querySelector('.reading-time');
+
+  if (!readingTimeElement) {
+    // Create the reading time div and append it
+    readingTimeElement = document.createElement('div');
+    readingTimeElement.className = 'blog-post-meta-item reading-time';
+
+    const icon = document.createElement('i');
+    icon.className = 'far fa-clock';
+
+    const timeText = document.createElement('span');
+    timeText.textContent = `${readingTimeMinutes} min read`;
+
+    readingTimeElement.appendChild(icon);
+    readingTimeElement.appendChild(timeText);
+
+    postMeta.appendChild(readingTimeElement);
+  } else {
+    // Update existing reading time
+    const timeText = readingTimeElement.querySelector('span');
+    if (timeText) {
+      timeText.textContent = `${readingTimeMinutes} min read`;
+    }
+  }
 }
+
 
 /**
  * Initialize reading progress bar

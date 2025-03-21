@@ -1,610 +1,448 @@
-/* ========== EDUBLOG DESIGN SYSTEM ========== */
-/* Custom CSS for Computer Science Educational Blog */
+/* ========== BLOG-SPECIFIC STYLES ========== */
+/* Building on the design system foundation */
 
-/* Namespace all custom classes with 'edublog-' to avoid conflicts */
-:root {
-  /* Extended color palette specific to educational content */
-  --edublog-accent-code: #ff7b25;       /* For code snippets/highlights */
-  --edublog-accent-tutorial: #4cc9f0;   /* For tutorials */
-  --edublog-accent-syllabus: #7209b7;   /* For syllabus content */
-  --edublog-accent-howto: #06d6a0;      /* For how-to guides */
-  --edublog-highlight: #ffd166;         /* For important notes */
-  --edublog-muted-bg: rgba(75, 85, 99, 0.05); /* For background accents */
-  
-  /* Special typography settings */
-  --edublog-code-font: 'Fira Code', 'JetBrains Mono', 'Roboto Mono', monospace;
-  
-  /* Blog-specific spacing */
-  --edublog-content-width: 42rem;       /* Optimal reading width */
-  --edublog-toc-width: 14rem;           /* Width for table of contents */
-}
-
-/* ========== LAYOUT COMPONENTS ========== */
-
-/* Main blog container */
-.edublog-container {
-  max-width: var(--edublog-content-width);
+/* Blog Layout Components */
+.blog-container {
+  max-width: 800px;
   margin: 0 auto;
   padding: var(--space-4);
 }
 
-/* For wider content layouts with sidebar */
-.edublog-container-wide {
-  max-width: calc(var(--edublog-content-width) + var(--edublog-toc-width) + var(--space-8));
-  margin: 0 auto;
-  padding: var(--space-4);
+/* Header & Navigation */
+.blog-header {
+  padding: var(--space-6) 0;
+  margin-bottom: var(--space-8);
+  border-bottom: 1px solid var(--color-border);
 }
 
-/* Blog post layout with TOC */
-.edublog-layout {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: var(--space-6);
+.blog-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-6);
 }
 
-@media (min-width: 1024px) {
-  .edublog-layout-with-toc {
-    grid-template-columns: var(--edublog-toc-width) minmax(0, 1fr);
-  }
-  
-  .edublog-layout-with-sidebar {
-    grid-template-columns: minmax(0, 1fr) var(--edublog-toc-width);
-  }
+.blog-nav-links {
+  display: flex;
+  gap: var(--space-4);
 }
 
-/* Table of Contents */
-.edublog-toc {
-  position: sticky;
-  top: var(--space-4);
-  max-height: calc(100vh - var(--space-8));
-  overflow-y: auto;
-  padding: var(--space-4);
-  border-radius: var(--radius-lg);
-  background-color: var(--color-background-card);
-  border: 1px solid var(--color-border);
-  box-shadow: var(--shadow-sm);
-}
-
-.edublog-toc-title {
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-semibold);
-  margin-bottom: var(--space-2);
-  color: var(--color-text);
-}
-
-.edublog-toc-list {
-  list-style-type: none;
-  padding-left: 0;
-}
-
-.edublog-toc-item {
-  margin: var(--space-2) 0;
-  font-size: var(--font-size-sm);
-}
-
-.edublog-toc-link {
-  color: var(--color-text-secondary);
-  display: block;
-  padding: var(--space-1) 0;
-  text-decoration: none;
-  border-left: 2px solid transparent;
-  padding-left: var(--space-2);
-  transition: all var(--transition-fast);
-}
-
-.edublog-toc-link:hover {
+.blog-logo {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
   color: var(--color-primary);
-  border-left-color: var(--color-primary-light);
-  text-decoration: none;
 }
 
-.edublog-toc-link-active {
-  color: var(--color-primary);
-  border-left-color: var(--color-primary);
-  font-weight: var(--font-weight-medium);
+/* Post Typography & Layout */
+.blog-post {
+  margin-bottom: var(--space-12);
+  position: relative;
 }
 
-.edublog-toc-nested {
-  padding-left: var(--space-3);
-}
-
-/* ========== TYPOGRAPHY ENHANCEMENTS ========== */
-
-/* Post Title */
-.edublog-post-title {
+.blog-post-title {
   font-size: var(--font-size-4xl);
   font-weight: var(--font-weight-bold);
+  margin-bottom: var(--space-4);
   line-height: 1.2;
+}
+
+.blog-post-subtitle {
+  font-size: var(--font-size-xl);
+  color: var(--color-text-secondary);
   margin-bottom: var(--space-6);
-  color: var(--color-text);
-  position: relative;
-  padding-bottom: var(--space-4);
+  line-height: 1.4;
 }
 
-.edublog-post-title::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 4rem;
-  height: 4px;
-  background-color: var(--color-primary);
-  border-radius: var(--radius-full);
-}
-
-/* Post Metadata */
-.edublog-post-meta {
+.blog-post-meta {
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
   gap: var(--space-4);
   margin-bottom: var(--space-6);
+  color: var(--color-text-tertiary);
   font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
 }
 
-.edublog-post-date,
-.edublog-post-author,
-.edublog-post-category {
+.blog-post-meta-item {
   display: flex;
   align-items: center;
   gap: var(--space-1);
 }
 
-/* Content Typography */
-.edublog-content p {
-  margin-bottom: var(--space-4);
-  line-height: var(--line-height-relaxed);
+.blog-post-meta-item i {
+  font-size: var(--font-size-md);
 }
 
-.edublog-content h2 {
-  font-size: var(--font-size-2xl);
+.blog-post-image {
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-6);
+  transition: transform var(--transition-normal);
+  overflow: hidden;
+}
+
+.blog-post-image img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  transition: transform var(--transition-normal);
+}
+
+.blog-post-image:hover img {
+  transform: scale(1.02);
+}
+
+.blog-post-content {
+  line-height: var(--line-height-relaxed);
+  margin-bottom: var(--space-8);
+}
+
+.blog-post-content p {
+  margin-bottom: var(--space-4);
+}
+
+.blog-post-content h2 {
   margin-top: var(--space-8);
   margin-bottom: var(--space-4);
-  padding-bottom: var(--space-2);
-  border-bottom: 1px solid var(--color-border);
+  font-size: var(--font-size-2xl);
 }
 
-.edublog-content h3 {
-  font-size: var(--font-size-xl);
+.blog-post-content h3 {
   margin-top: var(--space-6);
   margin-bottom: var(--space-3);
+  font-size: var(--font-size-xl);
 }
 
-.edublog-content h4 {
-  font-size: var(--font-size-lg);
-  margin-top: var(--space-5);
-  margin-bottom: var(--space-2);
-}
-
-.edublog-content ul,
-.edublog-content ol {
+.blog-post-content ul, 
+.blog-post-content ol {
   margin-bottom: var(--space-4);
-  padding-left: var(--space-5);
+  padding-left: var(--space-6);
 }
 
-.edublog-content li {
+.blog-post-content ul li, 
+.blog-post-content ol li {
   margin-bottom: var(--space-2);
 }
 
-.edublog-content ul li {
+.blog-post-content ul {
   list-style-type: disc;
 }
 
-.edublog-content ol li {
+.blog-post-content ol {
   list-style-type: decimal;
 }
 
-/* ========== SPECIALIZED CONTENT BLOCKS ========== */
-
-/* Code Blocks */
-.edublog-code {
-  font-family: var(--edublog-code-font);
-  background-color: var(--color-background-alt);
-  padding: var(--space-4);
-  border-radius: var(--radius-md);
-  margin: var(--space-4) 0;
-  overflow-x: auto;
-  border-left: 4px solid var(--edublog-accent-code);
-}
-
-/* Inline Code */
-.edublog-inline-code {
-  font-family: var(--edublog-code-font);
-  background-color: var(--color-background-alt);
-  color: var(--edublog-accent-code);
-  padding: 0.15em 0.4em;
-  border-radius: var(--radius-sm);
-  font-size: 90%;
-}
-
-/* Blockquotes */
-.edublog-blockquote {
-  border-left: 4px solid var(--color-primary-light);
-  padding: var(--space-3) var(--space-4);
-  margin: var(--space-4) 0;
-  background-color: var(--edublog-muted-bg);
-  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+.blog-post-content blockquote {
+  border-left: 4px solid var(--color-primary);
+  padding-left: var(--space-4);
+  margin: var(--space-6) 0;
   font-style: italic;
   color: var(--color-text-secondary);
 }
 
-/* Information Boxes */
-.edublog-info-box {
+/* Callout Boxes */
+.blog-callout {
   padding: var(--space-4);
   margin: var(--space-6) 0;
   border-radius: var(--radius-lg);
+  border-left: 4px solid;
+  background-color: rgba(var(--callout-color-rgb), 0.1);
+  border-color: rgb(var(--callout-color-rgb));
+}
+
+.blog-callout-title {
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--space-2);
+  color: rgb(var(--callout-color-rgb));
+}
+
+.blog-callout.info {
+  --callout-color-rgb: 76, 201, 240;
+}
+
+.blog-callout.tip {
+  --callout-color-rgb: 45, 198, 83;
+}
+
+.blog-callout.warning {
+  --callout-color-rgb: 249, 199, 79;
+}
+
+.blog-callout.important {
+  --callout-color-rgb: 247, 37, 133;
+}
+
+/* AI Summary Box */
+.blog-ai-summary {
+  background-color: var(--color-background-alt);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  margin-bottom: var(--space-6);
   border: 1px solid var(--color-border);
-  box-shadow: var(--shadow-sm);
-  position: relative;
-  padding-top: var(--space-8);
 }
 
-.edublog-info-box-title {
-  position: absolute;
-  top: 0;
-  left: var(--space-4);
-  transform: translateY(-50%);
-  background-color: var(--color-background);
-  padding: var(--space-1) var(--space-3);
-  font-weight: var(--font-weight-medium);
-  border-radius: var(--radius-md);
-  border: 1px solid var(--color-border);
-}
-
-/* Content Type Indicators */
-.edublog-tutorial {
-  border-left: 4px solid var(--edublog-accent-tutorial);
-}
-
-.edublog-tutorial .edublog-info-box-title {
-  color: var(--edublog-accent-tutorial);
-}
-
-.edublog-syllabus {
-  border-left: 4px solid var(--edublog-accent-syllabus);
-}
-
-.edublog-syllabus .edublog-info-box-title {
-  color: var(--edublog-accent-syllabus);
-}
-
-.edublog-howto {
-  border-left: 4px solid var(--edublog-accent-howto);
-}
-
-.edublog-howto .edublog-info-box-title {
-  color: var(--edublog-accent-howto);
-}
-
-/* Important Note */
-.edublog-note {
-  background-color: rgba(255, 209, 102, 0.1);
-  border: 1px solid var(--edublog-highlight);
-  padding: var(--space-3) var(--space-4);
-  margin: var(--space-4) 0;
-  border-radius: var(--radius-md);
-}
-
-.edublog-note-title {
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-text);
+.blog-ai-summary-title {
   display: flex;
   align-items: center;
   gap: var(--space-2);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
   margin-bottom: var(--space-2);
+  color: var(--color-primary);
 }
 
-/* Step-by-Step Instructions */
-.edublog-steps {
-  counter-reset: steps;
+.blog-ai-summary-content {
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-normal);
+}
+
+/* Reading Progress Bar */
+.reading-progress-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: transparent;
+  z-index: var(--z-index-fixed);
+}
+
+.reading-progress-bar {
+  height: 100%;
+  background: var(--color-primary);
+  width: 0%;
+  transition: width var(--transition-fast);
+  border-top-right-radius: var(--radius-full);
+  border-bottom-right-radius: var(--radius-full);
+}
+
+/* Post Tags */
+.blog-post-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
   margin: var(--space-6) 0;
 }
 
-.edublog-step {
-  margin-bottom: var(--space-6);
-  padding-left: var(--space-8);
-  position: relative;
-}
-
-.edublog-step::before {
-  counter-increment: steps;
-  content: counter(steps);
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 2rem;
-  height: 2rem;
-  background-color: var(--color-primary);
-  color: white;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: var(--font-weight-semibold);
-}
-
-.edublog-step-title {
-  font-weight: var(--font-weight-semibold);
-  font-size: var(--font-size-lg);
-  margin-bottom: var(--space-2);
-}
-
-/* ========== SPECIALIZED COMPONENTS ========== */
-
-/* Category Badges */
-.edublog-badge {
+.blog-post-tag {
   display: inline-block;
   padding: var(--space-1) var(--space-2);
   border-radius: var(--radius-full);
+  background-color: var(--color-background-alt);
+  color: var(--color-text-secondary);
   font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-medium);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-right: var(--space-2);
-  margin-bottom: var(--space-2);
+  transition: all var(--transition-fast);
 }
 
-.edublog-badge-bca {
-  background-color: rgba(114, 9, 183, 0.1);
-  color: var(--edublog-accent-syllabus);
+.blog-post-tag:hover {
+  background-color: var(--color-primary-light);
+  color: white;
+  text-decoration: none;
+  transform: translateY(-2px);
 }
 
-.edublog-badge-tutorial {
-  background-color: rgba(76, 201, 240, 0.1);
-  color: var(--edublog-accent-tutorial);
-}
-
-.edublog-badge-howto {
-  background-color: rgba(6, 214, 160, 0.1);
-  color: var(--edublog-accent-howto);
-}
-
-/* Card Components */
-.edublog-card {
+/* Author Info */
+.blog-author {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  margin: var(--space-8) 0;
+  padding: var(--space-4);
   border-radius: var(--radius-lg);
-  background-color: var(--color-background-card);
-  border: 1px solid var(--color-border);
-  overflow: hidden;
-  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
-  height: 100%;
+  background-color: var(--color-background-alt);
 }
 
-.edublog-card:hover {
+.blog-author-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.blog-author-info {
+  flex: 1;
+}
+
+.blog-author-name {
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--space-1);
+}
+
+.blog-author-bio {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+/* Social Sharing */
+.blog-social-share {
+  display: flex;
+  gap: var(--space-2);
+  margin: var(--space-6) 0;
+}
+
+.blog-social-button {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-background-alt);
+  color: var(--color-text);
+  transition: all var(--transition-fast);
+}
+
+.blog-social-button:hover {
+  background-color: var(--color-primary);
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* Related Posts */
+.blog-related-posts {
+  margin: var(--space-12) 0;
+}
+
+.blog-related-posts-title {
+  font-size: var(--font-size-2xl);
+  margin-bottom: var(--space-6);
+}
+
+.blog-related-posts-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+}
+
+.blog-related-post {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: all var(--transition-normal);
+  border: 1px solid var(--color-border);
+}
+
+.blog-related-post:hover {
   transform: translateY(-4px);
   box-shadow: var(--shadow-md);
 }
 
-.edublog-card-image {
-  width: 100%;
-  height: 180px;
-  object-fit: cover;
-  border-bottom: 1px solid var(--color-border-light);
-}
-
-.edublog-card-content {
-  padding: var(--space-4);
-}
-
-.edublog-card-title {
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-semibold);
-  margin-bottom: var(--space-2);
-}
-
-.edublog-card-excerpt {
-  color: var(--color-text-secondary);
-  margin-bottom: var(--space-3);
-  font-size: var(--font-size-sm);
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
+.blog-related-post-image {
+  aspect-ratio: 16/9;
   overflow: hidden;
 }
 
-/* Related Posts */
-.edublog-related {
-  margin-top: var(--space-8);
-  padding-top: var(--space-6);
-  border-top: 1px solid var(--color-border);
+.blog-related-post-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-normal);
 }
 
-.edublog-related-title {
-  font-size: var(--font-size-xl);
-  margin-bottom: var(--space-4);
+.blog-related-post:hover .blog-related-post-image img {
+  transform: scale(1.05);
 }
 
-.edublog-related-grid {
-  display: grid;
-  grid-template-columns: repeat(1, 1fr);
-  gap: var(--space-4);
+.blog-related-post-content {
+  padding: var(--space-3);
 }
 
-@media (min-width: 640px) {
-  .edublog-related-grid {
+.blog-related-post-title {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  margin-bottom: var(--space-2);
+  line-height: 1.3;
+}
+
+.blog-related-post-meta {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .blog-post-title {
+    font-size: var(--font-size-3xl);
+  }
+  
+  .blog-post-subtitle {
+    font-size: var(--font-size-lg);
+  }
+  
+  .blog-related-posts-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-@media (min-width: 1024px) {
-  .edublog-related-grid {
-    grid-template-columns: repeat(3, 1fr);
+@media (max-width: 640px) {
+  .blog-post-title {
+    font-size: var(--font-size-2xl);
+  }
+  
+  .blog-post-meta {
+    flex-wrap: wrap;
+  }
+  
+  .blog-related-posts-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .blog-author {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
 
-/* Author Bio */
-.edublog-author {
-  display: flex;
-  align-items: center;
-  gap: var(--space-4);
-  padding: var(--space-4);
-  margin-top: var(--space-8);
-  background-color: var(--edublog-muted-bg);
-  border-radius: var(--radius-lg);
+/* Animations and Effects */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.edublog-author-avatar {
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  object-fit: cover;
+.blog-post {
+  animation: fadeIn 0.6s ease-out;
 }
 
-.edublog-author-info {
-  flex: 1;
-}
-
-.edublog-author-name {
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-semibold);
-  margin-bottom: var(--space-1);
-}
-
-.edublog-author-bio {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
-}
-
-/* ========== SYLLABUS-SPECIFIC COMPONENTS ========== */
-
-/* Syllabus / Course Outline */
-.edublog-syllabus-container {
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  margin: var(--space-6) 0;
-  overflow: hidden;
-}
-
-.edublog-syllabus-header {
-  background-color: var(--color-background-alt);
-  padding: var(--space-3) var(--space-4);
-  border-bottom: 1px solid var(--color-border);
-}
-
-.edublog-syllabus-title {
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-semibold);
-  margin: 0;
-}
-
-.edublog-syllabus-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-4);
-  margin-top: var(--space-2);
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
-}
-
-.edublog-syllabus-section {
-  padding: var(--space-4);
-  border-bottom: 1px solid var(--color-border-light);
-}
-
-.edublog-syllabus-section:last-child {
-  border-bottom: none;
-}
-
-.edublog-syllabus-section-title {
-  font-weight: var(--font-weight-medium);
-  margin-bottom: var(--space-3);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.edublog-syllabus-list li {
-  margin-bottom: var(--space-2);
-  padding-left: var(--space-4);
-  position: relative;
-}
-
-.edublog-syllabus-list li::before {
-  content: "•";
-  position: absolute;
-  left: 0;
-  color: var(--color-primary);
-}
-
-/* Progress Bar for Course/Tutorials */
-.edublog-progress-container {
-  width: 100%;
-  height: 8px;
-  background-color: var(--color-border-light);
-  border-radius: var(--radius-full);
-  margin: var(--space-4) 0;
-  overflow: hidden;
-}
-
-.edublog-progress-bar {
-  height: 100%;
-  background-color: var(--color-primary);
-  border-radius: var(--radius-full);
-  transition: width var(--transition-normal);
-}
-
-/* ========== DARK MODE ADJUSTMENTS ========== */
-.dark-mode .edublog-code {
-  background-color: rgba(255, 255, 255, 0.05);
-}
-
-.dark-mode .edublog-inline-code {
-  background-color: rgba(255, 255, 255, 0.05);
-  color: var(--edublog-accent-code);
-}
-
-.dark-mode .edublog-note {
-  background-color: rgba(255, 209, 102, 0.05);
-}
-
-.dark-mode .edublog-muted-bg {
-  background-color: rgba(255, 255, 255, 0.03);
-}
-
-/* ========== ANIMATIONS ========== */
-
-/* Highlight animation for important elements */
-@keyframes edublog-highlight-pulse {
-  0% {
-    box-shadow: 0 0 0 0 rgba(247, 37, 133, 0.4);
-  }
-  70% {
-    box-shadow: 0 0 0 10px rgba(247, 37, 133, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(247, 37, 133, 0);
-  }
-}
-
-.edublog-highlight-pulse {
-  animation: edublog-highlight-pulse 2s infinite;
-}
-
-/* Fade in animation for page elements */
-@keyframes edublog-fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.edublog-fade-in {
-  animation: edublog-fade-in 0.5s ease-out forwards;
-}
-
-/* Staggered fade-in for lists */
-.edublog-fade-in-staggered > * {
+.blog-post-content > * {
   opacity: 0;
-  animation: edublog-fade-in 0.5s ease-out forwards;
+  transform: translateY(10px);
+  transition: opacity 0.5s, transform 0.5s;
 }
 
-.edublog-fade-in-staggered > *:nth-child(1) { animation-delay: 0.1s; }
-.edublog-fade-in-staggered > *:nth-child(2) { animation-delay: 0.2s; }
-.edublog-fade-in-staggered > *:nth-child(3) { animation-delay: 0.3s; }
-.edublog-fade-in-staggered > *:nth-child(4) { animation-delay: 0.4s; }
-.edublog-fade-in-staggered > *:nth-child(5) { animation-delay: 0.5s; }
-.edublog-fade-in-staggered > *:nth-child(n+6) { animation-delay: 0.6s; }
+.blog-post-content > *.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Dark Mode Enhancements */
+.dark-mode .blog-post-image,
+.dark-mode .blog-related-post {
+  border: 1px solid var(--color-border);
+}
+
+.dark-mode .blog-callout {
+  background-color: rgba(var(--callout-color-rgb), 0.15);
+}
+
+.dark-mode .blog-ai-summary {
+  background-color: rgba(67, 97, 238, 0.1);
+  border-color: rgba(67, 97, 238, 0.3);
+}
+
+/* Print Styles */
+@media print {
+  .reading-progress-container,
+  .blog-nav,
+  .blog-social-share,
+  .blog-related-posts {
+    display: none;
+  }
+  
+  .blog-container {
+    max-width: 100%;
+    padding: 0;
+  }
+  
+  .blog-post-image {
+    max-height: 400px;
+  }
+}

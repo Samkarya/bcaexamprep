@@ -1,160 +1,199 @@
-// Table of Contents Generator
+/**
+ * Modern Blog Functionality
+ * Features:
+ * - Reading time calculator
+ * - Reading progress bar
+ * - Reveal content on scroll
+ * - AI-generated summary (simulated)
+ */
+
 document.addEventListener('DOMContentLoaded', function() {
-  // Select elements
-  const contentElement = document.querySelector('.edublog-content');
-  const tocElement = document.querySelector('.edublog-toc');
-  
-  if (!contentElement || !tocElement) return;
-  
-  // Find all headings in the content
-  const headings = contentElement.querySelectorAll('h2, h3, h4');
-  
-  if (headings.length === 0) {
-    tocElement.style.display = 'none';
-    return;
-  }
-  
-  // Create TOC container
-  const tocTitle = document.createElement('div');
-  tocTitle.className = 'edublog-toc-title';
-  tocTitle.textContent = 'Table of Contents';
-  
-  const tocList = document.createElement('ul');
-  tocList.className = 'edublog-toc-list';
-  
-  // Track heading levels for nesting
-  const levels = { h2: 0, h3: 1, h4: 2 };
-  let prevLevel = 0;
-  let listStack = [tocList];
-  
-  // Process each heading
-  headings.forEach((heading, index) => {
-    // Add ID to heading if it doesn't have one
-    if (!heading.id) {
-      heading.id = 'heading-' + index;
-    }
-    
-    const level = levels[heading.tagName.toLowerCase()];
-    const item = document.createElement('li');
-    item.className = 'edublog-toc-item';
-    
-    const link = document.createElement('a');
-    link.className = 'edublog-toc-link';
-    link.href = '#' + heading.id;
-    link.textContent = heading.textContent;
-    
-    item.appendChild(link);
-    
-    // Handle nesting
-    if (level > prevLevel) {
-      // Create a new nested list
-      const nestedList = document.createElement('ul');
-      nestedList.className = 'edublog-toc-list edublog-toc-nested';
-      listStack[listStack.length - 1].lastChild.appendChild(nestedList);
-      listStack.push(nestedList);
-    } else if (level < prevLevel) {
-      // Go back up the stack
-      for (let i = 0; i < prevLevel - level; i++) {
-        listStack.pop();
-      }
-    }
-    
-    // Add item to the current list
-    listStack[listStack.length - 1].appendChild(item);
-    prevLevel = level;
-  });
-  
-  // Add TOC to the page
-  tocElement.appendChild(tocTitle);
-  tocElement.appendChild(tocList);
-  
-  // Add scroll highlighting
-  window.addEventListener('scroll', highlightTocOnScroll);
+  // Initialize all blog features
+  initReadingTime();
+  initReadingProgressBar();
+  initScrollReveal();
+  generateAISummary();
 });
 
-// Highlight TOC items on scroll
-function highlightTocOnScroll() {
-  const headings = Array.from(document.querySelectorAll('.edublog-content h2, .edublog-content h3, .edublog-content h4'));
-  if (headings.length === 0) return;
+/**
+ * Calculate and display reading time for blog post
+ */
+function initReadingTime() {
+  const content = document.querySelector('.blog-post-content');
+  const readingTimeElement = document.querySelector('.reading-time');
   
-  // Get all link elements in TOC
-  const tocLinks = document.querySelectorAll('.edublog-toc-link');
+  if (!content || !readingTimeElement) return;
   
-  // Remove active class from all links
-  tocLinks.forEach(link => {
-    link.classList.remove('edublog-toc-link-active');
-  });
-  
-  // Find the heading that's currently in view
-  let currentHeadingIndex = 0;
-  const scrollPosition = window.scrollY + 100; // Offset for better UX
-  
-  for (let i = 0; i < headings.length; i++) {
-    if (headings[i].offsetTop <= scrollPosition) {
-      currentHeadingIndex = i;
-    } else {
-      break;
-    }
-  }
-  
-  // Highlight the corresponding TOC link
-  const currentHeadingId = headings[currentHeadingIndex].id;
-  const activeLink = document.querySelector(`.edublog-toc-link[href="#${currentHeadingId}"]`);
-  
-  if (activeLink) {
-    activeLink.classList.add('edublog-toc-link-active');
-  }
-}
-
-// Calculate and display reading time
-document.addEventListener('DOMContentLoaded', function() {
-  const contentElement = document.querySelector('.edublog-content');
-  const metaElement = document.querySelector('.edublog-post-meta');
-  
-  if (!contentElement || !metaElement) return;
-  
-  // Get all text content
-  const text = contentElement.textContent;
-  const wordCount = text.split(/\s+/).length;
+  // Count words in the content
+  const text = content.textContent || content.innerText;
+  const wordCount = text.split(/\s+/).filter(Boolean).length;
   
   // Average reading speed: 200-250 words per minute
-  const readingTime = Math.ceil(wordCount / 225);
+  const readingSpeed = 225;
+  const readingTimeMinutes = Math.ceil(wordCount / readingSpeed);
   
-  // Create reading time element
-  const readTimeElement = document.createElement('div');
-  readTimeElement.className = 'edublog-post-read-time';
-  
-  // Add clock icon
-  const icon = document.createElement('span');
-  icon.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>';
-  
-  const texth= document.createElement('span');
-  texth.textContent = `${readingTime} min read`;
-  
-  readTimeElement.appendChild(icon);
-  readTimeElement.appendChild(texth);
-  
-  // Add to meta section
-  metaElement.appendChild(readTimeElement);
-});
+  // Update the reading time element
+  readingTimeElement.innerHTML = `<i class="far fa-clock"></i> ${readingTimeMinutes} min read`;
+}
 
-// Smooth scroll for TOC links
-document.addEventListener('DOMContentLoaded', function() {
-  const tocLinks = document.querySelectorAll('.edublog-toc-link');
+/**
+ * Initialize reading progress bar
+ */
+function initReadingProgressBar() {
+  // Create progress bar container if it doesn't exist
+  if (!document.querySelector('.reading-progress-container')) {
+    const progressContainer = document.createElement('div');
+    progressContainer.className = 'reading-progress-container';
+    
+    const progressBar = document.createElement('div');
+    progressBar.className = 'reading-progress-bar';
+    
+    progressContainer.appendChild(progressBar);
+    document.body.appendChild(progressContainer);
+  }
   
-  tocLinks.forEach(link => {
-    link.addEventListener('click', function(e) {
-      e.preventDefault();
-      
-      const targetId = this.getAttribute('href').substring(1);
-      const targetElement = document.getElementById(targetId);
-      
-      if (targetElement) {
-        window.scrollTo({
-          top: targetElement.offsetTop - 20,
-          behavior: 'smooth'
-        });
+  // Update progress bar on scroll
+  window.addEventListener('scroll', updateReadingProgress);
+}
+
+/**
+ * Update reading progress bar width based on scroll position
+ */
+function updateReadingProgress() {
+  const content = document.querySelector('.blog-post-content');
+  const progressBar = document.querySelector('.reading-progress-bar');
+  
+  if (!content || !progressBar) return;
+  
+  const contentBox = content.getBoundingClientRect();
+  const contentHeight = contentBox.height;
+  const contentTop = contentBox.top;
+  const windowHeight = window.innerHeight;
+  
+  // Calculate how much of the content has been read
+  let progress;
+  
+  if (contentTop >= 0) {
+    // Content hasn't started being read yet
+    progress = 0;
+  } else if (contentTop <= -contentHeight + windowHeight) {
+    // Content has been fully read
+    progress = 100;
+  } else {
+    // Content is being read
+    progress = (-contentTop / (contentHeight - windowHeight)) * 100;
+  }
+  
+  // Update progress bar width
+  progressBar.style.width = `${Math.min(100, Math.max(0, progress))}%`;
+}
+
+/**
+ * Reveal content elements as they scroll into view
+ */
+function initScrollReveal() {
+  const elements = document.querySelectorAll('.blog-post-content > *');
+  
+  if (!elements.length) return;
+  
+  // Set initial state
+  elements.forEach((element, index) => {
+    // Stagger the animation delay for a more natural effect
+    const delay = index * 0.05;
+    element.style.transitionDelay = `${delay}s`;
+  });
+  
+  // Create an observer for scroll reveal
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        // Stop observing once the element is visible
+        observer.unobserve(entry.target);
       }
     });
+  }, {
+    root: null,
+    rootMargin: '0px',
+    threshold: 0.1
   });
-});
+  
+  // Observe each element
+  elements.forEach(element => {
+    observer.observe(element);
+  });
+}
+
+/**
+ * Generate a simulated AI summary of the blog post
+ */
+function generateAISummary() {
+  const container = document.querySelector('.blog-ai-summary-content');
+  const title = document.querySelector('.blog-post-title');
+  const content = document.querySelector('.blog-post-content');
+  
+  if (!container || !title || !content) return;
+  
+  // Extract first two paragraphs for simulation
+  const paragraphs = content.querySelectorAll('p');
+  let summaryText = '';
+  
+  if (paragraphs.length >= 2) {
+    summaryText = paragraphs[0].textContent.trim();
+    
+    // Truncate if too long
+    if (summaryText.length > 200) {
+      summaryText = summaryText.substring(0, 200).trim() + '...';
+    }
+  } else if (paragraphs.length === 1) {
+    summaryText = paragraphs[0].textContent.trim();
+    
+    if (summaryText.length > 200) {
+      summaryText = summaryText.substring(0, 200).trim() + '...';
+    }
+  } else {
+    // Fallback text if no paragraphs found
+    summaryText = "This article discusses " + title.textContent.trim() + ". Read on to learn more.";
+  }
+  
+  // Add a prefix to make it feel AI-generated
+  const aiPrefixes = [
+    "This article explores ",
+    "The author discusses ",
+    "Key takeaways include ",
+    "In this post, you'll learn about ",
+    "The main focus of this article is "
+  ];
+  
+  const randomPrefix = aiPrefixes[Math.floor(Math.random() * aiPrefixes.length)];
+  container.textContent = randomPrefix + summaryText.replace(/^This article/i, '').replace(/^the author/i, '');
+}
+
+
+/**
+ * Utility: Properly format a date for blog display
+ * @param {Date|string} date - The date to format
+ * @return {string} Formatted date string
+ */
+function formatBlogDate(date) {
+  const d = new Date(date);
+  const options = { year: 'numeric', month: 'long', day: 'numeric' };
+  return d.toLocaleDateString(undefined, options);
+}
+
+/**
+ * Handle image load failures with fallback
+ */
+function handleImageErrors() {
+  const images = document.querySelectorAll('img');
+  
+  images.forEach(img => {
+    img.addEventListener('error', function() {
+      this.src = 'https://via.placeholder.com/800x450?text=Image+Not+Found';
+      this.alt = 'Image could not be loaded';
+    });
+  });
+}
+
+// Call this function to handle image errors
+handleImageErrors();

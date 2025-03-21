@@ -62,6 +62,7 @@ function initReadingTime() {
 
 /**
  * Initialize reading progress bar
+ * Improved to ensure proper positioning
  */
 function initReadingProgressBar() {
   // Create progress bar container if it doesn't exist
@@ -73,15 +74,32 @@ function initReadingProgressBar() {
     progressBar.className = 'reading-progress-bar';
     
     progressContainer.appendChild(progressBar);
-    document.body.appendChild(progressContainer);
+    document.body.insertAdjacentElement('afterbegin', progressContainer);
+    
+    // Add some basic styling if not already in CSS
+    progressContainer.style.position = 'fixed';
+    progressContainer.style.top = '0';
+    progressContainer.style.left = '0';
+    progressContainer.style.width = '100%';
+    progressContainer.style.height = '4px';
+    progressContainer.style.zIndex = '1000';
+    progressContainer.style.backgroundColor = 'transparent';
+    
+    progressBar.style.height = '100%';
+    progressBar.style.backgroundColor = '#0088cc';
+    progressBar.style.width = '0%';
+    progressBar.style.transition = 'width 0.2s ease-out';
   }
   
   // Update progress bar on scroll
   window.addEventListener('scroll', updateReadingProgress);
+  
+  // Initial update
+  updateReadingProgress();
 }
 
 /**
- * Update reading progress bar width based on scroll position
+ * Update reading progress bar width based on scroll 
  */
 function updateReadingProgress() {
   const content = document.querySelector('.blog-post-content');
@@ -89,57 +107,62 @@ function updateReadingProgress() {
   
   if (!content || !progressBar) return;
   
-  const contentBox = content.getBoundingClientRect();
-  const contentHeight = contentBox.height;
-  const contentTop = contentBox.top;
-  const windowHeight = window.innerHeight;
+  // Get total scrollable distance (document height minus viewport height)
+  const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
   
-  // Calculate how much of the content has been read
-  let progress;
+  // Get current scroll position
+  const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
   
-  if (contentTop >= 0) {
-    // Content hasn't started being read yet
-    progress = 0;
-  } else if (contentTop <= -contentHeight + windowHeight) {
-    // Content has been fully read
-    progress = 100;
-  } else {
-    // Content is being read
-    progress = (-contentTop / (contentHeight - windowHeight)) * 100;
-  }
+  // Calculate progress percentage
+  const progress = (scrollTop / scrollHeight) * 100;
   
   // Update progress bar width
   progressBar.style.width = `${Math.min(100, Math.max(0, progress))}%`;
 }
-
 /**
  * Reveal content elements as they scroll into view
+ * Improved to be less disruptive to reading
  */
 function initScrollReveal() {
+  // Check if we should disable animations (smaller screens, reduced motion preference)
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isMobileDevice = window.innerWidth < 768;
+  
+  // Get all content elements
   const elements = document.querySelectorAll('.blog-post-content > *');
   
   if (!elements.length) return;
   
-  // Set initial state
+  // If reduced motion is preferred or it's a mobile device, just make everything visible
+  if (prefersReducedMotion || isMobileDevice) {
+    elements.forEach(element => {
+      element.classList.add('visible');
+    });
+    return;
+  }
+  
+  // For devices that can handle animations, use a gentler approach
   elements.forEach((element, index) => {
-    // Stagger the animation delay for a more natural effect
-    const delay = index * 0.05;
+    // Reduce the delay between elements
+    const delay = index * 0.03;
     element.style.transitionDelay = `${delay}s`;
+    
+    // Use a shorter and subtler transition
+    element.style.transition = "opacity 0.3s ease, transform 0.3s ease";
   });
   
-  // Create an observer for scroll reveal
+  // Create an observer with a larger threshold for earlier reveals
   const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         entry.target.classList.add('visible');
-        // Stop observing once the element is visible
         observer.unobserve(entry.target);
       }
     });
   }, {
     root: null,
-    rootMargin: '0px',
-    threshold: 0.1
+    rootMargin: '0px 0px -10% 0px', // Start revealing a bit earlier
+    threshold: 0.05 // Require less visibility to trigger
   });
   
   // Observe each element

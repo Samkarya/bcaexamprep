@@ -38,11 +38,6 @@ export const getUserData = async (userId) => {
         updatedAt: serverTimestamp(),
         preferences: {
           darkMode: false,
-          emailNotifications: true,
-          updatesNotifications: true,
-          studyReminders: false,
-          shareProgress: false,
-          publicProfile: false
         }
       };
       

@@ -116,11 +116,11 @@ function displayBasicUserInfo(user) {
 // Set preference toggle states based on user data
 function setPreferenceToggles(preferences) {
   document.getElementById('dark-mode-toggle').checked = preferences.darkMode || false;
-  document.getElementById('email-notifications-toggle').checked = preferences.emailNotifications !== false;
-  document.getElementById('updates-notifications-toggle').checked = preferences.updatesNotifications !== false;
-  document.getElementById('study-reminders-toggle').checked = preferences.studyReminders || false;
-  document.getElementById('share-progress-toggle').checked = preferences.shareProgress || false;
-  document.getElementById('public-profile-toggle').checked = preferences.publicProfile || false;
+ // document.getElementById('email-notifications-toggle').checked = preferences.emailNotifications !== false;
+  //document.getElementById('updates-notifications-toggle').checked = preferences.updatesNotifications !== false;
+  //document.getElementById('study-reminders-toggle').checked = preferences.studyReminders || false;
+  //document.getElementById('share-progress-toggle').checked = preferences.shareProgress || false;
+  //document.getElementById('public-profile-toggle').checked = preferences.publicProfile || false;
 }
 
 // Setup profile management functionality

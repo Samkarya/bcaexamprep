@@ -5,6 +5,65 @@ function getUrlParameter(name) {
   var results = regex.exec(location.search);
   return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
 }
+// Function to read URL parameters and populate the report form
+function autoFillReportForm() {
+  // Get URL parameters
+  var type = getUrlParameter('type');
+  var page = getUrlParameter('page');
+  var question = getUrlParameter('question');
+  var from = getUrlParameter('from');
+  
+  // Check if we're on the report section
+  if (getUrlParameter('section') === 'report') {
+    // Wait for DOM to be loaded and form to be visible
+    var checkFormInterval = setInterval(function() {
+      // Check if form elements exist and are accessible
+      var typeSelect = document.getElementById('issue-type');
+      var issueMessage = document.getElementById('issue-message');
+      
+      if (typeSelect && issueMessage) {
+        clearInterval(checkFormInterval);
+        
+        // Set issue type if provided
+        if (type) {
+          // Find the matching option value
+          for (var i = 0; i < typeSelect.options.length; i++) {
+            if (typeSelect.options[i].value === type) {
+              typeSelect.selectedIndex = i;
+              break;
+            }
+          }
+        }
+        
+        // Create a detailed message from the URL parameters
+        var autoMessage = '';
+        
+        if (page) {
+          autoMessage += 'Page: ' + page + '\n';
+        }
+        
+        if (question) {
+          autoMessage += 'Question: ' + question + '\n';
+        }
+        
+        if (from) {
+          autoMessage += 'Source Page: ' + from + '\n';
+        }
+        
+        if (autoMessage) {
+          autoMessage += '\nIssue Details:\n';
+          
+          // Add the auto-generated message to the textarea
+          issueMessage.value = autoMessage;
+          
+          // Set focus to the end of the textarea
+          issueMessage.focus();
+          issueMessage.selectionStart = issueMessage.selectionEnd = issueMessage.value.length;
+        }
+      }
+    }, 100);
+  }
+}
 
 // Function to show the appropriate section
 function showSection() {
@@ -206,4 +265,5 @@ window.addEventListener('popstate', showSection);
 window.addEventListener('DOMContentLoaded', function() {
   showSection();
   updateFormType();
+  autoFillReportForm();
 });

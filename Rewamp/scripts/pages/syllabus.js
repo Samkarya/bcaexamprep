@@ -51,7 +51,7 @@ const shSyllabusData = [
         shortName: "IGNOU",
         tags: ["online"],
         links: [
-            { title: "Complete Course Syllabus", url: "http://www.ignou.ac.in/upload/programme/BCA%28Revised%29%20PG.pdf", icon: "fa-file-pdf" }
+            { title: "Complete Course Syllabus", url: "https://www.ignou.ac.in/schools/programme/BCA_NEW", icon: "fa-file-pdf" }
         ]
     },
     {

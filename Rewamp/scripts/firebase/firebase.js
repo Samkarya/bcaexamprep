@@ -6,13 +6,7 @@ import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.4.0/firebase
 
 // Firebase configuration
 const firebaseConfig = {
-    apiKey: "AIzaSyDH5mDzI1ASaWjM9R8b4cXWSbOQHR5iSmI",
-    authDomain: "bcaexamprep.firebaseapp.com",
-    projectId: "bcaexamprep",
-    storageBucket: "bcaexamprep.firebasestorage.app",
-    messagingSenderId: "332685820521",
-    appId: "1:332685820521:web:7e92dba0457f73e27058f8",
-    measurementId: "G-EFTNK4374V"
+   
   };
 
 // Initialize Firebase services

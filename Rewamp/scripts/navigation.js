@@ -116,46 +116,42 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault();
             
             const query = document.getElementById('search-query').value.trim();
-            const subject = document.getElementById('subject-filter').value;
-            const contentType = document.getElementById('content-filter').value;
             
-            if (query === '' && subject === '' && contentType === '') {
+            if (query === '') {
                 // Show error or notification
-                alert('Please enter a search term or select a filter');
+                alert('Please enter a search term');
                 return;
             }
             
             // Build search URL
             let searchUrl = '/search?q=' + encodeURIComponent(query);
-            if (subject) searchUrl += '&subject=' + encodeURIComponent(subject);
-            if (contentType) searchUrl += '&type=' + encodeURIComponent(contentType);
             
             // Redirect to search results
             window.location.href = searchUrl;
         });
     }
 
-    // Newsletter Form Validation
-    const newsletterForm = document.querySelector('.newsletter-form');
-    if (newsletterForm) {
-        newsletterForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const emailInput = this.querySelector('input[type="email"]');
-            const email = emailInput.value.trim();
+    // // Newsletter Form Validation
+    // const newsletterForm = document.querySelector('.newsletter-form');
+    // if (newsletterForm) {
+    //     newsletterForm.addEventListener('submit', function(e) {
+    //         e.preventDefault();
+    //         const emailInput = this.querySelector('input[type="email"]');
+    //         const email = emailInput.value.trim();
             
-            // Basic email validation
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(email)) {
-                alert('Please enter a valid email address');
-                return;
-            }
+    //         // Basic email validation
+    //         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    //         if (!emailRegex.test(email)) {
+    //             alert('Please enter a valid email address');
+    //             return;
+    //         }
             
-            // Here you would typically send the form data to your server
-            // For demonstration, show success message
-            alert('Thank you for subscribing to our newsletter!');
-            emailInput.value = '';
-        });
-    }
+    //         // Here you would typically send the form data to your server
+    //         // For demonstration, show success message
+    //         alert('Thank you for subscribing to our newsletter!');
+    //         emailInput.value = '';
+    //     });
+    // }
 
     // Active navigation link highlighting
     function highlightCurrentPage() {
